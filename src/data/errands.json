@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1",
+    "name": "Returns at Whole Foods",
+    "complete": false,
+    "dateAdded": "Sunday Feb 4, 2024",
+    "dateCompleted": "incomplete"
+  },
+  {
+    "id": "2",
+    "name": "Buy property insurance",
+    "complete": false,
+    "dateAdded": "Sunday Feb 4, 2024",
+    "dateCompleted": "incomplete"
+  },
+  {
+    "id": "3",
+    "name": "Eat Dinner",
+    "complete": false,
+    "dateAdded": "Sunday Feb 4, 2024",
+    "dateCompleted": "incomplete"
+  }
+]
