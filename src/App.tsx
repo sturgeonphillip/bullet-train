@@ -4,7 +4,6 @@ import viteLogo from '/vite.svg';
 import './App.css';
 import Clock from './components/Clock';
 import List from './components/Errands/List';
-// import MyForm from '../attic/etc/MyForm';
 
 function App() {
   const [count, setCount] = useState(0);

@@ -29,6 +29,7 @@ const Form = () => {
       console.error('Caught Error: ', err);
     }
     console.log('Submitting errand:', errand);
+    setName('');
   };
 
   return (

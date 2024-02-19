@@ -37,7 +37,7 @@ app.get('/errands', (req, res) => {
   res.send(data);
 });
 
-app.post('/list', (req, res) => {
+app.post('/list', async (req, res) => {
   try {
     const { id, dateAdded, dateCompleted, name, complete } = req.body;
     console.log('ERRAND', id, dateAdded, dateCompleted, name, complete);
@@ -48,10 +48,23 @@ app.post('/list', (req, res) => {
 });
 
 app.post('/errands', async (request, response) => {
+  await console.log('errand received', request.body);
   try {
-    await response.status(200).json({ message: 'Errand saved.' });
+    const dataPath = await path.join(__dirname, './data/errands.json');
+    const errands = JSON.parse(await fs.promises.readFile(dataPath, 'utf8'));
+
+    await fs.promises.writeFile(
+      dataPath,
+      JSON.stringify([...errands, request.body]),
+      'utf8'
+    );
+
+    response.status(200).json({ message: 'Errand saved.' });
   } catch (err) {
     console.error('Error saving errands: ', err);
+    response
+      .status(500)
+      .json({ message: 'Error saving errand', error: err.message });
   }
 });
 
