@@ -68,6 +68,28 @@ app.post('/errands', async (request, response) => {
   }
 });
 
+app.delete('/errands/:id', async (request, response) => {
+  const idToDelete = await request.params.id;
+
+  try {
+    const dataPath = path.join(__dirname, './data/errands.json');
+    const errands = JSON.parse(await fs.promises.readFile(dataPath, 'utf'));
+
+    const updatedErrands = errands.filter((errand) => errand.id !== idToDelete);
+
+    await fs.promises.writeFile(
+      dataPath,
+      JSON.stringify(updatedErrands),
+      'utf8'
+    );
+  } catch (err) {
+    console.error('Error saving errands: ', err);
+    response
+      .status(500)
+      .json({ message: 'Error deleting errand', error: err.message });
+  }
+});
+
 app.use((err, req, res, next) => {
   if (err instanceof Error) {
     res.status(500).send({ msg: 'CORS Error', detail: err.message });
