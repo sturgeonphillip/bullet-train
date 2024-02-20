@@ -1,8 +1,10 @@
+import { createHabit, HabitProps } from './createHabit';
+
 export class DailyHabits {
-  private habits: Habit[];
+  private habits: HabitProps[];
   private date: number;
 
-  constructor(habits: Habit[], date: number) {
+  constructor(habits: HabitProps[], date: number) {
     this.habits = habits;
     this.date = date;
   }
@@ -12,7 +14,7 @@ export class DailyHabits {
     this.habit = [...this.habits, newHabit];
   }
 
-  public getHabits(): Habit[] {
+  public getHabits(): HabitProps[] {
     return this.habits;
   }
 
@@ -28,15 +30,17 @@ export class DailyHabits {
     }));
   }
 
+  // TODO: fix to use for item going complete -> incomplete (ie, accidentally clicked), modify to use id - not index
+  public resetHabitDate(index: number) {
+    if (this.habits[index].complete) {
+      this.havits[index].date = 0;
+    }
+  }
+
   public resetHabits() {
     this.habits = this.habits.map((habit) => ({
       ...habit,
       complete: false,
     }));
   }
-}
-
-export interface HabitProps {
-  habits: Habit[];
-  date: number;
 }
