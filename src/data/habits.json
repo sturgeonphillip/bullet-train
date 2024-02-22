@@ -1,0 +1,77 @@
+[
+  {
+    "date": 1708564962501,
+    "habits": [
+      {
+        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "name": "row",
+        "complete": false
+      },
+      {
+        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "name": "pray",
+        "complete": false
+      },
+      {
+        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "name": "apply",
+        "complete": false
+      },
+      {
+        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "name": "code",
+        "complete": false
+      }
+    ]
+  },
+  {
+    "date": 1708478562501,
+    "habits": [
+      {
+        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "name": "row",
+        "complete": false
+      },
+      {
+        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "name": "pray",
+        "complete": false
+      },
+      {
+        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "name": "apply",
+        "complete": false
+      },
+      {
+        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "name": "code",
+        "complete": false
+      }
+    ]
+  },
+  {
+    "date": 1708392162501,
+    "habits": [
+      {
+        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "name": "row",
+        "complete": false
+      },
+      {
+        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "name": "pray",
+        "complete": false
+      },
+      {
+        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "name": "apply",
+        "complete": false
+      },
+      {
+        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "name": "code",
+        "complete": false
+      }
+    ]
+  }
+]

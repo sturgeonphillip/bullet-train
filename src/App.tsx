@@ -3,13 +3,23 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import Clock from './components/Clock';
-import List from './components/Errands/List';
+import HabitsList from './components/Habits/List';
+import ErrandsList from './components/Errands/List';
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
+      <div>
+        <Clock />
+      </div>
+      <p className='read-the-docs'>
+        Click on the Vite and React logos to learn more
+      </p>
+      <HabitsList />
+      <ErrandsList />
+      {/* <MyForm /> */}
       <div>
         <a
           href='https://vitejs.dev'
@@ -41,14 +51,6 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <div>
-        <Clock />
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-      <List />
-      {/* <MyForm /> */}
     </>
   );
 }

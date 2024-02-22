@@ -14,7 +14,6 @@ const Errand = ({ id, name, complete, finished, onComplete }: ErrandProps) => {
         checked={complete}
         onChange={handleToggle}
       />
-      <p>{finished}</p>
     </div>
   );
 };

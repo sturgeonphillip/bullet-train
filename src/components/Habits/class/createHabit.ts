@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 export interface HabitProps {
   id: string;
   name: string;
@@ -5,10 +7,10 @@ export interface HabitProps {
   onComplete?: (id: string) => void;
 }
 
-export function createHabit(id: string, name: string): HabitProps {
+export function createHabit(name: string): HabitProps {
   name = name ?? '[EMPTY]';
   return {
-    id,
+    id: uuid(),
     name,
     complete: false,
   };
