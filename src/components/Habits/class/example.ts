@@ -63,4 +63,34 @@ async function main() {
   console.log('twoAgo!');
   await writeToFile(filePath, myRoutine);
 }
+
 main();
+
+async function getLength(file) {
+  try {
+    const data = await fs.readFile(file, 'utf8');
+
+    const parsed = await JSON.parse(data);
+    const content = parsed.slice(0, 3);
+    const length = content.length;
+    return await { length, content };
+  } catch (err) {
+    console.error(`Error reading file: ${err}`);
+  }
+}
+
+const habitsFile = path.join(
+  __dirname,
+  '..',
+  '..',
+  '..',
+  'data',
+  'habits.json'
+);
+
+async function showRes() {
+  const result = await getLength(habitsFile);
+  await console.log(result);
+}
+
+showRes();

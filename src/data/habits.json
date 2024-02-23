@@ -1,74 +1,74 @@
 [
   {
-    "date": 1708564962501,
+    "date": 1708639961828,
     "habits": [
       {
-        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "id": "0f0551af-7e6f-480b-a03c-ac6e162abc86",
         "name": "row",
         "complete": false
       },
       {
-        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "id": "a48ce250-d054-4384-875b-7f8397d47f29",
         "name": "pray",
         "complete": false
       },
       {
-        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "id": "f81692bc-2adc-4ab2-8b55-be9961a499e9",
         "name": "apply",
         "complete": false
       },
       {
-        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "id": "788f50f9-80d6-4790-a051-7b5bd00c05a4",
         "name": "code",
         "complete": false
       }
     ]
   },
   {
-    "date": 1708478562501,
+    "date": 1708553561828,
     "habits": [
       {
-        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "id": "0f0551af-7e6f-480b-a03c-ac6e162abc86",
         "name": "row",
         "complete": false
       },
       {
-        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "id": "a48ce250-d054-4384-875b-7f8397d47f29",
         "name": "pray",
         "complete": false
       },
       {
-        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "id": "f81692bc-2adc-4ab2-8b55-be9961a499e9",
         "name": "apply",
         "complete": false
       },
       {
-        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "id": "788f50f9-80d6-4790-a051-7b5bd00c05a4",
         "name": "code",
         "complete": false
       }
     ]
   },
   {
-    "date": 1708392162501,
+    "date": 1708467161828,
     "habits": [
       {
-        "id": "eb3665b9-06f1-4d3c-b7d3-a62bf4f4e3f0",
+        "id": "0f0551af-7e6f-480b-a03c-ac6e162abc86",
         "name": "row",
         "complete": false
       },
       {
-        "id": "9f888eb1-a721-4b61-bece-e498d8a72ac1",
+        "id": "a48ce250-d054-4384-875b-7f8397d47f29",
         "name": "pray",
         "complete": false
       },
       {
-        "id": "dd923e7c-0495-4ec3-8dcd-9120db242b24",
+        "id": "f81692bc-2adc-4ab2-8b55-be9961a499e9",
         "name": "apply",
         "complete": false
       },
       {
-        "id": "71800e3f-cb70-4d84-9acc-b32e9ecba80e",
+        "id": "788f50f9-80d6-4790-a051-7b5bd00c05a4",
         "name": "code",
         "complete": false
       }

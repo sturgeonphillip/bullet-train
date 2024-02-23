@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
 import Form from './Form';
-// import Habit component
+import Habit from './Habit';
 import { HabitProps } from './class/createHabit';
+import Habits from './class/DailyHabits';
 
 const List = () => {
-  const [habits, setHabits] = useState<HabitProps[]>([]);
+  const daily = ['row', 'pray', 'apply', 'code'];
 
+  const [date, setDate] = useState(new Date());
+
+  const myRoutine = new Habits(date, daily);
+  const [habits, setHabits] = useState(myRoutine.getHabits());
+  useEffect(() => {
+    setInterval(() => setDate(new Date()), 86400000);
+  }, []);
   // check off when completed
   const handleComplete = (id) => {
     setHabits((prev) =>
@@ -21,26 +29,29 @@ const List = () => {
     );
   };
 
-  // fetch habits and set as state
-  useEffect(() => {
-    fetch('http://localhost:3001/habits')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Network response error.');
-        }
-        return res.json();
-      })
-      .then((saved) => setHabits(saved))
-      .catch((err) => {
-        console.error(`There was a problem with the fetch operation: ${err}`);
-      });
-  }, []);
+  console.log(myRoutine);
 
-  const datePlaceholder = 'Habits for ${date}';
+  // console.log(habits['habits']);
+  // // fetch habits and set as state
+  // useEffect(() => {
+  //   fetch('http://localhost:3001/habits')
+  //     .then((res) => {
+  //       if (!res.ok) {
+  //         throw new Error('Network response error.');
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((saved) => setHabits(saved))
+  //     .catch((err) => {
+  //       console.error(`There was a problem with the fetch operation: ${err}`);
+  //     });
+  // }, []);
+
+  // console.log(habits);
   return (
     <>
       <div>
-        <h3>{datePlaceholder}</h3>
+        <h3>{date.toISOString()}</h3>
         <Form />
         <ul>
           {habits.length > 0 ? (

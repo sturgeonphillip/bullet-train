@@ -37,6 +37,12 @@ app.get('/errands', (req, res) => {
   res.send(data);
 });
 
+app.get('/habits', (req, res) => {
+  const dataPath = path.join(__dirname, './data/habits.json');
+  const data = fs.readFileSync(dataPath, 'utf8');
+  res.send(data);
+});
+
 app.post('/list', async (req, res) => {
   try {
     const { id, dateAdded, dateCompleted, name, complete } = req.body;
