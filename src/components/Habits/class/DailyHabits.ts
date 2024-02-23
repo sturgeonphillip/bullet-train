@@ -26,6 +26,11 @@ export default class Habits {
     return this.date;
   }
 
+  public markAllComplete(): HabitProps[] {
+    this.habits.forEach((h) => (h.complete = true));
+    return this.habits;
+  }
+
   public setDate(date: number) {
     this.date = date;
     this.habits = this.habits.map((habit) => ({
@@ -47,6 +52,17 @@ export default class Habits {
       ...habit,
       complete: false,
     }));
+  }
+
+  public resetDateHabits() {
+    this.date = Date.now();
+
+    this.habits = this.habits.map((habit) => ({
+      ...habit,
+      complete: false,
+    }));
+
+    return { date: this.date, habits: this.habits };
   }
 
   public sortHabitsProperties(): HabitProps[] {
