@@ -11,7 +11,7 @@ export default class Habits {
 
   public addHabit(name: string) {
     const newHabit = createHabit(name);
-    this.habit = [...this.habits, newHabit];
+    this.habits = [...this.habits, newHabit];
   }
 
   public getHabits(): HabitProps[] {

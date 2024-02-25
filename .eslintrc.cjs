@@ -15,7 +15,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    'array-bracket-spacing': 2,
+    'array-bracket-spacing': 1,
   },
 };
 
