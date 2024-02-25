@@ -1,8 +1,8 @@
 import { HabitProps } from './class/createHabit';
 
-const Habit = ({ id, name, complete }: HabitProps) => {
+const Habit = ({ id, name, complete, onComplete }: HabitProps) => {
   const handleToggle = () => {
-    onComplete(id, finished);
+    onComplete?.(id);
   };
 
   return (

@@ -4,7 +4,7 @@ import { createErrand } from './createErrand';
 const Form = () => {
   const [name, setName] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const errand = createErrand(name);
@@ -23,7 +23,7 @@ const Form = () => {
     try {
       const response = await fetch('http://localhost:3001/errands', options);
       if (!response.ok) {
-        throw new Error('Network response is not OK.');
+        throw new Error('Network response is not ok.');
       }
     } catch (err) {
       console.error('Caught Error: ', err);

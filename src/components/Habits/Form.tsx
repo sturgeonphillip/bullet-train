@@ -4,7 +4,7 @@ import { createHabit } from './class/createHabit'; // class or component folder?
 const Form = () => {
   const [name, setName] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const habit = createHabit(name);

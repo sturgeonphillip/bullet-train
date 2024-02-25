@@ -1,7 +1,10 @@
 import { createRoutine, RoutineProps } from './createRoutine';
 
 export default class Routine {
-  constructor(date: number, routines: RoutineProps[]) {
+  date: number;
+  routines: RoutineProps[];
+
+  constructor(date: number, routines: string[]) {
     this.date = date;
     this.routines = routines.map((r) => createRoutine(r));
   }
@@ -22,7 +25,7 @@ export default class Routine {
     return this.routines.map((r) => r.id);
   }
 
-  public getByComplete() {
+  public getComplete() {
     const complete = this.routines.filter((r) => r.complete === true);
     if (complete.length === 0) {
       return ['nothing done!'];
@@ -30,7 +33,7 @@ export default class Routine {
     return complete;
   }
 
-  public markComplete(id: string) {
+  public setComplete(id: string) {
     this.routines = this.routines.map((routine) => {
       if (routine.id === id) {
         return {
@@ -41,6 +44,35 @@ export default class Routine {
       }
       return routine;
     });
+  }
+
+  public setIncomplete(id: string) {
+    this.routines = this.routines.map((routine) => {
+      if (routine.id === id) {
+        return {
+          ...routine,
+          complete: false,
+          timestamp: 0,
+        };
+      }
+      return routine;
+    });
+  }
+
+  public setAllComplete() {
+    this.routines = this.routines.map((routine) => ({
+      ...routine,
+      complete: true,
+      timestamp: Date.now(),
+    }));
+  }
+
+  public setAllIncomplete() {
+    this.routines = this.routines.map((routine) => ({
+      ...routine,
+      complete: false,
+      timestamp: 0,
+    }));
   }
 
   public addRoutine(name: string) {
@@ -58,46 +90,27 @@ export default class Routine {
     this.routines = this.routines.map((routine) => createRoutine(routine.name));
   }
 
-  public markAllComplete() {
-    this.routines = this.routines.map((routine) => ({
-      ...routine,
-      complete: true,
-      timestamp: Date.now(),
-    }));
-  }
-
-  public resetToIncomplete(id: string) {
-    this.routines = this.routines.map((routine) => {
-      if (routine.id === id) {
-        return {
-          ...routine,
-          complete: false,
-          timestamp: 0,
-        };
-      }
-      return routine;
-    });
-  }
-
   public sortRoutineProperties(): RoutineProps[] {
     return this.routines.map((routine) => ({
       name: routine.name,
       complete: routine.complete,
+      timestamp: routine.timestamp,
       id: routine.id,
     }));
   }
+
   // end
 }
 
 /**
- * addHabit
- * getHabits
- * getHabitsByName
- * getDate
- * markAllComplete
- * setDate
- * resetHabitDate
- * resetHabits
- * resetDateJabits
- * sortHabitsProperties
+ * // TODO:
+ *
+ * getTimeComplete
+ *
+ * editPastDay
+ * edit a single routine on a past day
+ * edit a whole past day
+ *
+ * add routine to begin on specific future date
+ *
  */

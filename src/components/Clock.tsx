@@ -6,7 +6,7 @@ const Clock = () => {
   useEffect(() => {
     const timer = setTimeout(() => setTime(new Date()), 1000);
     return () => clearTimeout(timer);
-  });
+  }, [time]);
 
   return (
     <>

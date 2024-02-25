@@ -1,19 +1,32 @@
 import { useState, useEffect } from 'react';
 import Form from './Form';
 import Habit from './Habit';
-import { HabitProps } from './class/createHabit';
+// import { HabitProps } from './class/createHabit';
 import Habits from './class/DailyHabits';
 
 const List = () => {
   const daily = ['row', 'pray', 'apply', 'code'];
-
   const [date, setDate] = useState(new Date());
 
+  // const dtOptions = {
+  //   // weekday: 'short',
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric',
+  //   // hour: 'numeric',
+  //   // minute: 'numeric',
+  //   // second: 'numeric',
+  // };
+
+  // const dtFormat = new Intl.DateTimeFormat('en-US', dtOptions);
+
   const myRoutine = new Habits(date, daily);
+
   const [habits, setHabits] = useState(myRoutine.getHabits());
   useEffect(() => {
     setInterval(() => setDate(new Date()), 86400000);
-  }, []);
+  }, [date]);
+
   // check off when completed
   const handleComplete = (id) => {
     setHabits((prev) =>
@@ -22,14 +35,14 @@ const List = () => {
           ? {
               ...habit,
               finished: Date.now(),
-              complete: !errand.complete,
+              complete: true,
             }
           : habit
       )
     );
   };
 
-  console.log(myRoutine);
+  // console.log(myRoutine);
 
   // console.log(habits['habits']);
   // // fetch habits and set as state
@@ -51,7 +64,7 @@ const List = () => {
   return (
     <>
       <div>
-        <h3>{date.toISOString()}</h3>
+        <h3>{dtFormat.format(date)}</h3>
         <Form />
         <ul>
           {habits.length > 0 ? (
@@ -62,7 +75,7 @@ const List = () => {
                   name={habit.name}
                   complete={habit.complete}
                   onComplete={handleComplete}
-                  finished={habit.finished}
+                  // finished={habit.finished}
                 />
               </li>
             ))
