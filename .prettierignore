@@ -1,0 +1,6 @@
+attic
+build
+coverage
+dist
+
+.eslintrc.cjs

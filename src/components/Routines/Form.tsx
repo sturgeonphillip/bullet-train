@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { RoutineProps, createRoutine } from '../../class/Routine/createRoutine';
-// import { createRoutine } from '../../class/Routine/createRoutine';
+import { RoutineProps, createRoutine } from './createRoutine';
 
 interface FormProps {
   onAdd: (routine: RoutineProps) => void;
@@ -19,6 +18,7 @@ const Form = ({ onAdd }: FormProps) => {
     }
     onAdd(routine);
     setName('');
+
     // const options = {
     //   method: 'POST',
     //   headers: {

@@ -6,7 +6,7 @@ import { ErrandProps } from './createErrand';
 const List = () => {
   const [errands, setErrands] = useState<ErrandProps[]>([]);
 
-  const handleComplete = (id) => {
+  const handleComplete = (id: string) => {
     setErrands((prev) =>
       prev.map((errand) =>
         errand.id === id
