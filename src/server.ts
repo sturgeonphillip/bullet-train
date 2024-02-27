@@ -170,7 +170,13 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
 };
 
 app.use(errorHandler);
-
+let lapse = Date.now();
+lapse;
 app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+  setInterval(() => {
+    console.clear();
+    console.log(
+      `Server listening at http://localhost:${port}; \nIt is now: ${(lapse = Date.now())};`
+    );
+  }, 5000);
 });
