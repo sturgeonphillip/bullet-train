@@ -1,0 +1,71 @@
+{
+  "2024-02-23": {
+    "date": "2024-02-23",
+    "routines": [
+      {
+        "complete": false,
+        "id": "1bdabaf5-a0e1-4b9b-be33-d183588c1898",
+        "name": "Walk Dogs",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "45efc5b5-ce31-4468-8ce9-d37b417607fe",
+        "name": "Pray",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "e47efb18-4a31-41b7-a18c-7042500db226",
+        "name": "Row",
+        "timestamp": 0
+      }
+    ]
+  },
+  "2024-02-24": {
+    "date": "2024-02-24",
+    "routines": [
+      {
+        "complete": false,
+        "id": "1bdabaf5-a0e1-4b9b-be33-d183588c1898",
+        "name": "Walk Dogs",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "45efc5b5-ce31-4468-8ce9-d37b417607fe",
+        "name": "Pray",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "e47efb18-4a31-41b7-a18c-7042500db226",
+        "name": "Row",
+        "timestamp": 0
+      }
+    ]
+  },
+  "2024-02-25": {
+    "date": "2024-02-25",
+    "routines": [
+      {
+        "complete": false,
+        "id": "1bdabaf5-a0e1-4b9b-be33-d183588c1898",
+        "name": "Walk Dogs",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "45efc5b5-ce31-4468-8ce9-d37b417607fe",
+        "name": "Pray",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "e47efb18-4a31-41b7-a18c-7042500db226",
+        "name": "Row",
+        "timestamp": 0
+      }
+    ]
+  }
+}

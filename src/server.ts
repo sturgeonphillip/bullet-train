@@ -9,6 +9,8 @@ import express, {
   NextFunction,
 } from 'express';
 
+import entryRoutes from './api/routes/entry.routes';
+
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -16,12 +18,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const approvedOrigins = ['http://localhost:3001', 'http://localhost:5173'];
-
-app.use(
-  cors({
-    origin: approvedOrigins,
-  })
-);
+app.use(cors({ origin: approvedOrigins }));
 
 app.use(express.urlencoded({ extended: true }));
 
@@ -33,6 +30,7 @@ app.use(
 
 app.use(express.json());
 
+app.use('/entries', entryRoutes);
 app.get('/', (_req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
 });
@@ -43,27 +41,9 @@ app.get('/errands', async (_req, res) => {
   res.send(data);
 });
 
-app.get('/habits', (_req, res) => {
-  const dataPath = path.join(__dirname, './data/habits.json');
-  const data = fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
-
-// app.get('/routines', async (_req, res) => {
-//   const dataPath = path.join(__dirname, '../db/routines.json');
-//   const data = await fs.readFile(dataPath, 'utf8');
-//   res.send(data);
-// });
-
-app.get('/routine-list', async (_req, res) => {
-  const dataPath = path.join(__dirname, '../db/adjustments.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
-
 app.post('/errands', async (req, res) => {
   try {
-    const dataPath = await path.join(__dirname, './data/errands.json');
+    const dataPath = path.join(__dirname, './data/errands.json');
     const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
 
     await fs.writeFile(
@@ -80,7 +60,7 @@ app.post('/errands', async (req, res) => {
 
 app.post('/routineList', async (req, res) => {
   try {
-    const dataPath = await path.join(__dirname, '../db/adjustments.json');
+    const dataPath = path.join(__dirname, '../db/adjustments.json');
 
     let existingData = [];
 
@@ -103,7 +83,7 @@ app.post('/routineList', async (req, res) => {
       date: Date.now(),
       routines: newRoutine,
     };
-    // get datapath before hitting create -> const dataPath = await path.join(__dirname, '');
+    // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
 
     await fs.writeFile(
       dataPath,
@@ -143,6 +123,15 @@ app.delete('/errands/:id', async (req, res) => {
   }
 });
 
+app.get('/entries', async (req, res) => {
+  await console.log(req.body);
+  const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
+  const data = await fs.readFile(dataPath, 'utf8');
+  res.send(data);
+});
+
+//'/:date', entryController.getEntry)
+
 app.use(
   (error: Error, _req: Request, res: Response, next: NextFunction): void => {
     if (error instanceof Error) {
@@ -170,13 +159,27 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
 };
 
 app.use(errorHandler);
-let lapse = Date.now();
-lapse;
 app.listen(port, () => {
-  setInterval(() => {
-    console.clear();
-    console.log(
-      `Server listening at http://localhost:${port}; \nIt is now: ${(lapse = Date.now())};`
-    );
-  }, 5000);
+  console.log(`Server listening at http://localhost:${port}`);
 });
+
+/**
+ * let today = new Date(lapse);
+ * console.log('TODAY', today, today.toISOString());
+ * let justDate = today.toISOString().split('T')[0];
+ * console.log('JSUT DATE', justDate);
+ *
+ */
+
+/**
+ * let lapse = Date.now();
+ *
+ * app.listen(() => {
+ *   setInterval(() => {
+ *     console.clear();
+ *     console.log(`Server listening at http://
+ *     localhost${PORT}\nIt is now: ${(lapse =
+ *     Date.now())};`
+ *   }, 5000);
+ * });
+ */
