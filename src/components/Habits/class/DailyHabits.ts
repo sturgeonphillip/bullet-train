@@ -4,7 +4,7 @@ export default class Habits {
   private date: number;
   private habits: HabitProps[];
 
-  constructor(date: number, habits: HabitProps[]) {
+  constructor(date: number, habits: string[]) {
     this.date = date;
     this.habits = habits.map((h) => createHabit(h));
   }
@@ -18,7 +18,7 @@ export default class Habits {
     return this.habits;
   }
 
-  public getHabitsByName(): HabitProps[] {
+  public getHabitsByName() {
     return this.habits.map((h) => h.name);
   }
 
@@ -41,11 +41,11 @@ export default class Habits {
 
   // TODO: fix to use for correcting an item marked complete prematurely
   // modify to use id - not index
-  public resetHabitDate(id: number) {
-    if (this.habits[id].complete) {
-      this.habits[id].date = 0;
-    }
-  }
+  // public resetHabitDate(id: number) {
+  //   if (this.habits[id].complete) {
+  //     this.habits[id] = 0;
+  //   }
+  // }
 
   public resetHabits() {
     this.habits = this.habits.map((habit) => ({
@@ -78,5 +78,12 @@ export default class Habits {
       complete: habit.complete,
       id: habit.id,
     }));
+  }
+
+  public toJSON(): Record<string, unknown> {
+    return {
+      date: this.date,
+      habits: this.habits,
+    };
   }
 }

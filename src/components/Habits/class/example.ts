@@ -14,7 +14,7 @@ const myRoutine = new Habits(today, daily);
 
 const filePath = path.join(__dirname, '..', '..', '..', 'data', 'habits.json');
 
-async function writeToFile(filePath, data) {
+async function writeToFile(filePath: string, data: Record<string, unknown>) {
   const serialized = JSON.stringify(data);
   console.log('DATA', serialized);
 
@@ -55,18 +55,18 @@ async function writeToFile(filePath, data) {
 
 async function main() {
   console.log('myRoutine!');
-  await writeToFile(filePath, myRoutine);
+  await writeToFile(filePath, myRoutine.toJSON());
   myRoutine.setDate(yesterday);
   console.log('yesterday!');
-  await writeToFile(filePath, myRoutine);
+  await writeToFile(filePath, myRoutine.toJSON());
   myRoutine.setDate(twoAgo);
   console.log('twoAgo!');
-  await writeToFile(filePath, myRoutine);
+  await writeToFile(filePath, myRoutine.toJSON());
 }
 
 main();
 
-async function getLength(file) {
+async function getLength(file: string) {
   try {
     const data = await fs.readFile(file, 'utf8');
 

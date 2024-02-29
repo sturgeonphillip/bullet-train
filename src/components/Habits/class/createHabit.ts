@@ -12,6 +12,7 @@ export function createHabit(name: string): HabitProps {
   return {
     id: uuid(),
     name,
+
     complete: false,
   };
 }

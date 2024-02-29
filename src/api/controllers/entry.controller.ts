@@ -10,8 +10,7 @@ const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, '../../../db/entries.json');
 
-const getEntries = async (req: Request, res: Response) => {
-  console.log(req.body);
+const getEntries = async (_req: Request, res: Response) => {
   try {
     const data = await fs.readFile(filePath, 'utf8');
     res.send(data);
@@ -55,13 +54,14 @@ const getEntryRoutine = async (req: Request, res: Response) => {
 };
 
 const createEntry = async (req: Request, res: Response) => {
+  console.log('REQ BODY', req.body);
   try {
     let existingData = {};
     try {
       const content = await fs.readFile(filePath, 'utf8');
       existingData = JSON.parse(content);
 
-      console.log('createEntry[EXISTDATA]:', existingData);
+      // console.log('createEntry[EXISTDATA]:', existingData);
     } catch (err) {
       if (err instanceof SyntaxError) {
         existingData = {};
@@ -69,14 +69,20 @@ const createEntry = async (req: Request, res: Response) => {
         handleError(err, res, `Error reading file contents: ${err}`);
       }
     }
-    const key = await req.body.date;
-    const val = await req.body;
+
+    console.log('rpd', req.body.date);
+    // const createdEntry = {};
+
     const allEntries = {
       ...existingData,
-      [key]: val,
+      // [req.params.date]: req.body,
+      [req.body.date]: req.body,
     };
 
     await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
+    // console.log(createdEntry);
+    // console.log(allEntries);
+    res.status(201).json(allEntries);
   } catch (err) {
     handleError(err, res, 'Error writing new entry.');
   }
@@ -91,7 +97,7 @@ const updateEntry = async (req: Request, res: Response) => {
       const content = await fs.readFile(filePath, 'utf8');
       existingData = JSON.parse(content);
 
-      console.log('updateEntry[EXISTDATA]:', existingData);
+      // console.log('updateEntry[EXISTDATA]:', existingData);
     } catch (err) {
       if (err instanceof SyntaxError) {
         existingData = {};
@@ -174,3 +180,29 @@ export {
 //     handleError(err, res, 'Error writing new entry.');
 //   }
 // };
+
+/**
+ * "2024-02-29": {
+    "date": "2024-02-29",
+    "routines": [
+      {
+        "complete": false,
+        "id": "1bdabaf5-a0e1-4b9b-be33-d183588c1898",
+        "name": "Walk Dogs",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "45efc5b5-ce31-4468-8ce9-d37b417607fe",
+        "name": "Pray",
+        "timestamp": 0
+      },
+      {
+        "complete": false,
+        "id": "e47efb18-4a31-41b7-a18c-7042500db226",
+        "name": "Row",
+        "timestamp": 0
+      }
+    ]
+  }
+ */
