@@ -10,6 +10,8 @@ import express, {
 } from 'express';
 
 import entryRoutes from './api/routes/entry.routes';
+import listRoutes from './api/routes/list.routes';
+import errandRoutes from './api/routes/errand.routes';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -20,28 +22,29 @@ const __dirname = dirname(__filename);
 const approvedOrigins = ['http://localhost:3001', 'http://localhost:5173'];
 app.use(cors({ origin: approvedOrigins }));
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(
   express.static(path.resolve(__dirname, '..', 'public'), {
     extensions: ['html', 'css'],
   })
 );
 
-app.use(express.json());
-
 app.use('/entries', entryRoutes);
-app.get('/', (_req, res) => {
+app.use('/list', listRoutes);
+app.use('/errands', errandRoutes);
+
+app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
 });
 
-app.get('/errands', async (_req, res) => {
+app.get('/errands', async (_req: Request, res: Response) => {
   const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
   const data = await fs.readFile(dataPath, 'utf8');
   res.send(data);
 });
 
-app.post('/errands', async (req, res) => {
+app.post('/errands', async (req: Request, res: Response) => {
   try {
     const dataPath = path.join(__dirname, './data/errands.json');
     const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
@@ -58,7 +61,7 @@ app.post('/errands', async (req, res) => {
   }
 });
 
-app.post('/routineList', async (req, res) => {
+app.post('/routineList', async (req: Request, res: Response) => {
   try {
     const dataPath = path.join(__dirname, '../db/adjustments.json');
 
@@ -100,7 +103,7 @@ app.post('/routineList', async (req, res) => {
   }
 });
 
-app.delete('/errands/:id', async (req, res) => {
+app.delete('/errands/:id', async (req: Request, res: Response) => {
   const idToDelete = await req.params.id;
 
   try {
@@ -123,30 +126,19 @@ app.delete('/errands/:id', async (req, res) => {
   }
 });
 
-app.get('/entries', async (req, res) => {
+app.get('/entries', async (req: Request, res: Response) => {
   await console.log(req.body);
   const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
   const data = await fs.readFile(dataPath, 'utf8');
   res.send(data);
 });
 
-//'/:date', entryController.getEntry)
-
-app.use(
-  (error: Error, _req: Request, res: Response, next: NextFunction): void => {
-    if (error instanceof Error) {
-      res.status(500).send({
-        msg: 'possible CORS Error',
-        detail: error.message,
-      });
-    } else {
-      next(error);
-    }
-  }
-);
-
-const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
-  // (error: Error, _req: Request, res: Response, next: NextFunction): void => {
+const errorHandler: ErrorRequestHandler = (
+  err: Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   if (err instanceof Error) {
     res.status(500).send({
       msg: 'possible CORS Error',
@@ -155,7 +147,6 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
   } else {
     next(err);
   }
-  // }
 };
 
 app.use(errorHandler);

@@ -32,7 +32,7 @@ const getEntry = async (req: Request, res: Response) => {
     } else
       res
         .status(404)
-        .send({ message: 'Entry not found for the specific date.' });
+        .send({ message: 'Entry not found for the specified date.' });
   } catch (err) {
     handleError(err, res, 'Error reading entry from database.');
   }
@@ -62,7 +62,7 @@ const createEntry = async (req: Request, res: Response) => {
     try {
       const content = await fs.readFile(filePath, 'utf8');
 
-      existingData = JSON.parse(content);
+      existingData = await JSON.parse(content);
     } catch (err) {
       if (err instanceof SyntaxError) {
         existingData = {};
