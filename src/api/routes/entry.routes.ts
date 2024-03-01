@@ -12,6 +12,8 @@ router.post('/', entryController.createEntry);
 
 router.patch('/:date', entryController.updateEntry);
 
+// router.patch('/:date/:id', entryController.updateEntryRoutine);
+
 router.delete('/:date', entryController.destroyEntry);
 
 /** not needed, sort of redundant with the benefits of updating state via hooks on the client */
@@ -20,7 +22,6 @@ router.delete('/:date', entryController.destroyEntry);
 // router.get('/:date/:id', entryController.getEntryRoutine);
 
 // update the status of a routine on this day's entry
-// router.patch('/:date/:id', entryController.updateEntryRoutine);
 
 // remove a routine from the entry
 // router.delete('/:date/:id', entryController.destroyEntryRoutine);

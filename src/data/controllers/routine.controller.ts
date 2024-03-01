@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { Request, Response } from 'express';
 import { handleError } from '../../utils/errorHandler';
-import path, { dirname } from 'path';
+// import path, { dirname } from 'path';
 
 /**
  * export interface RoutineProps {
@@ -68,14 +68,14 @@ const read = async (_req: Request, res: Response, dataPath: string) => {
 };
 export { create, read };
 
-app.get('/routines', async (_req, res) => {
-  const dataPath = path.join(__dirname, '../db/routines.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
+// app.get('/routines', async (_req: Request, res: Response) => {
+//   const dataPath = path.join(__dirname, '../db/routines.json');
+//   const data = await fs.readFile(dataPath, 'utf8');
+//   res.send(data);
+// });
 
-app.get('/routine-list', async (_req, res) => {
-  const dataPath = '../db/adjustments.json';
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
+// app.get('/routine-list', async (_req: Request, res: Response) => {
+//   const dataPath = '../db/adjustments.json';
+//   const data = await fs.readFile(dataPath, 'utf8');
+//   res.send(data);
+// });

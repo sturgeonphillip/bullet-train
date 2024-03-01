@@ -21,7 +21,6 @@ const getEntries = async (_req: Request, res: Response) => {
 
 const getEntry = async (req: Request, res: Response) => {
   try {
-    console.log(req.params.date);
     const byDate = req.params.date;
     const data = await fs.readFile(filePath, 'utf8');
     const entries = JSON.parse(data);
@@ -54,14 +53,13 @@ const getEntryRoutine = async (req: Request, res: Response) => {
 };
 
 const createEntry = async (req: Request, res: Response) => {
-  console.log('REQ BODY', req.body);
   try {
     let existingData = {};
+
     try {
       const content = await fs.readFile(filePath, 'utf8');
-      existingData = JSON.parse(content);
 
-      // console.log('createEntry[EXISTDATA]:', existingData);
+      existingData = JSON.parse(content);
     } catch (err) {
       if (err instanceof SyntaxError) {
         existingData = {};
@@ -70,18 +68,14 @@ const createEntry = async (req: Request, res: Response) => {
       }
     }
 
-    console.log('rpd', req.body.date);
-    // const createdEntry = {};
-
+    const entryKey = req.params.date;
+    const entryData = req.body;
     const allEntries = {
       ...existingData,
-      // [req.params.date]: req.body,
-      [req.body.date]: req.body,
+      [entryKey]: entryData,
     };
 
     await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
-    // console.log(createdEntry);
-    // console.log(allEntries);
     res.status(201).json(allEntries);
   } catch (err) {
     handleError(err, res, 'Error writing new entry.');
@@ -90,14 +84,12 @@ const createEntry = async (req: Request, res: Response) => {
 
 const updateEntry = async (req: Request, res: Response) => {
   try {
-    let existingData = {};
-    // updateEntry
+    const entryKey = req.params.date;
+    let existingData: { [key: string]: Record<string, unknown> } = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
       existingData = JSON.parse(content);
-
-      // console.log('updateEntry[EXISTDATA]:', existingData);
     } catch (err) {
       if (err instanceof SyntaxError) {
         existingData = {};
@@ -105,14 +97,17 @@ const updateEntry = async (req: Request, res: Response) => {
         handleError(err, res, 'Error reading file contents: ');
       }
     }
-    const key = req.body.date;
-    const val = req.body;
+    console.log('PRE', existingData);
 
-    const allEntries = {
-      ...existingData,
-      [key]: val,
-    };
-    await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
+    let entry: Record<string, unknown> = existingData[entryKey];
+
+    entry = { ...req.body };
+    existingData[entryKey] = entry;
+
+    console.log('POST', existingData);
+    await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
+
+    res.status(204).send();
   } catch (err) {
     handleError(err, res, 'HANDLED!');
   }
@@ -142,6 +137,26 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
   }
 };
 
+function objectEquality(
+  objA: Record<string, unknown>,
+  objB: Record<string, unknown>
+) {
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  for (const key of keysA) {
+    if (!keysB.includes(key) || objA[key] !== objB[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export {
   getEntries,
   getEntry,
@@ -153,7 +168,7 @@ export {
   destroyEntryRoutine,
 };
 
-// const csdeateEntry = async (req: Request, res: Response) => {
+// const createEntry = async (req: Request, res: Response) => {
 //   try {
 //     let existingData = {};
 //     try {
