@@ -24,6 +24,6 @@ router.delete('/:date', entryController.destroyEntry);
 // update the status of a routine on this day's entry
 
 // remove a routine from the entry
-// router.delete('/:date/:id', entryController.destroyEntryRoutine);
+router.delete('/:date/:id', entryController.destroyEntryRoutine);
 
 export default router;

@@ -13,7 +13,7 @@ const filePath = path.join(__dirname, '../../../db/entries.json');
 const getEntries = async (_req: Request, res: Response) => {
   try {
     const data = await fs.readFile(filePath, 'utf8');
-    res.send(data);
+    res.status(200).send(data);
   } catch (err) {
     handleError(err, res, 'Error reading entries from database.');
   }
@@ -28,7 +28,7 @@ const getEntry = async (req: Request, res: Response) => {
     const entry = entries[byDate];
 
     if (entry) {
-      res.send(entry);
+      res.status(200).send(entry);
     } else
       res
         .status(404)
@@ -38,6 +38,9 @@ const getEntry = async (req: Request, res: Response) => {
   }
 };
 
+// TODO: clean out all console.log() statements
+// TODO: write proper healthy comments
+
 // redundant dept of theoretical redundancy
 const getEntryRoutine = async (req: Request, res: Response) => {
   try {
@@ -46,9 +49,9 @@ const getEntryRoutine = async (req: Request, res: Response) => {
     const data = await fs.readFile(filePath, 'utf8');
     const entry = data[byDate];
     const routine = entry[id];
-    res.send(routine);
+    res.status(200).send(routine);
   } catch (err) {
-    handleError(err, res, 'Error reading entry from database.');
+    handleError(err, res, 'Error reading entry routine from database.');
   }
 };
 
@@ -64,7 +67,7 @@ const createEntry = async (req: Request, res: Response) => {
       if (err instanceof SyntaxError) {
         existingData = {};
       } else {
-        handleError(err, res, `Error reading file contents: ${err}`);
+        handleError(err, res, 'Error reading existing content from file.');
       }
     }
 
@@ -78,14 +81,14 @@ const createEntry = async (req: Request, res: Response) => {
     await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
     res.status(201).json(allEntries);
   } catch (err) {
-    handleError(err, res, 'Error writing new entry.');
+    handleError(err, res, 'Error while writing new entry.');
   }
 };
 
 const updateEntry = async (req: Request, res: Response) => {
   try {
     const entryKey = req.params.date;
-    let existingData: { [key: string]: Record<string, unknown> } = {};
+    let existingData: { [key: string]: EntryProps } = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -94,12 +97,12 @@ const updateEntry = async (req: Request, res: Response) => {
       if (err instanceof SyntaxError) {
         existingData = {};
       } else {
-        handleError(err, res, `Error reading file contents: ${err}`);
+        handleError(err, res, 'Error reading file contents.');
       }
     }
     console.log('PRE', existingData);
 
-    let entry: Record<string, unknown> = existingData[entryKey];
+    let entry: EntryProps = existingData[entryKey];
 
     entry = { ...req.body };
     existingData[entryKey] = entry;
@@ -109,7 +112,7 @@ const updateEntry = async (req: Request, res: Response) => {
 
     res.status(204).send();
   } catch (err) {
-    handleError(err, res, 'HANDLED!');
+    handleError(err, res, 'Error updating entry.');
   }
 };
 
@@ -125,7 +128,7 @@ const destroyEntry = async (req: Request, res: Response) => {
   try {
     // destroyEntry
     const entryKey = req.params.date;
-    let existingData: { [key: string]: Record<string, unknown> } = {};
+    let existingData: { [key: string]: EntryProps } = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -140,7 +143,6 @@ const destroyEntry = async (req: Request, res: Response) => {
     }
 
     if (!Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
-      // if (!existingData.hasOwnProperty(entryKey)) {
       res
         .status(404)
         .send({ message: `Entry not found for specified date (${entryKey}.)` });
@@ -154,17 +156,94 @@ const destroyEntry = async (req: Request, res: Response) => {
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
     res.status(204).send();
   } catch (err) {
-    handleError(err, res, 'HANDLED!');
+    handleError(err, res, 'Error while deleting entry.');
   }
 };
 
-// const destroyEntryRoutine = async (req: Request, res: Response) => {
-//   try {
-//     // destroyEntryRoutine
-//   } catch (err) {
-//     handleError(err, res, 'HANDLED!');
-//   }
-// };
+const destroyEntryRoutine = async (req: Request, res: Response) => {
+  try {
+    const entryKey = req.params.date;
+    const routineId = req.params.id;
+    console.log(entryKey, routineId);
+
+    let existingData: { [key: string]: EntryProps } = {};
+
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      existingData = JSON.parse(content);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        existingData = {};
+      } else {
+        handleError(err, res, 'Error reading file contents.');
+        return;
+      }
+    }
+
+    console.log('EXISTINGDATA', existingData);
+    if (Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
+      const entry: EntryProps = existingData[entryKey];
+
+      console.log('ENTRY', entry);
+      const routineIndex = entry.routine.findIndex(
+        (routine) => routine.id === routineId
+      );
+
+      if (routineIndex !== -1) {
+        // remove the routine from the array of routines
+        entry.routine.splice(routineIndex, 1);
+
+        console.log('SPLICE', entry);
+
+        // update entry in existingData object
+        existingData[entryKey] = entry;
+
+        // write updated data back to the file
+        console.log('writing updates:');
+        console.log(JSON.stringify(existingData));
+        await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
+        res.status(204).send();
+      } else {
+        res
+          .status(404)
+          .send({ message: `Routine not found for id (${routineId}).` });
+      }
+    } else {
+      res.status(404).send({
+        message: `Entry not found for specified date (${entryKey}).`,
+      });
+    }
+  } catch (err) {
+    handleError(err, res, 'Error while deleting the routine.');
+  }
+};
+
+export {
+  getEntries,
+  getEntry,
+  getEntryRoutine,
+  createEntry,
+  updateEntry,
+  // updateEntryRoutine,
+  destroyEntry,
+  destroyEntryRoutine,
+};
+
+// TODO: move types out of controller
+interface RoutineProps {
+  id: string;
+  name: string;
+  complete: boolean;
+  timestamp: number;
+}
+
+interface EntryProps {
+  date: string;
+  routine: RoutineProps[];
+}
+
+// TODO: test performance in updateEntry with Object.assign
+// is it better to create a new object or just write over the old existing one?
 
 // function objectEquality(
 //   objA: Record<string, unknown>,
@@ -185,68 +264,3 @@ const destroyEntry = async (req: Request, res: Response) => {
 
 //   return true;
 // }
-
-export {
-  getEntries,
-  getEntry,
-  getEntryRoutine,
-  createEntry,
-  updateEntry,
-  // updateEntryRoutine,
-  destroyEntry,
-  // destroyEntryRoutine,
-};
-
-// const createEntry = async (req: Request, res: Response) => {
-//   try {
-//     let existingData = {};
-//     try {
-//       const content = await fs.readFile(filePath, 'utf8');
-//       existingData = JSON.parse(content);
-
-//       console.log('createEntry[EXISTDATA]:', existingData);
-//     } catch (err) {
-//       if (err instanceof SyntaxError) {
-//         existingData = {};
-//       } else {
-//         handleError(err, res, `Error reading file contents: ${err}`);
-//       }
-//     }
-//     const key = await req.body.date;
-//     const val = await req.body;
-//     const allEntries = {
-//       ...existingData,
-//       [key]: val,
-//     };
-
-//     await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
-//   } catch (err) {
-//     handleError(err, res, 'Error writing new entry.');
-//   }
-// };
-
-/**
- * "2024-02-29": {
-    "date": "2024-02-29",
-    "routines": [
-      {
-        "complete": false,
-        "id": "1bdabaf5-a0e1-4b9b-be33-d183588c1898",
-        "name": "Walk Dogs",
-        "timestamp": 0
-      },
-      {
-        "complete": false,
-        "id": "45efc5b5-ce31-4468-8ce9-d37b417607fe",
-        "name": "Pray",
-        "timestamp": 0
-      },
-      {
-        "complete": false,
-        "id": "e47efb18-4a31-41b7-a18c-7042500db226",
-        "name": "Row",
-        "timestamp": 0
-      }
-    ]
-  }
- */
