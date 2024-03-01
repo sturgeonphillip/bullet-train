@@ -73,5 +73,28 @@
         "timestamp": 0
       }
     ]
+  },
+  "2024-02-29": {
+    "date": "2024-02-29",
+    "routine": [
+      {
+        "id": "d3fbf48d-cc1e-48ff-a98e-ab5486282b63",
+        "name": "Walk Dogs",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "45512d5d-4634-4461-aa48-23978a55c081",
+        "name": "Pray",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "27641917-b427-4c1b-8bb3-e0d1c117fbab",
+        "name": "Row",
+        "complete": false,
+        "timestamp": 0
+      }
+    ]
   }
 }
