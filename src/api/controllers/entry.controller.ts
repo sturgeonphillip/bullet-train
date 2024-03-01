@@ -94,7 +94,7 @@ const updateEntry = async (req: Request, res: Response) => {
       if (err instanceof SyntaxError) {
         existingData = {};
       } else {
-        handleError(err, res, 'Error reading file contents: ');
+        handleError(err, res, `Error reading file contents: ${err}`);
       }
     }
     console.log('PRE', existingData);
@@ -113,49 +113,78 @@ const updateEntry = async (req: Request, res: Response) => {
   }
 };
 
-const updateEntryRoutine = async (req: Request, res: Response) => {
-  try {
-    // updateEntryRoutine
-  } catch (err) {
-    handleError(err, res, 'HANDLED!');
-  }
-};
+// const updateEntryRoutine = async (req: Request, res: Response) => {
+//   try {
+//     // updateEntryRoutine
+//   } catch (err) {
+//     handleError(err, res, 'HANDLED!');
+//   }
+// };
 
 const destroyEntry = async (req: Request, res: Response) => {
   try {
     // destroyEntry
-  } catch (err) {
-    handleError(err, res, 'HANDLED!');
-  }
-};
+    const entryKey = req.params.date;
+    let existingData: { [key: string]: Record<string, unknown> } = {};
 
-const destroyEntryRoutine = async (req: Request, res: Response) => {
-  try {
-    // destroyEntryRoutine
-  } catch (err) {
-    handleError(err, res, 'HANDLED!');
-  }
-};
-
-function objectEquality(
-  objA: Record<string, unknown>,
-  objB: Record<string, unknown>
-) {
-  const keysA = Object.keys(objA);
-  const keysB = Object.keys(objB);
-
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
-
-  for (const key of keysA) {
-    if (!keysB.includes(key) || objA[key] !== objB[key]) {
-      return false;
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      existingData = JSON.parse(content);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        existingData = {};
+      } else {
+        handleError(err, res, `Error reading file contents: ${err}`);
+        return;
+      }
     }
-  }
 
-  return true;
-}
+    if (!Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
+      // if (!existingData.hasOwnProperty(entryKey)) {
+      res
+        .status(404)
+        .send({ message: `Entry not found for specified date (${entryKey}.)` });
+      return;
+    }
+
+    console.log('PRE', existingData);
+    delete existingData[entryKey];
+    console.log('POST', existingData);
+
+    await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
+    res.status(204).send();
+  } catch (err) {
+    handleError(err, res, 'HANDLED!');
+  }
+};
+
+// const destroyEntryRoutine = async (req: Request, res: Response) => {
+//   try {
+//     // destroyEntryRoutine
+//   } catch (err) {
+//     handleError(err, res, 'HANDLED!');
+//   }
+// };
+
+// function objectEquality(
+//   objA: Record<string, unknown>,
+//   objB: Record<string, unknown>
+// ) {
+//   const keysA = Object.keys(objA);
+//   const keysB = Object.keys(objB);
+
+//   if (keysA.length !== keysB.length) {
+//     return false;
+//   }
+
+//   for (const key of keysA) {
+//     if (!keysB.includes(key) || objA[key] !== objB[key]) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// }
 
 export {
   getEntries,
@@ -163,9 +192,9 @@ export {
   getEntryRoutine,
   createEntry,
   updateEntry,
-  updateEntryRoutine,
+  // updateEntryRoutine,
   destroyEntry,
-  destroyEntryRoutine,
+  // destroyEntryRoutine,
 };
 
 // const createEntry = async (req: Request, res: Response) => {
