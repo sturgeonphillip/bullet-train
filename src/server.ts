@@ -61,47 +61,47 @@ app.post('/errands', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/routineList', async (req: Request, res: Response) => {
-  try {
-    const dataPath = path.join(__dirname, '../db/adjustments.json');
+// app.post('/routineList', async (req: Request, res: Response) => {
+//   try {
+//     const dataPath = path.join(__dirname, '../db/adjustments.json');
 
-    let existingData = [];
+//     let existingData = [];
 
-    try {
-      const content = await fs.readFile(dataPath, 'utf8');
+//     try {
+//       const content = await fs.readFile(dataPath, 'utf8');
 
-      existingData = JSON.parse(content);
-      console.log('EXIST', existingData);
-    } catch (error) {
-      if (error instanceof SyntaxError) {
-        existingData = [];
-      } else {
-        console.error(`Error reading file contents: ${error}`);
-      }
-    }
+//       existingData = JSON.parse(content);
+//       console.log('EXIST', existingData);
+//     } catch (error) {
+//       if (error instanceof SyntaxError) {
+//         existingData = [];
+//       } else {
+//         console.error(`Error reading file contents: ${error}`);
+//       }
+//     }
 
-    const oldRoutine = existingData.at(-1).routines; // ?? [];
-    const newRoutine = [...oldRoutine, req.body];
-    const routine = {
-      date: Date.now(),
-      routines: newRoutine,
-    };
-    // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
+//     const oldRoutine = existingData.at(-1).routines; // ?? [];
+//     const newRoutine = [...oldRoutine, req.body];
+//     const routine = {
+//       date: Date.now(),
+//       routines: newRoutine,
+//     };
+//     // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
 
-    await fs.writeFile(
-      dataPath,
-      JSON.stringify([...existingData, routine]),
-      'utf8'
-    );
-    res.status(201).json(routine);
-  } catch (error) {
-    console.error('Error adding a new routine.', error);
-    res.status(500).json({
-      message: 'Error adding a new routine.',
-      error,
-    });
-  }
-});
+//     await fs.writeFile(
+//       dataPath,
+//       JSON.stringify([...existingData, routine]),
+//       'utf8'
+//     );
+//     res.status(201).json(routine);
+//   } catch (error) {
+//     console.error('Error adding a new routine.', error);
+//     res.status(500).json({
+//       message: 'Error adding a new routine.',
+//       error,
+//     });
+//   }
+// });
 
 app.delete('/errands/:id', async (req: Request, res: Response) => {
   const idToDelete = await req.params.id;

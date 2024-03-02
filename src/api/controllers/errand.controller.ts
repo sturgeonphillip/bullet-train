@@ -132,12 +132,13 @@ const destroyErrand = async (req: Request, res: Response) => {
   }
 };
 
+// TODO: move types
 interface ErrandProps {
   id: string;
   name: string;
   complete: boolean;
-  added: number;
-  finished: number;
+  timeAssigned: number;
+  timeExecuted: number;
 }
 
 export { getErrands, getErrand, createErrand, updateErrand, destroyErrand };
