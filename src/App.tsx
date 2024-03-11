@@ -1,19 +1,16 @@
 import './App.css';
-import Clock from './components/Clock';
-// import RoutinesList from './components/Routines/List';
-import ErrandsList from './components/Errands/List';
+import Clock from '../attic/components/Clock';
+import RoutineDisplay from './front/Routines/Display';
 import ErrandsDisplay from './front/Errands/Display';
 
 function App() {
   return (
     <>
       <div>
-        <ErrandsDisplay />
+        <RoutineDisplay />
         <Clock />
+        <ErrandsDisplay />
       </div>
-
-      {/* <RoutinesList /> */}
-      <ErrandsList />
     </>
   );
 }

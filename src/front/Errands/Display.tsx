@@ -27,29 +27,35 @@ const Display = () => {
     );
   };
 
-  // when a new errand is submitted, the data goes to the db, but it doesn't update on the page until hitting refresh
   useEffect(() => {
-    fetch('http://localhost:3001/errands')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Network response error.');
-        }
-        return res.json();
-      })
-      .then((saved) => setErrands(saved))
-      .catch((err) => {
-        console.error(`There was a problem with the fetch operation: ${err}`);
-      });
+    requestErrands();
   }, []);
+
+  async function requestErrands() {
+    try {
+      const res = await fetch('http://localhost:3001/errands');
+      if (!res.ok) {
+        throw new Error('Network response error.');
+      }
+
+      const json = await res.json();
+      setErrands(json);
+    } catch (err) {
+      console.error(`There was a problem with the fetch operation: ${err}`);
+    }
+  }
 
   return (
     <div>
       <h3>Errands</h3>
-      <Form />
+      <Form onNewErrandAdded={requestErrands} />
       <ul>
         {errands.length > 0 ? (
           errands.map((errand) => (
-            <li key={errand.id}>
+            <li
+              key={errand.id}
+              className={'errand-li'}
+            >
               <Errand
                 id={errand.id}
                 name={errand.name}
@@ -60,7 +66,7 @@ const Display = () => {
             </li>
           ))
         ) : (
-          <p>no errands to complete!</p>
+          <p>no errands to complete.</p>
         )}
       </ul>
     </div>

@@ -1,13 +1,18 @@
 import './index.css';
-import { ErrandProps } from './createErrand';
+import { RoutineProps } from './createRoutine';
 
-const Errand = ({ id, name, complete, onComplete }: ErrandProps) => {
+const Routine = ({
+  id,
+  name,
+  complete,
+  timestamp,
+  onComplete,
+}: RoutineProps) => {
   const handleToggle = () => {
     if (onComplete) {
       onComplete(id);
     }
   };
-
   return (
     <>
       <div id={id}>
@@ -18,9 +23,10 @@ const Errand = ({ id, name, complete, onComplete }: ErrandProps) => {
           checked={complete}
           onChange={handleToggle}
         />
+        <p>{timestamp > 0 ? timestamp : 0}</p>
       </div>
     </>
   );
 };
 
-export default Errand;
+export default Routine;

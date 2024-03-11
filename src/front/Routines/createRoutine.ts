@@ -1,21 +1,19 @@
 import { v4 as uuid } from 'uuid';
 
-export interface ErrandProps {
+export interface RoutineProps {
   id: string;
   name: string;
   complete: boolean;
-  added: number;
-  finished: number;
+  timestamp: number;
   onComplete?: (id: string) => void;
 }
 
-export function createErrand(name: string): ErrandProps {
+export function createRoutine(name: string): RoutineProps {
   name = name ?? '[EMPTY]';
   return {
     id: uuid(),
     name,
     complete: false,
-    added: Date.now(),
-    finished: 0,
+    timestamp: 0,
   };
 }

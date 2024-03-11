@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createErrand } from './createErrand';
+import { createRoutine } from './createRoutine';
 
 const Form = () => {
   const [name, setName] = useState('');
@@ -7,28 +7,30 @@ const Form = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const errand = createErrand(name);
+    const routine = createRoutine(name);
 
-    if (errand.name.length < 3) {
-      return alert('Add an errand to your submission.');
+    if (routine.name.length < 2) {
+      return alert('Add a routine to your submission.');
     }
+
     const options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(errand),
+      body: JSON.stringify(routine),
     };
 
     try {
-      const response = await fetch('http://localhost:3001/errands', options);
+      const response = await fetch('http://localhost:3001/routines', options);
+
       if (!response.ok) {
         throw new Error('Network response is not ok.');
       }
     } catch (err) {
-      console.error('Caught Error: ', err);
+      console.error('Caught Error:', err);
     }
-    console.log('Submitting errand:', errand);
+
     setName('');
   };
 

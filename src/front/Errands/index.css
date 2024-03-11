@@ -1,0 +1,8 @@
+/* .errand-item {
+  text-decoration: none;
+} */
+
+.errand-li {
+  list-style-type: none;
+  text-decoration: none;
+}

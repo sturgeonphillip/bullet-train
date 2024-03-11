@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { createErrand } from './createErrand';
 
-const Form = () => {
+interface FormProps {
+  onNewErrandAdded: () => void;
+}
+
+const Form = ({ onNewErrandAdded }: FormProps) => {
   const [name, setName] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,6 +36,7 @@ const Form = () => {
     }
 
     setName('');
+    onNewErrandAdded();
   };
 
   return (
