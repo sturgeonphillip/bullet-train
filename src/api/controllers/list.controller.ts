@@ -10,12 +10,44 @@ const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, '../../../db/list.json');
 
-// read
+interface ExistingDataProps {
+  [key: string]: string[];
+}
+
+// read all
 const getRoutineList = async (_req: Request, res: Response) => {
   try {
     const data = await fs.readFile(filePath, 'utf8');
-
     res.status(200).send(data);
+  } catch (err) {
+    handleError(err, res, 'Error reading entries from database.');
+  }
+};
+
+// read one
+const getRoutineByDate = async (req: Request, res: Response) => {
+  try {
+    const entryKey = req.params.date;
+    let existingData: ExistingDataProps = {};
+
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+      existingData = JSON.parse(content);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        existingData = {};
+      } else {
+        handleError(err, res, 'Error reading existing content from file.');
+      }
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
+      res
+        .status(404)
+        .send({ message: `Entry not found for specified date (${entryKey}).` });
+    }
+
+    res.status(200).send(JSON.stringify(existingData[entryKey]));
   } catch (err) {
     handleError(err, res, 'Error reading entries from database.');
   }
@@ -24,7 +56,7 @@ const getRoutineList = async (_req: Request, res: Response) => {
 // create
 const createRoutineList = async (req: Request, res: Response) => {
   try {
-    let routineList: { [key: string]: string[] } = {};
+    let routineList: ExistingDataProps = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -56,7 +88,7 @@ const createRoutineList = async (req: Request, res: Response) => {
 const updateRoutineList = async (req: Request, res: Response) => {
   try {
     const entryKey = req.params.date;
-    let existingData: { [key: string]: string[] } = {};
+    let existingData: ExistingDataProps = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -91,7 +123,7 @@ const updateRoutineList = async (req: Request, res: Response) => {
 const destroyRoutineList = async (req: Request, res: Response) => {
   try {
     const entryKey = req.params.date;
-    let existingData: { [key: string]: string[] } = {};
+    let existingData: ExistingDataProps = {};
 
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -123,6 +155,7 @@ const destroyRoutineList = async (req: Request, res: Response) => {
 
 export {
   getRoutineList,
+  getRoutineByDate,
   createRoutineList,
   updateRoutineList,
   destroyRoutineList,

@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { createRoutine } from './createRoutine';
 
-const Form = () => {
+interface FormProps {
+  onNewRoutineAdd: () => void;
+}
+
+const Form = ({ onNewRoutineAdd }: FormProps) => {
   const [name, setName] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +26,7 @@ const Form = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/routines', options);
+      const response = await fetch('http://localhost:3001/list', options);
 
       if (!response.ok) {
         throw new Error('Network response is not ok.');
@@ -31,12 +35,14 @@ const Form = () => {
       console.error('Caught Error:', err);
     }
 
+    onNewRoutineAdd();
     setName('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
+        name='routine-form'
         type='text'
         value={name}
         onChange={(e) => setName(e.target.value)}

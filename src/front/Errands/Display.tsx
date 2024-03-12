@@ -38,8 +38,8 @@ const Display = () => {
         throw new Error('Network response error.');
       }
 
-      const json = await res.json();
-      setErrands(json);
+      const saved = await res.json();
+      setErrands(saved);
     } catch (err) {
       console.error(`There was a problem with the fetch operation: ${err}`);
     }
@@ -48,12 +48,13 @@ const Display = () => {
   return (
     <div>
       <h3>Errands</h3>
-      <Form onNewErrandAdded={requestErrands} />
+      <Form onNewErrandAdd={requestErrands} />
       <ul>
         {errands.length > 0 ? (
           errands.map((errand) => (
             <li
               key={errand.id}
+              // TODO: sort out css className situation
               className={'errand-li'}
             >
               <Errand

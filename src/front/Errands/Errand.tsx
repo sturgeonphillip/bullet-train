@@ -10,7 +10,10 @@ const Errand = ({ id, name, complete, onComplete }: ErrandProps) => {
 
   return (
     <>
-      <div id={id}>
+      <div
+        id={id}
+        className='errand-display-div'
+      >
         <p>{name}</p>
         <input
           type='checkbox'

@@ -22,30 +22,33 @@ const Display = () => {
                 timstamp: 0,
               };
         }
-
         return routine;
       })
     );
   };
 
   useEffect(() => {
-    fetch('http://localhost:3001/routines')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Network response error.');
-        }
-        return res.json();
-      })
-      .then((saved) => setRoutines(saved))
-      .catch((err) => {
-        console.log(`There was a problem with the fetch operation: ${err}`);
-      });
+    requestRoutines();
   }, []);
+
+  async function requestRoutines() {
+    try {
+      const res = await fetch('http://localhost:3001/entry');
+      if (!res.ok) {
+        throw new Error('Network response error.');
+      }
+
+      const saved = await res.json();
+      setRoutines(saved);
+    } catch (err) {
+      console.error(`There was a problem with the fetch operation: ${err}`);
+    }
+  }
 
   return (
     <div>
       <h3>Routines</h3>
-      <Form />
+      <Form onNewRoutineAdd={requestRoutines} />
       <ul>
         {routines.length > 0 ? (
           routines.map((routine) => (

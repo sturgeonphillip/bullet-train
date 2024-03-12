@@ -30,7 +30,7 @@ app.use(
   })
 );
 
-app.use('/entries', entryRoutes);
+app.use('/entry', entryRoutes);
 app.use('/list', listRoutes);
 app.use('/errands', errandRoutes);
 
