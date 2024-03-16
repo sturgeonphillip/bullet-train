@@ -42,9 +42,13 @@
 .clock {
   font-style: italic;
   background: linear-gradient(
-    to right bottom,
+    to right,
     rgb(24, 190, 228),
     rgb(24, 190, 228),
+    rgb(24, 190, 228),
+    rgb(24, 190, 228),
+    rgb(245, 0, 188),
+    rgb(245, 0, 188),
     rgb(245, 0, 188)
   );
   -webkit-background-clip: text;

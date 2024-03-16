@@ -1,7 +1,20 @@
 {
+  "1970-01-01": {
+    "id": "4mem4d1s-liv3-t4lk-54v3-d35ir0u5",
+    "date": "1970-01-01",
+    "routines": [
+      {
+        "id": "gr85c0tt-gig4-w4tt-wh04-drv88mph",
+        "name": "Initiate the Unix Epoch",
+        "complete": true,
+        "timestamp": 0
+      }
+    ]
+  },
   "2024-02-20": {
+    "id": "4a152726-ed7f-4201-88cb-1dcc9b07c062",
     "date": "2024-02-20",
-    "routine": [
+    "routines": [
       {
         "id": "8beb6ec5-fe29-4f4a-b0c0-54f4ec140e07",
         "name": "Walk Dogs",
@@ -23,8 +36,9 @@
     ]
   },
   "2024-02-21": {
+    "id": "b6c09531-a01b-45a7-9391-82b0970049b6",
     "date": "2024-02-21",
-    "routine": [
+    "routines": [
       {
         "id": "2cb358fa-9b59-4212-8c76-52b28c7b29e6",
         "name": "Walk Dogs",
@@ -52,8 +66,9 @@
     ]
   },
   "2024-02-22": {
+    "id": "436f6d60-d63c-4861-af16-8d42f2b85c5e",
     "date": "2024-02-22",
-    "routine": [
+    "routines": [
       {
         "id": "a887cf33-08bc-487a-9a02-818fc17ec4b0",
         "name": "Walk Dogs",
@@ -75,8 +90,9 @@
     ]
   },
   "2024-02-29": {
+    "id": "5b283e36-3c57-4249-9059-5f9b0a6868cf",
     "date": "2024-02-29",
-    "routine": [
+    "routines": [
       {
         "id": "d3fbf48d-cc1e-48ff-a98e-ab5486282b63",
         "name": "Walk Dogs",

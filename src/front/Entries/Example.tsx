@@ -1,7 +1,14 @@
-import './index.css';
-import { RoutineProps } from './createRoutine';
+// css
 
-const Routine = ({
+export interface RoutineProps {
+  id: string;
+  name: string;
+  complete: boolean;
+  timestamp: number;
+  onComplete?: (id: string) => void;
+}
+
+const ExampleRoutine = ({
   id,
   name,
   complete,
@@ -13,6 +20,7 @@ const Routine = ({
       onComplete(id);
     }
   };
+
   return (
     <>
       <div
@@ -32,4 +40,4 @@ const Routine = ({
   );
 };
 
-export default Routine;
+export default ExampleRoutine;
