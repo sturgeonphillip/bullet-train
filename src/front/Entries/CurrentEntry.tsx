@@ -1,29 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './index.css';
-import unixEpoch from './epoch.ts';
 import ExampleRoutine from './Example.tsx';
-import { EntryProps, createEntry, requestEntry } from './createEntry';
-// import Routine from '../Routines/Routine';
-
-// const startEntry = createEntry(['Walk Dogs', 'Row', 'Pray']);
+import { EntryProps, requestEntry } from './createEntry';
+import unixEpoch from './epoch.ts';
 
 const CurrentEntry = () => {
-  const [entryDate, setEntryDate] = useState('1970-01-01');
-  const [entry, setEntry] = useState<EntryProps>(unixEpoch);
+  const [entryDate, setEntryDate] = useState('');
+  const [entry, setEntry] = useState<EntryProps | null>(null);
+  const [error, setError] = useState('');
+  const [showError, setShowError] = useState(false);
+
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000); // show error msg 3 sec
+    }
+  }, [error]);
 
   const handleEntryDate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const storedEntry = await requestEntry(entryDate);
-    if (storedEntry !== null) {
-      setEntry(storedEntry);
-    } else {
-      setEntryDate('1970-01-01');
-      // setStr(unixEpoch);
+    try {
+      const storedEntry = await requestEntry(entryDate);
+      if (storedEntry) {
+        setEntry(storedEntry);
+        setError(''); // clear any previous error
+      } else {
+        setEntry(unixEpoch);
+        setError('No entry found for the given date.');
+      }
+    } catch (err) {
+      console.error('Error fetching entry:', err);
+      setError('An error ocurred while fetching the entry.');
     }
   };
 
-  console.log(entryDate);
   return (
     <>
       <div className='ce-container-div'>
@@ -36,7 +47,6 @@ const CurrentEntry = () => {
             onChange={(e) => setEntryDate(e.target.value)}
             className='ce-input-date'
           />
-          {/* {current} */}
           <button
             className='ce-btn'
             type='submit'
@@ -44,17 +54,20 @@ const CurrentEntry = () => {
             go
           </button>
         </form>
-        <div>
-          {/* <p>{entry.id}</p>
-          <p>{entry.date}</p> */}
-          <ul>
-            {entry.routines.map((r) => (
-              <li key={r.id}>
-                <ExampleRoutine {...r} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        {showError && <p className='error-notification'>{error}</p>}
+        {entry ? (
+          <div>
+            <ul>
+              {entry.routines.map((r) => (
+                <li key={r.id}>
+                  <ExampleRoutine {...r} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </>
   );
@@ -89,4 +102,115 @@ export default CurrentEntry;
       return null; // indicate failure
     }
   }
+ */
+
+/**
+ * Phind Recs
+ * Improvements and Error Handling:
+ * 1. Error Handling: Added a state variable error to handle and display any errors that occur during the fetch operation. This improves the user experience by providing feedback when something goes wrong.
+ * 2. Loading State: Consider adding a loading state to indicate to the user that data is being fetched. This can be done by introducing a new state variable (e.g., isLoading) and toggling it before and after the fetch operation.
+ * 3. Input Validation: Before making the fetch request, validate the entryDate to ensure it's in the correct format and not empty. This can prevent unnecessary requests and improve the user experience.
+ * 4. Code Organization: The handleEntryDate function is doing a lot of work. Consider breaking it down into smaller functions for better readability and maintainability. For example, you could have separate functions for fetching the entry and handling the response.
+ * 5. Styling: Add CSS for the error message to make it visually distinct from the rest of the content. This can be done by adding a new class in your CSS file and applying it to the error message paragraph.
+ * 6. Accessibility: Ensure that the form and its elements are accessible. For example, use aria-label attributes for inputs and buttons to provide descriptive labels for screen readers.
+ * 7. Performance: If the ExampleRoutine component is complex or if there are many routines, consider implementing pagination or virtualization to improve performance.
+ *
+ * By implementing these improvements, you can enhance the user experience, maintainability, and performance of your CurrentEntry component.
+ */
+
+/**
+ * To display a temporary message using a toast notification and set the default state using the data from `unixEpoch`, you can use a combination of state management and conditional rendering in React. Additionally, you might want to use a library like `react-toastify` for displaying toast notifications, which simplifies the process.
+
+First, ensure you have `react-toastify` installed in your project. If not, you can install it using npm or yarn:
+
+```bash
+npm install react-toastify
+# or
+yarn add react-toastify
+```
+
+Then, import `toast` from `react-toastify` and its CSS in your component file:
+
+```tsx
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+```
+
+Here's how you can modify the `CurrentEntry` component to include toast notifications and set the default state using the data from `unixEpoch`:
+
+```tsx
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './index.css';
+import ExampleRoutine from './Example.tsx';
+import { EntryProps, requestEntry } from './createEntry';
+import unixEpoch from './epoch.ts';
+
+const CurrentEntry = () => {
+ const [entryDate, setEntryDate] = useState('');
+ const [entry, setEntry] = useState<EntryProps | null>(null);
+
+ const handleEntryDate = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const storedEntry = await requestEntry(entryDate);
+      if (storedEntry) {
+        setEntry(storedEntry);
+      } else {
+        setEntry(unixEpoch); // Set default state using unixEpoch
+        toast.error('No entry found for the given date. Defaulting to Unix Epoch.');
+      }
+    } catch (err) {
+      console.error('Error fetching entry:', err);
+      toast.error('An error occurred while fetching the entry.');
+    }
+ };
+
+ return (
+    <>
+      <div className='ce-container-div'>
+        <form onSubmit={handleEntryDate}>
+          <input
+            name='entry-date'
+            type='date'
+            id='entry-date'
+            value={entryDate}
+            onChange={(e) => setEntryDate(e.target.value)}
+            className='ce-input-date'
+          />
+          <button
+            className='ce-btn'
+            type='submit'
+          >
+            go
+          </button>
+        </form>
+        {entry && (
+          <div>
+            <ul>
+              {entry.routines.map((r) => (
+                <li key={r.id}>
+                 <ExampleRoutine {...r} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+      {toast.configure()}
+    </>
+ );
+};
+
+export default CurrentEntry;
+```
+
+### Key Points:
+
+- **Toast Notifications**: The `toast.error` function from `react-toastify` is used to display error messages as toast notifications. You can also use `toast.success` for success messages, and `toast.info` for informational messages.
+- **Default State with `unixEpoch`**: When no entry is found for the given date, the default state is set to the data from `unixEpoch`.
+- **Styling**: The `react-toastify` library comes with default styles for toast notifications, but you can customize them using CSS if needed.
+
+This approach provides a user-friendly way to display temporary messages and handle errors or informational messages without interrupting the user's workflow.
  */

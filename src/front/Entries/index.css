@@ -29,3 +29,12 @@ form {
   flex-direction: row;
   justify-content: center;
 }
+
+.error-notification {
+  background-color: #f44336;
+  color: #efefef;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
