@@ -1,6 +1,7 @@
 export function localDTKey() {
   return new Date(Date.now()).toLocaleString().split('T')[0];
 }
+
 export function isoDateKey() {
   return new Date(Date.now()).toISOString().split('T')[0];
 }
@@ -15,3 +16,7 @@ export function intlDTFKey() {
 
   return formatter.format(now);
 }
+
+console.log(localDTKey());
+console.log(isoDateKey());
+console.log(intlDTFKey());

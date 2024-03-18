@@ -2,12 +2,22 @@ import { useState } from 'react';
 import './index.css';
 import ExampleRoutine from './Example.tsx';
 import { EntryProps, requestEntry } from './createEntry';
+import PromptEntry from './Prompt/PromptEntry.tsx';
+import { isoDateKey } from '../../utils/dateKey.ts';
+import unixEpoch from './epoch.ts';
 
 const CurrentEntry = () => {
-  const [entryDate, setEntryDate] = useState('');
+  const today = isoDateKey();
+  const [entryDate, setEntryDate] = useState(today);
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [error, setError] = useState('');
+  const [entryPrompt, setEntryPrompt] = useState(false);
 
+  const setEpoch = () => {
+    setEntryDate('1970-01-01');
+    setEntry(unixEpoch);
+    setEntryPrompt(false);
+  };
   const handleEntryDate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!entryDate) {
@@ -23,6 +33,8 @@ const CurrentEntry = () => {
       } else {
         setEntry(null);
         setError('No entry found for the given date.');
+        // ask user if they would like to create an entry for the provided date.
+        setEntryPrompt(true);
       }
     } catch (err) {
       console.error('Error fetching entry:', err);
@@ -30,6 +42,7 @@ const CurrentEntry = () => {
     }
   };
 
+  console.log('Entry Date:', entryDate);
   return (
     <>
       <div className='ce-container-div'>
@@ -39,7 +52,10 @@ const CurrentEntry = () => {
             type='date'
             id='entry-date'
             value={entryDate}
-            onChange={(e) => setEntryDate(e.target.value)}
+            onChange={(e) => {
+              console.log('INPUT VALUE:', e.target.value);
+              setEntryDate(e.target.value);
+            }}
             className='ce-input-date'
           />
           <button
@@ -50,6 +66,13 @@ const CurrentEntry = () => {
           </button>
         </form>
         {error && <p className='error-message'>{error}</p>}
+        {entryPrompt && (
+          <PromptEntry
+            inputDate={entryDate}
+            setEpoch={setEpoch}
+            cleanUp={() => setEntryPrompt(false)}
+          />
+        )}
         {entry && entry.routines && (
           <div>
             <ul>
@@ -61,6 +84,8 @@ const CurrentEntry = () => {
             </ul>
           </div>
         )}
+        <p>FORM: Add a Routine</p>
+        {/* TODO add form: add a routine to entry */}
       </div>
     </>
   );

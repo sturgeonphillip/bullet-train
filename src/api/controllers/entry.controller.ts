@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
+import sortEntries from '../../utils/sortEntries';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -78,7 +79,50 @@ const createEntry = async (req: Request, res: Response) => {
       [entryKey]: entryData,
     };
 
-    await fs.writeFile(filePath, JSON.stringify(allEntries), 'utf8');
+    // TODO add sort entries function here
+
+    const sorted = sortEntries(allEntries);
+
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+
+    res.status(201).json(allEntries);
+  } catch (err) {
+    handleError(err, res, 'Error while writing new entry.');
+  }
+};
+
+const createEntryByDate = async (req: Request, res: Response) => {
+  try {
+    let existingData = {};
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
+
+      existingData = await JSON.parse(content);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        existingData = {};
+      } else {
+        handleError(err, res, 'Error reading existing content from file.');
+      }
+    }
+
+    console.log('REQUEST INFO');
+    console.log('REQ.BODY', req.body);
+    console.log('REQ.PARAMS', req.params);
+
+    const entryKey = req.params.date;
+    const entryData = req.body;
+
+    const allEntries = {
+      ...existingData,
+      [entryKey]: entryData,
+    };
+
+    const sorted = sortEntries(allEntries);
+    // TODO add sort entries function here
+
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+
     res.status(201).json(allEntries);
   } catch (err) {
     handleError(err, res, 'Error while writing new entry.');
@@ -223,6 +267,7 @@ export {
   getEntry,
   getEntryRoutine,
   createEntry,
+  createEntryByDate,
   updateEntry,
   // updateEntryRoutine,
   destroyEntry,

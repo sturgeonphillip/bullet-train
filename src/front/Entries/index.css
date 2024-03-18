@@ -38,3 +38,20 @@ form {
   border-radius: 5px;
   text-align: center;
 }
+
+.pe-btn-yes {
+  background-color: #efefef;
+  color: #008000;
+  /* color: #efefef;
+  background-color: #008000; */
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.pe-btn-no {
+  background-color: #efefef;
+  color: #f44336;
+  /* color: #efefef;
+  background-color: #f44336; */
+  font-weight: 600;
+}

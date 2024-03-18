@@ -10,6 +10,8 @@ router.get('/:date', entryController.getEntry);
 
 router.post('/', entryController.createEntry);
 
+router.post('/:date', entryController.createEntryByDate);
+
 router.patch('/:date', entryController.updateEntry);
 
 // router.patch('/:date/:id', entryController.updateEntryRoutine);

@@ -33,6 +33,7 @@ const Display = () => {
 
   async function requestRoutines() {
     try {
+      // TODO: this is improperly formatted
       const res = await fetch('http://localhost:3001/entry');
       if (!res.ok) {
         throw new Error('Network response error.');

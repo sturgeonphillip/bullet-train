@@ -15,12 +15,13 @@ export interface EntryProps {
   routines: RoutineProps[];
 }
 
-export function createEntry(current: string[]): EntryProps {
+// TODO: argument for current param to be determined by either current routine list (if creating the next consecutive day) or newest list that is <= date argument
+export function createEntry(current: string[] = [], date?: string): EntryProps {
   const routines = current.map((name: string) => createRoutine(name));
 
   return {
     id: uuid(),
-    date: isoDateKey(),
+    date: date ? date : isoDateKey(),
     routines: routines,
   };
 }
@@ -35,7 +36,6 @@ export async function requestEntry(entryDate: string) {
     return data;
   } catch (err) {
     console.error('Network response error.', err);
-    return;
     return null; // indicate failure
   }
 }
