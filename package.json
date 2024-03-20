@@ -10,7 +10,8 @@
     "dust": "eslint . --fix-dry-run --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "server": "npx tsx watch ./src/server.ts"
+    "server": "npx tsx watch ./src/server.ts",
+    "go": "concurrently -s all -p {time} \"npm:server\" \"npm:dev\""
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -30,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",

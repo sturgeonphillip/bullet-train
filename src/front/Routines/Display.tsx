@@ -76,3 +76,15 @@ const Display = () => {
 };
 
 export default Display;
+
+/**
+ * Full Routine App:
+ * [ mm / dd / yyyy ] <button>fetch data for date</button>
+ *
+ * 1. display routines
+ * 2. display routines
+ * 3. display routines
+ *
+ * <button>add a new routine to list</button>
+ *
+ */

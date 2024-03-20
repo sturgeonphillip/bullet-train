@@ -39,5 +39,3 @@ export async function requestEntry(entryDate: string) {
     return null; // indicate failure
   }
 }
-// const active = ['Pray', 'Walk Dogs', 'Row'];
-// console.log(createEntry(active));

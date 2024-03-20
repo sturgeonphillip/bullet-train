@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import './index.css';
-import ExampleRoutine from './Example.tsx';
+import Routine from '../Routines/Routine';
 import { EntryProps, requestEntry } from './createEntry';
-import PromptEntry from './Prompt/PromptEntry.tsx';
-import { isoDateKey } from '../../utils/dateKey.ts';
-import unixEpoch from './epoch.ts';
+import PromptEntry from './Prompt/PromptEntry';
+import { isoDateKey } from '../../utils/dateKey';
+import unixEpoch from './epoch';
 
-const CurrentEntry = () => {
+const Entry = () => {
   const today = isoDateKey();
   const [entryDate, setEntryDate] = useState(today);
   const [entry, setEntry] = useState<EntryProps | null>(null);
@@ -22,14 +22,14 @@ const CurrentEntry = () => {
     event.preventDefault();
     if (!entryDate) {
       setError('Please select a date.');
-      return; // prevent making a request with an empty date
+      return; // prevent making a request with empty date
     }
 
     try {
       const storedEntry = await requestEntry(entryDate);
       if (storedEntry) {
         setEntry(storedEntry);
-        setError(''); // clear previous error
+        setError(''); // clear any previous error
       } else {
         setEntry(null);
         setError('No entry found for the given date.');
@@ -42,7 +42,6 @@ const CurrentEntry = () => {
     }
   };
 
-  console.log('Entry Date:', entryDate);
   return (
     <>
       <div className='ce-container-div'>
@@ -78,7 +77,7 @@ const CurrentEntry = () => {
             <ul>
               {entry.routines.map((r) => (
                 <li key={r.id}>
-                  <ExampleRoutine {...r} />
+                  <Routine {...r} />
                 </li>
               ))}
             </ul>
@@ -91,4 +90,4 @@ const CurrentEntry = () => {
   );
 };
 
-export default CurrentEntry;
+export default Entry;
