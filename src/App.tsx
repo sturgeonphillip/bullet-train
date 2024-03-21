@@ -1,6 +1,6 @@
 import './App.css';
 import Clock from '../attic/components/Clock';
-import RoutineDisplay from './front/Routines/Display';
+// import RoutineDisplay from './front/Routines/Display';
 import ErrandsDisplay from './front/Errands/Display';
 import ListDisplay from './front/Lists/Display';
 import CurrentEntry from './front/Entries/Entry';
@@ -10,7 +10,7 @@ function App() {
     <>
       <Clock />
       <CurrentEntry />
-      <RoutineDisplay />
+      {/* <RoutineDisplay /> */}
 
       <hr />
 

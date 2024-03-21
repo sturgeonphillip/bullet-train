@@ -1,13 +1,13 @@
 import { createEntry } from '../createEntry';
 interface PromptEntryProps {
   inputDate: string;
-  setEpoch: () => void;
+  showEpoch: () => void;
   cleanUp: () => void;
 }
 
-const PromptEntry = ({ inputDate, setEpoch, cleanUp }: PromptEntryProps) => {
+const PromptEntry = ({ inputDate, showEpoch, cleanUp }: PromptEntryProps) => {
   function handleNo() {
-    setEpoch();
+    showEpoch();
     return cleanUp();
   }
 

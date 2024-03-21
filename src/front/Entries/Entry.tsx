@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import './index.css';
-import Routine from '../Routines/Routine';
 import { EntryProps, requestEntry } from './createEntry';
 import PromptEntry from './Prompt/PromptEntry';
 import { isoDateKey } from '../../utils/dateKey';
 import unixEpoch from './epoch';
+import RoutineDisplay from '../Routines/Display';
+// import { RoutineProps } from '../Routines/createRoutine';
+import { useRoutines } from '../Routines/useRoutines';
 
 const Entry = () => {
   const today = isoDateKey();
@@ -12,8 +14,10 @@ const Entry = () => {
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [error, setError] = useState('');
   const [entryPrompt, setEntryPrompt] = useState(false);
+  // TODO: better name for this hook
+  const { routines, handleComplete } = useRoutines(entryDate);
 
-  const setEpoch = () => {
+  const showEpoch = () => {
     setEntryDate('1970-01-01');
     setEntry(unixEpoch);
     setEntryPrompt(false);
@@ -51,10 +55,7 @@ const Entry = () => {
             type='date'
             id='entry-date'
             value={entryDate}
-            onChange={(e) => {
-              console.log('INPUT VALUE:', e.target.value);
-              setEntryDate(e.target.value);
-            }}
+            onChange={(e) => setEntryDate(e.target.value)}
             className='ce-input-date'
           />
           <button
@@ -68,23 +69,37 @@ const Entry = () => {
         {entryPrompt && (
           <PromptEntry
             inputDate={entryDate}
-            setEpoch={setEpoch}
+            showEpoch={showEpoch}
             cleanUp={() => setEntryPrompt(false)}
           />
         )}
-        {entry && entry.routines && (
-          <div>
-            <ul>
-              {entry.routines.map((r) => (
-                <li key={r.id}>
-                  <Routine {...r} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <p>FORM: Add a Routine</p>
-        {/* TODO add form: add a routine to entry */}
+        {(entry && entry.routines && (
+          // (
+          //   <div>
+          //     <ul>
+          //       {entry.routines.map((r) => (
+          //         <li key={r.id}>
+          //           <Routine
+          //             id={r.id}
+          //             name={r.name}
+          //             complete={r.complete}
+          //             timestamp={r.timestamp}
+          //           />
+          //         </li>
+          //       ))}
+          //     </ul>
+          //   </div>
+          // )
+          <RoutineDisplay
+            routines={routines}
+            handleComplete={handleComplete}
+          />
+        )) ?? <p>nothing to see here!</p>}
+        {/* <RoutineForm
+          onNewRoutineAdd={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+        /> */}
       </div>
     </>
   );

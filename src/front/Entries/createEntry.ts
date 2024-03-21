@@ -29,6 +29,7 @@ export function createEntry(current: string[] = [], date?: string): EntryProps {
 export async function requestEntry(entryDate: string) {
   try {
     const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
+
     if (!res.ok) {
       throw new Error('Network response error.');
     }
