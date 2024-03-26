@@ -1,0 +1,43 @@
+.massive-container-div {
+  border: 1px dotted #00aaff;
+  padding: 1rem;
+}
+
+.massive-routines-div {
+  background-color: rgb(255, 255, 255, 0.1);
+  border: 1px solid #00aaff;
+  border-radius: 10px;
+  box-shadow: inset;
+  margin: 3rem;
+  justify-self: center;
+  padding: 0 1rem;
+}
+
+.entry-input-date {
+  font-size: 1.25rem;
+  text-align: center;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.routine-component {
+  display: flex;
+}
+
+.routine-container-div {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.routine-checkbox {
+  margin: 0 1em 0 0;
+}
+
+.entry-routine-li {
+  list-style-type: none;
+}
+
+.unnecessary {
+  margin-top: 15em;
+}

@@ -3,9 +3,8 @@ import './index.css';
 import { EntryProps, requestEntry } from './createEntry';
 import PromptEntry from './Prompt/PromptEntry';
 import { isoDateKey } from '../../utils/dateKey';
-import unixEpoch from './epoch';
+import { unixEpoch } from './epoch';
 import RoutineDisplay from '../Routines/Display';
-// import { RoutineProps } from '../Routines/createRoutine';
 import { useRoutines } from '../Routines/useRoutines';
 
 const Entry = () => {
@@ -74,22 +73,6 @@ const Entry = () => {
           />
         )}
         {(entry && entry.routines && (
-          // (
-          //   <div>
-          //     <ul>
-          //       {entry.routines.map((r) => (
-          //         <li key={r.id}>
-          //           <Routine
-          //             id={r.id}
-          //             name={r.name}
-          //             complete={r.complete}
-          //             timestamp={r.timestamp}
-          //           />
-          //         </li>
-          //       ))}
-          //     </ul>
-          //   </div>
-          // )
           <RoutineDisplay
             routines={routines}
             handleComplete={handleComplete}

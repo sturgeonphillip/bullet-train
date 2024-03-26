@@ -126,6 +126,9 @@ const createEntryByDate = async (req: Request, res: Response) => {
 const updateEntry = async (req: Request, res: Response) => {
   try {
     const entryKey = req.params.date;
+    const updatedRoutines = req.body.routines;
+
+    console.log('UPDATEDROUTINES', updatedRoutines);
     let existingData: { [key: string]: EntryProps } = {};
 
     try {
@@ -138,14 +141,15 @@ const updateEntry = async (req: Request, res: Response) => {
         handleError(err, res, 'Error reading file contents.');
       }
     }
-    console.log('PRE', existingData);
+
+    // console.log('PRE', existingData);
 
     let entry: EntryProps = existingData[entryKey];
 
     entry = { ...req.body };
     existingData[entryKey] = entry;
 
-    console.log('POST', existingData);
+    // console.log('POST', existingData);
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
 
     res.status(204).send();
@@ -303,3 +307,56 @@ interface EntryProps {
 
 //   return true;
 // }
+
+// GET and POST revision
+// assumes a function to get an entry by date
+const getEntryByDate = async (date: string) => {
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    const entries = JSON.parse(data);
+    return entries[date];
+  } catch (err) {
+    console.error('Error reading entry:', err);
+    return null;
+  }
+};
+
+// create a new entry if it doesn't exist
+const createEntryDoesntExist = async (date: string, entryData: any) => {
+  const existingEntry = await getEntryByDate(date);
+  if (!existingEntry) {
+    // no entry exists, proceed to create a new one
+    const newEntry = {
+      ...entryData,
+      date: date, // assumes date is part of entry data
+    };
+
+    // add logic to write the new entry to the database
+    console.log('Creating new entry:', newEntry);
+  } else {
+    console.log('Entry already exists for the given date.');
+  }
+};
+
+// app.post('/create-entry', async (req, res) => {
+//   const { date, entryData } = req.body;
+
+//   // check if an entry already exists for the given date
+//   const existingEntry = await getEntryByDate(date);
+//   if (existingEntry) {
+//     return res
+//       .status(409)
+//       .send({ message: 'Entry already exists for the given date.' });
+
+//     // if none exists, proceed to create a new entry
+//     const newEntry = {
+//       ...entryData,
+//       date: date,
+//     };
+
+//     // logic to write the new entry to database
+//     await createNewEntry(newEntry);
+
+//     res.status(201).send({ message: 'New entry created successfully.' });
+//   }
+// });

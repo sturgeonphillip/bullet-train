@@ -96,8 +96,8 @@
       {
         "id": "d3fbf48d-cc1e-48ff-a98e-ab5486282b63",
         "name": "Walk Dogs",
-        "complete": false,
-        "timestamp": 0
+        "complete": true,
+        "timestamp": 1709240388400
       },
       {
         "id": "45512d5d-4634-4461-aa48-23978a55c081",

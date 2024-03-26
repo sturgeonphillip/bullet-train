@@ -1,8 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import { isoDateKey } from '../../utils/dateKey';
-import { createRoutine } from '../Routines/createRoutine';
+// import { createRoutine } from '../Routines/createRoutine';
 
-interface RoutineProps {
+export interface RoutineProps {
   id: string;
   name: string;
   complete: boolean;
@@ -13,6 +13,24 @@ export interface EntryProps {
   id: string;
   date: string;
   routines: RoutineProps[];
+}
+
+export interface RoutineProps {
+  id: string;
+  name: string;
+  complete: boolean;
+  timestamp: number;
+  onComplete?: (id: string) => void;
+}
+
+export function createRoutine(name: string): RoutineProps {
+  name = name ?? '[EMPTY]';
+  return {
+    id: uuid(),
+    name,
+    complete: false,
+    timestamp: 0,
+  };
 }
 
 // TODO: argument for current param to be determined by either current routine list (if creating the next consecutive day) or newest list that is <= date argument
@@ -35,6 +53,7 @@ export async function requestEntry(entryDate: string) {
     }
 
     const data = await res.json();
+    // console.log(data);
     return data;
   } catch (err) {
     console.error('Network response error.', err);
