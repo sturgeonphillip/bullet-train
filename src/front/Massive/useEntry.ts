@@ -3,7 +3,8 @@ import { EntryProps, RoutineProps } from './createEntryM';
 
 export const useEntry = () => {
   const [entry, setEntry] = useState<EntryProps | null>(null);
-
+  const [dataError, setDataError] = useState('');
+  const [prompt, setPrompt] = useState(false);
   async function fetchEntry(entryDate: string) {
     if (!entryDate) {
       console.error(`entryData is undefined.`);
@@ -17,14 +18,30 @@ export const useEntry = () => {
       }
 
       const data = await res.json();
-      setEntry(data);
+      return await data;
     } catch (err) {
       console.error(`There was a problem with the fetch operation: ${err}`);
     }
   }
 
   async function handleSubmit(entryDate: string) {
-    await fetchEntry(entryDate);
+    if (!entryDate) {
+      setDataError('Please select a date.');
+      return; // prevent making an empty request
+    }
+
+    const storedEntry = await fetchEntry(entryDate);
+
+    if (storedEntry) {
+      setEntry(storedEntry);
+      setDataError(''); // clear any previous errors
+    } else {
+      setEntry(null);
+      setDataError(`No entry found for ${entryDate}`);
+      // ask user whether to create an entry for requested date.
+      setPrompt(true);
+      return;
+    }
   }
 
   async function handleComplete(entryDate: string, id: string) {
@@ -89,5 +106,5 @@ export const useEntry = () => {
     }
   }
 
-  return { entry, handleSubmit, handleComplete };
+  return { entry, prompt, handleSubmit, handleComplete, dataError };
 };

@@ -3,12 +3,12 @@ import './indexM.css';
 import Routine from './RoutinesM/RoutineM';
 // import { EntryProps } from './createEntryM';
 // import { leap, unixEpoch } from '../Entries/epoch';
-// import PromptEntry from '../Entries/Prompt/PromptEntry';
+import PromptEntry from '../Entries/Prompt/PromptEntry';
 import { useEntry } from './useEntry';
 
 const MassiveEntry = () => {
   const [entryDate, setEntryDate] = useState('1970-01-01');
-  const { entry, handleSubmit, handleComplete } = useEntry();
+  const { entry, prompt, handleSubmit, handleComplete, dataError } = useEntry();
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +31,8 @@ const MassiveEntry = () => {
           />
           <button type='submit'>GO</button>
         </form>
-        {/* {error && <p className='error-class'>{error}</p>} */}
-        {/* {entryPrompt && (<PromptEntry inputDate={entryDate} />)} */}
+        {dataError && <p className='error-class'>{dataError}</p>}
+        {prompt && <PromptEntry inputDate={entryDate} />}
 
         {/* Display routines */}
         <div className='massive-routines-div'>
