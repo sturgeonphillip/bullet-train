@@ -3,15 +3,16 @@ import Clock from '../attic/components/Clock';
 // import RoutineDisplay from './front/Routines/Display';
 import ErrandsDisplay from './front/Errands/Display';
 import ListDisplay from './front/Lists/Display';
-import CurrentEntry from './front/Entries/Entry';
+// import CurrentEntry from './front/Entries/Entry';
+import MassiveEntry from './front/Massive/MassiveEntry';
 
 function App() {
   return (
     <>
       <Clock />
-      <CurrentEntry />
+      {/* <CurrentEntry /> */}
       {/* <RoutineDisplay /> */}
-
+      <MassiveEntry />
       <hr />
 
       <div

@@ -1,56 +1,32 @@
-import { createEntry } from '../createEntry';
 interface PromptEntryProps {
   inputDate: string;
-  showEpoch: () => void;
-  cleanUp: () => void;
+  showEpoch?: () => void;
+  handler: (verdict: boolean) => void;
+  cleanUp?: () => void;
 }
 
-const PromptEntry = ({ inputDate, showEpoch, cleanUp }: PromptEntryProps) => {
-  function handleNo() {
-    showEpoch();
-    return cleanUp();
-  }
-
-  async function handleYes() {
-    const entry = createEntry([], inputDate);
-
-    console.log('handleYes, entry:', entry);
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(entry),
-    };
-
-    try {
-      const res = await fetch(
-        `http://localhost:3001/entry/${inputDate}`,
-        options
-      );
-
-      if (!res.ok) {
-        throw new Error('Network response is not ok.');
-      }
-    } catch (err) {
-      console.error('Caught error:', err);
-    }
-    return cleanUp();
-  }
+type ChoicesType = string[][];
+interface PromptListProps {
+  entryDate: string;
+  choices: ChoicesType;
+  handler: (choices: string[]) => string[];
+}
+const PromptEntry = ({ inputDate, handler }: PromptEntryProps) => {
+  // const PromptEntry = ({ inputDate, cleanUp }: PromptEntryProps) => {
 
   return (
     <>
+      <p>No data found.</p>
       <p>Would you like to create an entry for {inputDate}?</p>
       <button
         className='pe-btn-yes'
-        onClick={() => handleYes()}
+        onClick={() => handler(true)}
       >
         Yes
       </button>
       <button
         className='pe-btn-no'
-        onClick={() => handleNo()}
+        onClick={() => handler(false)}
       >
         No
       </button>
@@ -58,4 +34,31 @@ const PromptEntry = ({ inputDate, showEpoch, cleanUp }: PromptEntryProps) => {
   );
 };
 
+export const PromptList = ({
+  entryDate,
+  choices,
+  handler,
+}: PromptListProps) => {
+  const [a, b] = choices;
+  return (
+    <div>
+      <p>
+        The two dates closest to {entryDate} are different. Choose a list of
+        routines to use for this new entry.
+      </p>
+      <button
+        className='pe-btn-before'
+        onClick={() => handler(a)}
+      >
+        Before
+      </button>
+      <button
+        className='pe-btn-after'
+        onClick={() => handler(b)}
+      >
+        After
+      </button>
+    </div>
+  );
+};
 export default PromptEntry;

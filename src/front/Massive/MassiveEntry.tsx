@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import './indexM.css';
 import Routine from './RoutinesM/RoutineM';
-import PromptEntry from '../Entries/Prompt/PromptEntry';
+import PromptEntry, { PromptList } from '../Entries/Prompt/PromptEntry';
 import useEntry from './useEntry';
+import { isoDateKey } from '../../utils/dateKey';
 
 const MassiveEntry = () => {
-  const [entryDate, setEntryDate] = useState('');
+  const today = isoDateKey();
+  const [entryDate, setEntryDate] = useState(today);
   const {
     entry,
-    showPrompt,
-    handlePrompt,
+    showEntryPrompt,
+    handleEntryPrompt,
     handleSubmit,
     handleComplete,
     // dataError,
+    showListPrompt,
+    handleListPrompt,
   } = useEntry(entryDate);
 
   return (
@@ -32,12 +36,13 @@ const MassiveEntry = () => {
           <button type='submit'>GO</button>
         </form>
         {/* {dataError && <p className='error-className'>{dataError}</p>} */}
-        {showPrompt && (
+        {showEntryPrompt && (
           <PromptEntry
             inputDate={entryDate}
-            handler={handlePrompt}
+            handler={handleEntryPrompt}
           />
         )}
+        {showListPrompt && <PromptList handler={handleListPrompt} />}
 
         {/* Display routines */}
         <div className='massive-routines-div'>

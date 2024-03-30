@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { createEntry, EntryProps, RoutineProps } from './createEntryM';
+import {
+  createEntry,
+  EntryProps,
+  findAppropriateRoutineList,
+  RoutineProps,
+} from './createEntryM';
 
 function useEntry(entryDate: string) {
-  const [showPrompt, setShowPrompt] = useState(false);
+  const [showEntryPrompt, setShowEntryPrompt] = useState(false);
+  const [showListPrompt, setShowListPrompt] = useState(false);
   const [entry, setEntry] = useState<EntryProps | null>(null);
-
+  let routinesToUse: string[] = [];
   async function fetchEntry() {
     if (!entryDate) {
       console.error(`entryData is undefined.`);
       return null;
     }
-
     try {
       const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
       if (!res.ok) {
@@ -41,7 +46,7 @@ function useEntry(entryDate: string) {
       setEntry(null);
 
       // prompt user to create entry
-      setShowPrompt(true);
+      setShowEntryPrompt(true);
       return;
     }
   }
@@ -104,10 +109,35 @@ function useEntry(entryDate: string) {
     }
   }
 
-  async function handlePrompt(verdict: boolean) {
+  function handleListPrompt(choices: string[][]): string[] {
+    const a = choices[0];
+    const b = choices[1];
+    if (a) {
+      return a;
+    } else {
+      return b;
+    }
+  }
+
+  async function handleEntryPrompt(verdict: boolean) {
     if (verdict === true) {
       console.log('yes!');
-      const entry = createEntry([], entryDate);
+
+      const checkList = await findAppropriateRoutineList(entryDate);
+
+      if (checkList.length > 1) {
+        setShowEntryPrompt(false);
+        setShowListPrompt(true);
+        // prompt user checkList[0] || checkList[1]
+        routinesToUse = await handleListPrompt(checkList);
+        setShowListPrompt(false);
+      } else {
+        if (checkList) {
+          routinesToUse = checkList[0];
+        }
+      }
+
+      const entry = createEntry(routinesToUse, entryDate);
 
       const options = {
         method: 'POST',
@@ -138,14 +168,16 @@ function useEntry(entryDate: string) {
       console.log('no entry will be created.');
     }
 
-    setShowPrompt(false);
+    setShowEntryPrompt(false);
   }
-  console.log(handlePrompt);
+  console.log(handleEntryPrompt);
 
   return {
     entry,
-    showPrompt,
-    handlePrompt,
+    showEntryPrompt,
+    handleEntryPrompt,
+    showListPrompt,
+    handleListPrompt,
     handleSubmit,
     handleComplete,
     // dataError,

@@ -7,6 +7,9 @@
  * 6 stringify object using JSON.stringify()
  * 7 write back to file using fs
  */
+interface ListProps {
+  [dateKey: string]: string[];
+}
 
 interface RoutineProps {
   id: string;
@@ -35,3 +38,18 @@ export default function sortEntries(entriesObject: EntriesObjectProps) {
 
   return sortedEntries;
 }
+
+export function sortRoutineList(listObject: ListProps) {
+  return Object.keys(listObject)
+    .map((x) => new Date(x).getTime())
+    .sort((a, b) => a - b);
+}
+
+// const dates = {
+//   '2024-02-23': ['Pray', 'Walk Dogs', 'Code'],
+//   '2024-02-21': ['Pray', 'Walk Dogs', 'Eat', 'Code'],
+//   '2023-09-05': ['Nap', 'Every Day is Leg Day', 'Get a Slurpee'],
+//   '2024-03-01': ['Pray', 'Walk Dogs', 'Code'],
+// };
+
+// console.log(sortRoutineList(dates));

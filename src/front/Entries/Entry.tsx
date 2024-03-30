@@ -21,6 +21,7 @@ const Entry = () => {
     setEntry(unixEpoch);
     setEntryPrompt(false);
   };
+
   const handleEntryDate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!entryDate) {

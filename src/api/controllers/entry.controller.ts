@@ -317,6 +317,7 @@ const getEntryByDate = async (date: string) => {
     return entries[date];
   } catch (err) {
     console.error('Error reading entry:', err);
+    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
     return null;
   }
 };
@@ -360,3 +361,14 @@ const createEntryDoesntExist = async (date: string, entryData: any) => {
 //     res.status(201).send({ message: 'New entry created successfully.' });
 //   }
 // });
+
+// async function getEntryByDate(entryDate: string) {
+//   try {
+//     const content = await fs.readFile(filePath, 'utf8');
+//     const entries = JSON.parse(content);
+//     return entries[entryDate];
+//   } catch (err) {
+//     console.error(`Error reading entry: ${err}`);
+//     return null;
+//   }
+// }

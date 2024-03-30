@@ -9,6 +9,7 @@ import express, {
   NextFunction,
 } from 'express';
 
+// TODO: validate all requests server side
 import entryRoutes from './api/routes/entry.routes';
 import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
@@ -153,6 +154,8 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
+
+// from MDN: Warning: Client-side form validation is no substitute for validating on the server. It's easy for someone to modify the HTML, or bypass your HTML entirely and submit the data directly to your server. If your server fails to validate the received data, disaster could strike with data that is badly-formatted, too large, of the wrong type, etc.
 
 /**
  * let today = new Date(lapse);

@@ -1,21 +1,4 @@
 import { createEntry } from '../createEntry';
-// interface HandleNoProps {}
-
-/**
- * const [entryDate, setEntryDate] = useState('');
-  const [entry, setEntry] = useState<EntryProps | null>(null);
-  const [error, setError] = useState('');
-  const [entryPrompt, setEntryPrompt] = useState(false);
-//  */
-
-// function handlePrompt(create: boolean, inputDate?: string) {
-//   if (create === false) {
-//     // setEntryDate && fetch unixEpoch
-//     handleNo();
-//   } else {
-//     handleYes(inputDate as string);
-//   }
-// }
 
 export function handleNo(callbacks?: unknown) {
   return callbacks;
