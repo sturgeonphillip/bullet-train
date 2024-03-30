@@ -1,45 +1,47 @@
 import { useState } from 'react';
-import { EntryProps, RoutineProps } from './createEntryM';
+import { createEntry, EntryProps, RoutineProps } from './createEntryM';
 
-export const useEntry = () => {
+function useEntry(entryDate: string) {
+  const [showPrompt, setShowPrompt] = useState(false);
   const [entry, setEntry] = useState<EntryProps | null>(null);
-  const [dataError, setDataError] = useState('');
-  const [prompt, setPrompt] = useState(false);
-  async function fetchEntry(entryDate: string) {
+
+  async function fetchEntry() {
     if (!entryDate) {
       console.error(`entryData is undefined.`);
       return null;
     }
 
     try {
-      const res = await fetch(`http://localhost:3001/${entryDate}`);
+      const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
       if (!res.ok) {
-        throw new Error('Network response error.');
+        throw new Error('response not ok.');
       }
 
       const data = await res.json();
-      return await data;
+      console.log('data!', data);
+      setEntry(data);
+      return data; // return fetched data
     } catch (err) {
       console.error(`There was a problem with the fetch operation: ${err}`);
+      return null; // return null in case of error
     }
   }
 
-  async function handleSubmit(entryDate: string) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (!entryDate) {
-      setDataError('Please select a date.');
       return; // prevent making an empty request
     }
 
-    const storedEntry = await fetchEntry(entryDate);
+    const storedEntry = await fetchEntry();
 
     if (storedEntry) {
       setEntry(storedEntry);
-      setDataError(''); // clear any previous errors
     } else {
       setEntry(null);
-      setDataError(`No entry found for ${entryDate}`);
-      // ask user whether to create an entry for requested date.
-      setPrompt(true);
+
+      // prompt user to create entry
+      setShowPrompt(true);
       return;
     }
   }
@@ -84,7 +86,7 @@ export const useEntry = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          updatedEntry, // use updatedEntry directly to ensure most recent data
+          updatedEntry, // ensure most recent data
         }),
       };
 
@@ -96,15 +98,58 @@ export const useEntry = () => {
       if (!res.ok) {
         throw new Error('Failed to update routine in database.');
       }
-
-      // TODO: handle the response body if it contains additional data
-      // like update the state if server sends back the updated entry
-
       console.log('Routine updated successfully.');
     } catch (err) {
       console.error(`Error updating the routine: ${err}`);
     }
   }
 
-  return { entry, prompt, handleSubmit, handleComplete, dataError };
-};
+  async function handlePrompt(verdict: boolean) {
+    if (verdict === true) {
+      console.log('yes!');
+      const entry = createEntry([], entryDate);
+
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(entry),
+      };
+
+      try {
+        const res = await fetch(
+          `http://localhost:3001/entry/${entryDate}`,
+          options
+        );
+        if (!res.ok) {
+          throw new Error('Network response not ok.');
+        }
+
+        // after creating entry, fetch again to ensure latest data
+        const createdEntry = await fetchEntry();
+        setEntry(createdEntry);
+      } catch (err) {
+        console.error(
+          `Caught error while trying to create entry for ${entryDate}. ${err}`
+        );
+      }
+    } else {
+      console.log('no entry will be created.');
+    }
+
+    setShowPrompt(false);
+  }
+  console.log(handlePrompt);
+
+  return {
+    entry,
+    showPrompt,
+    handlePrompt,
+    handleSubmit,
+    handleComplete,
+    // dataError,
+  };
+}
+
+export default useEntry;

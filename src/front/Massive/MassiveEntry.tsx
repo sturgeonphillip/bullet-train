@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import './indexM.css';
 import Routine from './RoutinesM/RoutineM';
-// import { EntryProps } from './createEntryM';
-// import { leap, unixEpoch } from '../Entries/epoch';
 import PromptEntry from '../Entries/Prompt/PromptEntry';
-import { useEntry } from './useEntry';
+import useEntry from './useEntry';
 
 const MassiveEntry = () => {
-  const [entryDate, setEntryDate] = useState('1970-01-01');
-  const { entry, prompt, handleSubmit, handleComplete, dataError } = useEntry();
-
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSubmit(entryDate);
-  };
+  const [entryDate, setEntryDate] = useState('');
+  const {
+    entry,
+    showPrompt,
+    handlePrompt,
+    handleSubmit,
+    handleComplete,
+    // dataError,
+  } = useEntry(entryDate);
 
   return (
     <>
       <div className='massive-container-div'>
-        <p>MASSIVE</p>
+        {/* <p>MASSIVE</p> */}
 
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSubmit}>
           <input
             type='date'
             id='entry-date-id'
@@ -31,8 +31,13 @@ const MassiveEntry = () => {
           />
           <button type='submit'>GO</button>
         </form>
-        {dataError && <p className='error-class'>{dataError}</p>}
-        {prompt && <PromptEntry inputDate={entryDate} />}
+        {/* {dataError && <p className='error-className'>{dataError}</p>} */}
+        {showPrompt && (
+          <PromptEntry
+            inputDate={entryDate}
+            handler={handlePrompt}
+          />
+        )}
 
         {/* Display routines */}
         <div className='massive-routines-div'>
@@ -45,33 +50,15 @@ const MassiveEntry = () => {
               />
             ))
           ) : (
-            <p>No routines on the entry for {entryDate}</p>
+            <>
+              <h4>Entry for {entryDate} is empty.</h4>
+              <p>Add some routines.</p>
+            </>
           )}
         </div>
-
-        {/* unnecessary temp button */}
-        <div className='unnecessary'>
-          <button onClick={() => console.log('unused')}>temp</button>
-          <p>{entryDate === '1970-01-01' ? '' : entryDate}</p>
-          {/* <p>{error}</p> */}
-        </div>
-
-        {/* end unnecessary temp */}
       </div>
     </>
   );
 };
 
-/**
- * * Routines Component Note * *
- *
- * this component needs to:
- * * received the data (fetched using date from input)
- * * display the entry's routines and be able to modify their state
- *
- * (separate the following into a second component...)
- * * be able to add a routine via form with a submit to:
- * * * add the new routine to current entry's routines
- * * * adds the new routine to the list db, creating a new entry (or modifying one associated with current day) so that the next day's entry will include it when creating a new entry and fetching routines
- */
 export default MassiveEntry;

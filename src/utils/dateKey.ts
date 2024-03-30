@@ -17,6 +17,14 @@ export function intlDTFKey() {
   return formatter.format(now);
 }
 
-console.log(localDTKey());
-console.log(isoDateKey());
-console.log(intlDTFKey());
+export function longMonthFormat(dateString: string) {
+  const date = new Date(dateString);
+
+  const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long' });
+  const formattedMonth = monthFormatter.format(date);
+
+  console.log(formattedMonth);
+  return formattedMonth;
+}
+
+longMonthFormat('2024-02-29');
