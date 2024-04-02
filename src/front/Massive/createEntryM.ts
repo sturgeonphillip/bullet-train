@@ -1,8 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { isoDateKey } from '../../utils/dateKey';
 
-// import { createRoutine } from '../Routines/createRoutine';
-
 export interface ListProps {
   [dateKey: string]: string[];
 }
@@ -51,7 +49,6 @@ export async function requestEntry(entryDate: string) {
     }
 
     const data = await res.json();
-    // console.log(data);
     return data;
   } catch (err) {
     console.error('Network response error.', err);
@@ -59,30 +56,27 @@ export async function requestEntry(entryDate: string) {
   }
 }
 
-function backToIso(x: number) {
-  return new Date(x).toISOString().split('T')[0];
-}
 export function youngestBefore(allLists: number[], dateMatch: number) {
   return allLists.reduce((mostRecent, current) => {
     if (current <= dateMatch && current > mostRecent) {
       return current;
     }
     return mostRecent;
-  }, 0);
+  }); // explicitly use first index
 }
 
 export function oldestAfter(allLists: number[], dateMatch: number) {
   return allLists.reduce((mostRecent, current) => {
-    if (current >= dateMatch && current < mostRecent) {
+    if (current > dateMatch && current < mostRecent) {
       return current;
     }
     return mostRecent;
-  }, 0);
+  }); // explicitly use first index
 }
 
 function listWithKey(num: number, routineLists: ListProps) {
-  const key = backToIso(num);
-  return routineLists[key];
+  const key = new Date(num).toISOString().split('T')[0];
+  return [key, routineLists[key]];
 }
 
 export async function findAppropriateRoutineList(dateToMatch: string) {
@@ -108,7 +102,29 @@ export async function findAppropriateRoutineList(dateToMatch: string) {
       routineList.push(listWithKey(before, json));
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
+
   return routineList;
 }
+
+(async () => {
+  const res = await findAppropriateRoutineList('2024-02-29');
+  console.log('res', res);
+})();
+
+const dS = ['2024-02-21', '2024-02-23', '2024-02-29', '2024-03-01'];
+// const dsNum = dS.map((x) => new Date(x).getTime());
+// console.log('oA', oldestAfter(dsNum, new Date('2024-02-29').getTime()));
+// const unsorted: { [key: string]: number } = {};
+// dS.map((x) => {
+//   const key = x;
+//   unsorted[key] = new Date(x).getTime();
+// });
+
+// console.log(unsorted);
+// // console.log(
+// //   Object.entries(unsorted).sort((a, b) => {
+// //     return a[1] - b[1];
+// //   })
+// // );
