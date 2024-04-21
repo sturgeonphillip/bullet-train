@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { createEntry, fetchEntry, isoDateKey } from './mainPageFunctions';
+import {
+  createEntry,
+  fetchEntry,
+  isoDateKey,
+  findAppropriateRoutineLists,
+} from './mainPageFunctions';
 import {
   RoutineProps,
   EntryProps,
   DisplayEntryProps,
   DisplayMissingProps,
   DisplayListProps,
+  ListOptionProps,
 } from './mainPageTypes';
 
 // component for current day's entry of routines
@@ -15,24 +21,43 @@ const Main = () => {
   const [wizard, setWizard] = useState(0);
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [entryDate, setEntryDate] = useState(today);
+  const [listOptions, setListOptions] = useState<ListOptionProps[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {
       return; // prevent an empty request
     }
+    console.log('entryDate');
 
     const storedEntry = await fetchEntry(entryDate);
+    console.log('stored', storedEntry);
     if (storedEntry) {
       console.log('storedEntry');
+      setWizard(0);
       setEntry(storedEntry);
     } else {
       console.log(`
-      setEntry(null);
-      setWizard(1);
-      `);
+        setEntry(null);
+        setWizard(1);
+        `);
       setEntry(null);
       setWizard(1); // prompt user to create entry
+    }
+  }
+
+  async function handleCreateMissing(verdict: boolean) {
+    if (verdict === true) {
+      /**
+       *
+       */
+      const lists = await findAppropriateRoutineLists(entryDate);
+      setListOptions(lists);
+      setWizard(2);
+      return;
+    } else {
+      setEntry(entry);
+      setWizard(0);
     }
   }
 
@@ -61,15 +86,17 @@ const Main = () => {
         )}
         {wizard === 1 && (
           <DisplayMissing
+            entry={entry}
+            setEntry={setEntry}
             inputDate={entryDate}
             wizard={wizard}
             setWizard={setWizard}
+            handler={handleCreateMissing}
           />
         )}
         {wizard === 2 && (
           <DisplayList
-            before={[['routine1'], ['routine2']]}
-            after={[['routine3'], ['routine4']]}
+            candidates={listOptions}
             inputDate={entryDate}
             createNewEntry={createEntry}
             wizard={wizard}
@@ -80,20 +107,20 @@ const Main = () => {
       <div>
         {/* show entry using DisplayEntry */}
         {/* or if no entry in db, show DisplayMissing to ask user if they want to create an entry.
-       
-        if user clicks no:
-        stop showing DisplayMissing
-        setEntry(today)
+         
+          if user clicks no:
+          stop showing DisplayMissing
+          setEntry(today)
 
-        if user clicks yes:
-        stop showing DisplayMissing
-        show DisplayList so they can choose which list to use when creating the new entry.
-       
-        then, when user decides which list:
-        use other logic to create the new entry
-        setEntry(NewlyCreatedEntry)
-        stop showing DisplayList, show DisplayEntry
-        */}
+          if user clicks yes:
+          stop showing DisplayMissing
+          show DisplayList so they can choose which list to use when creating the new entry.
+         
+          then, when user decides which list:
+          use other logic to create the new entry
+          setEntry(NewlyCreatedEntry)
+          stop showing DisplayList, show DisplayEntry
+          */}
       </div>
     </>
   );
@@ -192,24 +219,10 @@ export const DisplayEntry = ({
 export const DisplayMissing = ({
   inputDate,
   wizard,
-  setWizard,
+  handler,
 }: DisplayMissingProps) => {
   if (wizard !== 1) {
     return null;
-  }
-
-  function handler(verdict: boolean) {
-    if (verdict === true) {
-      /**
-       *
-       */
-
-      setWizard(2);
-      return;
-    } else {
-      // setEntry(today);
-      setWizard(0);
-    }
   }
 
   return (
@@ -237,14 +250,15 @@ export const DisplayMissing = ({
 export const DisplayList = ({
   wizard,
   setWizard,
-  before,
-  after,
+  candidates,
   inputDate,
   // createNewEntryFromList,
 }: DisplayListProps) => {
   if (wizard !== 2) {
     return null;
   }
+
+  const [before, after] = candidates;
 
   function chooseList(list: string[], entryDate: string) {
     // logic to choose list

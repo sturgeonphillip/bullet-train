@@ -1,15 +1,17 @@
 {
   "1970-01-01": {
-    "id": "4mem4d1s-liv3-t4lk-54v3-d35ir0u5",
-    "date": "1970-01-01",
-    "routines": [
-      {
-        "id": "gr85c0tt-gig4-w4tt-wh04-drv88mph",
-        "name": "Initiate the Unix Epoch",
-        "complete": true,
-        "timestamp": 0
-      }
-    ]
+    "updatedEntry": {
+      "id": "4mem4d1s-liv3-t4lk-54v3-d35ir0u5",
+      "date": "1970-01-01",
+      "routines": [
+        {
+          "id": "gr85c0tt-gig4-w4tt-wh04-drv88mph",
+          "name": "Initiate the Unix Epoch",
+          "complete": true,
+          "timestamp": 1712127389929
+        }
+      ]
+    }
   },
   "2024-02-20": {
     "id": "4a152726-ed7f-4201-88cb-1dcc9b07c062",
@@ -102,8 +104,8 @@
       {
         "id": "45512d5d-4634-4461-aa48-23978a55c081",
         "name": "Pray",
-        "complete": false,
-        "timestamp": 0
+        "complete": true,
+        "timestamp": 1712127068329
       },
       {
         "id": "27641917-b427-4c1b-8bb3-e0d1c117fbab",
@@ -121,6 +123,11 @@
   "2024-04-02": {
     "id": "3024b13d-c6e7-40fd-b9fb-6b15aa634826",
     "date": "2024-04-02",
+    "routines": []
+  },
+  "2024-04-03": {
+    "id": "9f1212ac-7df8-4e6f-aad5-4cfdf6961fd6",
+    "date": "2024-04-03",
     "routines": []
   }
 }

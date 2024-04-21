@@ -3,6 +3,8 @@ export interface ListProps {
   [dateKey: string]: string[];
 }
 
+export type ListOptionProps = [string, string[]];
+
 export interface RoutineProps {
   id: string;
   name: string;
@@ -25,15 +27,16 @@ export interface DisplayEntryProps {
 }
 
 export interface DisplayMissingProps {
+  entry: EntryProps | null;
   inputDate: string;
   wizard: number;
   setWizard: Dispatch<SetStateAction<number>>;
-  //   handler: (verdict: boolean) => void;
+  setEntry: Dispatch<SetStateAction<EntryProps | null>>;
+  handler: (verdict: boolean) => void;
 }
 
 export interface DisplayListProps {
-  before: string[][];
-  after: string[][];
+  candidates: ListOptionProps[];
   inputDate: string;
   wizard: number;
   setWizard: React.Dispatch<React.SetStateAction<number>>;

@@ -1,5 +1,10 @@
 import { v4 as uuid } from 'uuid';
-import { EntryProps, ListProps, RoutineProps } from './mainPageTypes';
+import {
+  EntryProps,
+  ListProps,
+  ListOptionProps,
+  RoutineProps,
+} from './mainPageTypes';
 
 export function isoDateKey() {
   return new Date(Date.now()).toISOString().split('T')[0];
@@ -33,17 +38,23 @@ export async function fetchEntry(date: string) {
     }
 
     const data = await res.json();
+    console.log('DATA');
     return data;
   } catch (err) {
+    // TODO: change error messaging
     console.error('Network response error.', err);
     return null;
   }
+
+  console.log('ROTATE');
 }
 
 // searches stored lists of routines to find the lists closest to
 // input date (before and after) when creating a missing entry
-export async function findAppropriateRoutineLists(dateToMatch: string) {
-  const routineList = [];
+export async function findAppropriateRoutineLists(
+  dateToMatch: string
+): Promise<ListOptionProps[]> {
+  const routineList: ListOptionProps[] = [];
   const match = new Date(dateToMatch).getTime();
 
   try {
@@ -54,14 +65,17 @@ export async function findAppropriateRoutineLists(dateToMatch: string) {
       .map((x) => new Date(x).getTime())
       .sort((a, b) => a - b);
 
+    // const before = oldestBefore(orderedDates, match);
+    // const after = oldestAfter(orderedDates, match);
+
     const before = oldestBefore(orderedDates, match);
     const after = oldestAfter(orderedDates, match);
 
+    console.log('b', before);
+    console.log('a', after);
+    routineList.push(listWithKey(before, json));
     if (before !== after) {
-      routineList.push(listWithKey(before, json));
       routineList.push(listWithKey(after, json));
-    } else {
-      routineList.push(listWithKey(before, json));
     }
   } catch (err) {
     console.error(err);
@@ -73,7 +87,7 @@ export async function findAppropriateRoutineLists(dateToMatch: string) {
 // finds date of oldest list subsequent to entry date
 function oldestBefore(allLists: number[], dateMatch: number) {
   return allLists.reduce((mostRecent, current) => {
-    if (current <= dateMatch && current > mostRecent) {
+    if (current >= dateMatch && current < mostRecent) {
       return current;
     }
     return mostRecent;
@@ -83,7 +97,7 @@ function oldestBefore(allLists: number[], dateMatch: number) {
 // finds the date of oldest list after entry date
 function oldestAfter(allLists: number[], dateMatch: number) {
   return allLists.reduce((leastRecent, current) => {
-    if (current >= dateMatch && current < leastRecent) {
+    if (current <= dateMatch && current > leastRecent) {
       return current;
     }
     return leastRecent;
@@ -91,9 +105,29 @@ function oldestAfter(allLists: number[], dateMatch: number) {
 }
 
 // format routine lists into tuple
-function listWithKey(num: number, routineLists: ListProps) {
+function listWithKey(num: number, routineLists: ListProps): ListOptionProps {
   const key = new Date(num).toISOString().split('T')[0];
 
-  console.log([key, routineLists[key]]);
   return [key, routineLists[key]];
 }
+
+(async () => {
+  // const res = await fetchEntry('2024-02-29');
+  // console.log('res', res);
+
+  const res = await findAppropriateRoutineLists('2024-03-18');
+  console.log('res', res);
+})();
+/**
+ * // (async () => {
+//   const res = await findAppropriateRoutineList('2024-02-29');
+//   console.log('res', res);
+// })();
+ */
+
+// const b = 1710547200000;
+// const a = 1708473600000;
+// console.log(b - a);
+// console.log(a - b);
+// console.log('before', new Date(b));
+// console.log('after', new Date(a));
