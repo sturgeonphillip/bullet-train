@@ -50,20 +50,6 @@ export async function fetchEntry(date: string) {
   }
 }
 
-export async function handleToday(date: string) {
-  try {
-    const res = await fetch(`http://localhost:3001/entry/${date}`);
-    if (!res.ok) {
-      throw new Error('Network response error.');
-    }
-
-    const data = await res.json();
-    console.log(data);
-  } catch (err) {
-    console.error('Neetwork response error.', err);
-  }
-}
-
 // format tuple [date, [routines]]
 function listWithKey(num: number, routineLists: ListProps): ListOptionProps {
   const key = new Date(num).toISOString().split('T')[0];
@@ -71,9 +57,55 @@ function listWithKey(num: number, routineLists: ListProps): ListOptionProps {
   return [key, routineLists[key]];
 }
 
-// const ordered = [
-//   1708473600000, 1708646400000, 1710547200000, 1711411200000, 1711929600000,
-// ];
+export async function handleToday() {
+  let storedLists: ListProps = {};
+
+  try {
+    const res = await fetch(`http://localhost:3001/list/`);
+    if (!res.ok) {
+      throw new Error('Network response error.');
+    }
+
+    storedLists = await res.json();
+  } catch (err) {
+    console.error('Neetwork response error.', err);
+  }
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const yesterdayFormatted = yesterday.toISOString().split('T')[0];
+  const todayFormatted = today.toISOString().split('T')[0];
+
+  const todayList = storedLists[yesterdayFormatted];
+
+  // TODO: once entry is created, still need to send it to entries db
+  // return createEntry(todayList, todayFormatted);
+  const created = createEntry(todayList, todayFormatted);
+
+  // TODO: this needs revision
+  //  currently getting error network response not ok
+  // try {
+  //   const options = {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(created),
+  //   };
+
+  //   const res = await fetch(
+  //     `http:localhost:3001/entries/${todayFormatted}`,
+  //     options
+  //   );
+  //   if (!res.ok) {
+  //     throw new Error('Network response is not ok.');
+  //   }
+  // } catch (err) {
+  //   console.error("Error adding today's entry to database.", err);
+  // }
+}
 
 export async function findSurroundingLists(inputDate: string) {
   const routineLists: ListOptionProps[] = [];
@@ -83,9 +115,11 @@ export async function findSurroundingLists(inputDate: string) {
 
   try {
     const res = await fetch(`http://localhost:3001/list/`);
-    const json = await res.json();
+    if (!res.ok) {
+      throw new Error('Network response error.');
+    }
 
-    storedLists = await json;
+    storedLists = await res.json();
   } catch (err) {
     console.error(err);
   }
@@ -103,29 +137,12 @@ export async function findSurroundingLists(inputDate: string) {
   const after =
     midIdx < timecodes.length - 1 ? timecodes[midIdx + 1] : timecodes[midIdx];
 
-  // const beforeDate = new Date(before).toISOString().split('T')[0];
-
-  // const afterDate = new Date(after).toISOString().split('T')[0];
-
   routineLists.push(listWithKey(before, storedLists));
   routineLists.push(listWithKey(after, storedLists));
 
-  console.log(
-    'rL',
-    routineLists,
-    midIdx,
-    // beforeDate,
-    '|',
-    // afterDate,
-    '|',
-    'sort timecodes',
-    timecodes
-    // timecodes.sort((a, b) => a - b)
-  );
+  return routineLists;
 }
 
 (async () => {
-  console.log('findRoutineLists...');
-  const r = await findSurroundingLists('2024-03-17');
-  console.log(r);
+  await handleToday();
 })();
