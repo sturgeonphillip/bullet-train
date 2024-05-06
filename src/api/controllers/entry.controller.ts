@@ -30,10 +30,11 @@ const getEntry = async (req: Request, res: Response) => {
 
     if (entry) {
       res.status(200).json(entry);
-    } else
+    } else {
       res
         .status(404)
         .send({ message: 'Entry not found for the specified date.' });
+    }
   } catch (err) {
     handleError(err, res, 'Error reading entry from database.');
   }

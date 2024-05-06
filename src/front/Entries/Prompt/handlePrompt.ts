@@ -5,7 +5,7 @@ export function handleNo(callbacks?: unknown) {
 }
 
 export async function handleYes(inputDate: string) {
-  const entry = createEntry([], inputDate);
+  const entry = createEntry(['walk dogs', 'drop off returns'], inputDate);
 
   console.log('handleYes, entry: ', entry);
   const options = {
@@ -23,7 +23,6 @@ export async function handleYes(inputDate: string) {
       options
     );
 
-    console.log(res);
     if (!res.ok) {
       throw new Error('Network response is not ok.');
     }
@@ -32,7 +31,7 @@ export async function handleYes(inputDate: string) {
   }
 }
 
-handleYes('2024-03-17');
+handleYes('2024-04-17');
 // export default handlePrompt;
 
 /**
