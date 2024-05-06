@@ -40,5 +40,12 @@ export interface DisplayListProps {
   inputDate: string;
   wizard: number;
   setWizard: React.Dispatch<React.SetStateAction<number>>;
-  createNewEntry: (list: string[]) => void;
+  createNewEntry?: (list: string[]) => void;
+}
+
+type ListChoice = [string, string[]][];
+
+export interface ChooseListProps {
+  list: ListChoice;
+  inputDate: string;
 }

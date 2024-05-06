@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const PromptCarriage = () => {
+const PromptCarriage = (carriage: string) => {
   const [showEntryPrompt, setShowEntryPrompt] = useState(true);
   const [showListPrompt, setShowListPrompt] = useState(false);
 
@@ -9,7 +9,7 @@ const PromptCarriage = () => {
     setShowListPrompt(!showListPrompt);
   }
 
-  console.log(`Action coming from carriage!`);
+  console.log(`Action coming from ${carriage}!`);
   return (
     <>
       {showEntryPrompt && (

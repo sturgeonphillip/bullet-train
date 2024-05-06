@@ -1,8 +1,19 @@
 import { v4 as uuid } from 'uuid';
 import { isoDateKey } from '../../utils/dateKey';
+import { ListOptionProps } from './MainPage/mainPageTypes';
+
+export interface EntryProps {
+  id: string;
+  date: string;
+  routines: RoutineProps[];
+}
 
 export interface ListProps {
   [dateKey: string]: string[];
+}
+
+export interface RoutineListProps {
+  [key: string]: string[];
 }
 
 export interface RoutineProps {
@@ -11,11 +22,6 @@ export interface RoutineProps {
   complete: boolean;
   timestamp: number;
   onComplete?: (id: string) => void;
-}
-export interface EntryProps {
-  id: string;
-  date: string;
-  routines: RoutineProps[];
 }
 
 export function createRoutine(name: string): RoutineProps {
@@ -74,12 +80,14 @@ export function oldestAfter(allLists: number[], dateMatch: number) {
   }); // explicitly use first index
 }
 
-function listWithKey(num: number, routineLists: ListProps) {
+function listWithKey(num: number, routineLists: ListProps): ListOptionProps {
   const key = new Date(num).toISOString().split('T')[0];
   return [key, routineLists[key]];
 }
 
-export async function findAppropriateRoutineList(dateToMatch: string) {
+export async function findAppropriateRoutineList(
+  dateToMatch: string
+): Promise<ListOptionProps[]> {
   const routineList = [];
   const match = new Date(dateToMatch).getTime();
   try {
@@ -108,12 +116,12 @@ export async function findAppropriateRoutineList(dateToMatch: string) {
   return routineList;
 }
 
-(async () => {
-  const res = await findAppropriateRoutineList('2024-02-29');
-  console.log('res', res);
-})();
+// (async () => {
+//   const res = await findAppropriateRoutineList('2024-02-29');
+//   console.log('res', res);
+// })();
 
-const dS = ['2024-02-21', '2024-02-23', '2024-02-29', '2024-03-01'];
+// const dS = ['2024-02-21', '2024-02-23', '2024-02-29', '2024-03-01'];
 // const dsNum = dS.map((x) => new Date(x).getTime());
 // console.log('oA', oldestAfter(dsNum, new Date('2024-02-29').getTime()));
 // const unsorted: { [key: string]: number } = {};

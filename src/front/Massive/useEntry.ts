@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   createEntry,
   EntryProps,
@@ -7,10 +7,11 @@ import {
 } from './createEntryM';
 
 function useEntry(entryDate: string) {
-  const [showEntryPrompt, setShowEntryPrompt] = useState(false);
-  const [showListPrompt, setShowListPrompt] = useState(false);
   const [entry, setEntry] = useState<EntryProps | null>(null);
+  const [showListPrompt, setShowListPrompt] = useState(false);
+  const [showEntryPrompt, setShowEntryPrompt] = useState(false);
   let routinesToUse: string[] = [];
+
   async function fetchEntry() {
     if (!entryDate) {
       console.error(`entryData is undefined.`);
@@ -119,7 +120,8 @@ function useEntry(entryDate: string) {
     }
   }
 
-  async function handleEntryPrompt(verdict: boolean) {
+  // async function handleEntryPrompt(verdict: boolean) {
+  const handleEntryPrompt = useCallback(async (verdict: boolean) => {
     if (verdict === true) {
       console.log('yes!');
 
@@ -129,7 +131,7 @@ function useEntry(entryDate: string) {
         setShowEntryPrompt(false);
         setShowListPrompt(true);
         // prompt user checkList[0] || checkList[1]
-        routinesToUse = await handleListPrompt(checkList);
+        // routinesToUse = await handleListPrompt(checkList);
         setShowListPrompt(false);
       } else {
         if (checkList) {
@@ -169,7 +171,7 @@ function useEntry(entryDate: string) {
     }
 
     setShowEntryPrompt(false);
-  }
+  }, []);
   console.log(handleEntryPrompt);
 
   return {

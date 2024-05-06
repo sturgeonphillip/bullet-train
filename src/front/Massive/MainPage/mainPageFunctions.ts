@@ -38,10 +38,11 @@ export async function fetchEntry(date: string) {
   try {
     const res = await fetch(`http://localhost:3001/entry/${date}`);
     if (!res.ok) {
-      throw new Error('Network response error.');
+      throw new Error('Network response error while fetching entry.');
     }
 
     const data = await res.json();
+    // console.log('DATA', data);
     return data;
   } catch (err) {
     // TODO: change error messaging
@@ -51,13 +52,18 @@ export async function fetchEntry(date: string) {
 }
 
 // format tuple [date, [routines]]
-function listWithKey(num: number, routineLists: ListProps): ListOptionProps {
+export function listWithKey(
+  num: number,
+  routineLists: ListProps
+): ListOptionProps {
   const key = new Date(num).toISOString().split('T')[0];
 
   return [key, routineLists[key]];
 }
 
 export async function handleToday() {
+  // first needs to check if today's entry exists
+
   let storedLists: ListProps = {};
 
   try {
@@ -68,7 +74,7 @@ export async function handleToday() {
 
     storedLists = await res.json();
   } catch (err) {
-    console.error('Neetwork response error.', err);
+    console.error('Network response error.', err);
   }
 
   const today = new Date();
@@ -76,73 +82,163 @@ export async function handleToday() {
   yesterday.setDate(yesterday.getDate() - 1);
 
   const yesterdayFormatted = yesterday.toISOString().split('T')[0];
-  const todayFormatted = today.toISOString().split('T')[0];
 
-  const todayList = storedLists[yesterdayFormatted];
+  const yesterdayList = storedLists[yesterdayFormatted];
+  let todayList;
 
-  // TODO: once entry is created, still need to send it to entries db
-  // return createEntry(todayList, todayFormatted);
-  const created = createEntry(todayList, todayFormatted);
+  if (!yesterdayList) {
+    const lastListTimes = Object.keys(storedLists)
+      .map((x) => new Date(x).getTime())
+      .sort((a, b) => a - b);
 
-  // TODO: this needs revision
-  //  currently getting error network response not ok
-  // try {
-  //   const options = {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(created),
-  //   };
-
-  //   const res = await fetch(
-  //     `http:localhost:3001/entries/${todayFormatted}`,
-  //     options
-  //   );
-  //   if (!res.ok) {
-  //     throw new Error('Network response is not ok.');
-  //   }
-  // } catch (err) {
-  //   console.error("Error adding today's entry to database.", err);
-  // }
-}
-
-export async function findSurroundingLists(inputDate: string) {
-  const routineLists: ListOptionProps[] = [];
-  let storedLists: ListProps = {};
-
-  const midpoint = new Date(inputDate).getTime();
-
-  try {
-    const res = await fetch(`http://localhost:3001/list/`);
-    if (!res.ok) {
-      throw new Error('Network response error.');
-    }
-
-    storedLists = await res.json();
-  } catch (err) {
-    console.error(err);
+    todayList = listWithKey(
+      lastListTimes[lastListTimes.length - 1],
+      storedLists
+    )[1];
+  } else {
+    todayList = yesterdayList;
   }
 
-  const keys = Object.keys(storedLists);
+  const todayFormatted = today.toISOString().split('T')[0];
+  const createToday = createEntry(todayList, todayFormatted);
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(createToday),
+  };
 
-  const timecodes = keys.map((x) => new Date(x).getTime());
+  // post to entries db
+  try {
+    const res = await fetch(
+      `http://localhost:3001/entry/${todayFormatted}`,
+      options
+    );
 
-  timecodes.push(midpoint);
-  timecodes.sort((a, b) => a - b);
+    if (!res.ok) {
+      throw new Error(
+        "Network response is not ok while posting today's entry."
+      );
+    }
+  } catch (err) {
+    console.error('Caught Error:', err);
+  }
 
-  const midIdx = timecodes.indexOf(midpoint);
-
-  const before = midIdx > 0 ? timecodes[midIdx - 1] : timecodes[midIdx];
-  const after =
-    midIdx < timecodes.length - 1 ? timecodes[midIdx + 1] : timecodes[midIdx];
-
-  routineLists.push(listWithKey(before, storedLists));
-  routineLists.push(listWithKey(after, storedLists));
-
-  return routineLists;
+  return createToday;
 }
 
-(async () => {
-  await handleToday();
-})();
+// convert date string to a timecode
+function getTimecode(dateString: string): number {
+  return new Date(dateString).getTime();
+}
+
+// find appropriate points
+export async function findPrecedingSucceedingPoints(
+  inputDate: string
+): Promise<[string, string[]] | null> {
+  // const routineLists: ListOptionProps[] = [];
+  // let storedLists: ListProps = {};
+
+  const res = await fetch('http://localhost:3001/list/');
+  if (!res.ok) {
+    throw new Error('Network resonse error.');
+  }
+
+  const lists = await res.json();
+
+  const sortedKeys = Object.keys(lists)
+    .map(getTimecode)
+    .sort((a, b) => a - b);
+
+  const inputTimecode = getTimecode(inputDate);
+
+  let precedingDate: string | null = null;
+  let succeedingDate: string;
+
+  for (const key of sortedKeys) {
+    if (key < inputTimecode) {
+      precedingDate = new Date(key).toISOString().split('T')[0];
+    } else if (key > inputTimecode) {
+      succeedingDate = new Date(key).toISOString().split('T')[0];
+      break;
+    }
+  }
+
+  if (precedingDate && succeedingDate) {
+    return [precedingDate, succeedingDate];
+  } else {
+    return null;
+  }
+}
+// const inputDate = '2024-01-01';
+
+// findPrecedingSucceedingPoints(inputDate)
+//   .then((result) => {
+//     console.log('null?', result);
+//   })
+//   .catch((err) => {
+//     console.error(`Error fetching list data: ${err}`);
+//   });
+
+interface FetchTodayProps {
+  today: string;
+  setEntry: React.Dispatch<React.SetStateAction<EntryProps | null>>;
+  setEntryDate: React.Dispatch<React.SetStateAction<string>>;
+}
+export async function fetchToday({
+  today,
+  setEntry,
+  setEntryDate,
+}: FetchTodayProps) {
+  let fresh: EntryProps = await fetchEntry(today);
+
+  if (fresh === null) {
+    console.log("create entry using yesterday's routines.");
+    fresh = await handleToday();
+  } else {
+    fresh = await fetchEntry(today);
+  }
+
+  setEntry(fresh);
+  setEntryDate(today);
+}
+//   try {
+//     const res = await fetch(`http://localhost:3001/list/`);
+//     if (!res.ok) {
+//       throw new Error('Network response error.');
+//     }
+
+//   //   storedLists = await res.json();
+//   //   console.log(storedLists);
+//   // } catch (err) {
+//   //   console.error(err);
+//   // }
+//   // timecodes.sort((a, b) => a - b);
+//   // console.log(timecodes);
+//   const midIdx = timecodes.indexOf(midpoint);
+
+//   const before = midIdx > 0 ? timecodes[midIdx - 1] : timecodes[midIdx];
+
+//   const after =
+//     midIdx < timecodes.length - 1 ? timecodes[midIdx + 1] : timecodes[midIdx];
+
+//   const beforeList = listWithKey(before, storedLists);
+//   const afterList = listWithKey(after, storedLists);
+//   routineLists.push(beforeList);
+
+//   if (afterList[1] !== undefined) {
+//     routineLists.push(afterList);
+//   }
+
+//   return routineLists;
+// }
+
+// (async () => {
+//   // findPrecedingSucceedingPoints('2024-04-27');
+//   const starWars = await fetchEntry('2024-05-06');
+
+//   // return starWars;
+
+//   // return 'dogs';
+// })();

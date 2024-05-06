@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './indexM.css';
 import Routine from './RoutinesM/RoutineM';
-import PromptEntry, { PromptList } from '../Entries/Prompt/PromptEntry';
+import PromptEntry from './PromptM/PromptEntry';
+import PromptList from './PromptM/PromptList';
 import useEntry from './useEntry';
 import { isoDateKey } from '../../utils/dateKey';
 

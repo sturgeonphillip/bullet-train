@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import './main.css';
 import {
   createEntry,
   fetchEntry,
+  findPrecedingSucceedingPoints,
   isoDateKey,
-  findAppropriateRoutineLists,
+  fetchToday,
+  // handleToday,
 } from './mainPageFunctions';
 import {
   RoutineProps,
@@ -11,36 +14,67 @@ import {
   DisplayEntryProps,
   DisplayMissingProps,
   DisplayListProps,
-  ListOptionProps,
+  // ListOptionProps,
 } from './mainPageTypes';
+// import { DisplayOption } from './temp';
 
 // component for current day's entry of routines
 // or entry based on user input
 const Main = () => {
-  const today = isoDateKey();
+  // const epoch = '1970-01-01';
   const [wizard, setWizard] = useState(0);
-  const [entry, setEntry] = useState<EntryProps | null>(null);
-  const [entryDate, setEntryDate] = useState(today);
-  const [listOptions, setListOptions] = useState<ListOptionProps[]>([]);
+  const [entry, setEntry] = useState<EntryProps | null>({
+    id: '4mem4d1s-liv3-t4lk-54v3-d35ir0u5',
+    date: '1970-01-01',
+    routines: [
+      {
+        id: 'gr85c0tt-gig4-w4tt-wh04-drv88mph',
+        name: 'Initiate the Unix Epoch',
+        complete: true,
+        timestamp: 1712127389929,
+      },
+    ],
+  });
+
+  const [entryDate, setEntryDate] = useState('');
+  // const [listOptions, setListOptions] = useState<ListOptionProps[]>([]);
+
+  /**
+   * Asynchronous State Updates: If there's any asynchronous operation triggered by the entryDate state change (e.g., fetching data based on the date), ensure that these operations do not inadvertently reset the state or cause unnecessary re-renders.
+   */
+
+  useEffect(() => {
+    const today = isoDateKey();
+    // let fresh: EntryProps;
+    // const fetchToday = async () => {
+    //   fresh = await fetchEntry(today);
+
+    //   if (fresh === null) {
+    //     console.log("create entry using yesterday's routines.");
+    //     fresh = await handleToday();
+    //     // setEntry(fresh);
+    //   } else {
+    //     fresh = await fetchEntry(today);
+    //   }
+    //   setEntry(fresh);
+    //   setEntryDate(today);
+    // };
+
+    fetchToday({ today, setEntry, setEntryDate });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {
       return; // prevent an empty request
     }
-    console.log('entryDate');
 
     const storedEntry = await fetchEntry(entryDate);
-    console.log('stored', storedEntry);
     if (storedEntry) {
       console.log('storedEntry');
       setWizard(0);
       setEntry(storedEntry);
     } else {
-      console.log(`
-        setEntry(null);
-        setWizard(1);
-        `);
       setEntry(null);
       setWizard(1); // prompt user to create entry
     }
@@ -51,16 +85,21 @@ const Main = () => {
       /**
        *
        */
-      const lists = await findAppropriateRoutineLists(entryDate);
-      setListOptions(lists);
+      const lists = await findPrecedingSucceedingPoints(entryDate);
+      console.log('hcm', lists);
+      // setListOptions(lists);
       setWizard(2);
       return;
     } else {
+      console.log('SET ENTRY DECLINED', entry);
+      // const entry = await fetchEntry(isoDateKey());
       setEntry(entry);
+      setEntryDate(isoDateKey());
       setWizard(0);
     }
   }
 
+  console.log('ENTRY', entry);
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -70,12 +109,13 @@ const Main = () => {
           name='entry-date'
           value={entryDate}
           onChange={(e) => setEntryDate(e.target.value)}
-          className='entry-input=date'
+          className='entry-input-date'
         />
         <button type='submit'>GO</button>
       </form>
 
       <div>
+        {/* display current entry routine data */}
         {wizard === 0 && entry && (
           <DisplayEntry
             entry={entry}
@@ -84,6 +124,8 @@ const Main = () => {
             entryDate={entryDate}
           />
         )}
+
+        {/* display when no entry exists for date */}
         {wizard === 1 && (
           <DisplayMissing
             entry={entry}
@@ -94,9 +136,14 @@ const Main = () => {
             handler={handleCreateMissing}
           />
         )}
+
+        {/* display options to use if creating new entry */}
         {wizard === 2 && (
           <DisplayList
-            candidates={listOptions}
+            candidates={[
+              ['', ['', '']],
+              ['', ['', '', '']],
+            ]}
             inputDate={entryDate}
             createNewEntry={createEntry}
             wizard={wizard}
@@ -104,9 +151,13 @@ const Main = () => {
           />
         )}
       </div>
-      <div>
-        {/* show entry using DisplayEntry */}
-        {/* or if no entry in db, show DisplayMissing to ask user if they want to create an entry.
+    </>
+  );
+};
+
+/* show entry using DisplayEntry */
+
+/* or if no entry in db, show DisplayMissing to ask user if they want to create an entry.
          
           if user clicks no:
           stop showing DisplayMissing
@@ -120,13 +171,9 @@ const Main = () => {
           use other logic to create the new entry
           setEntry(NewlyCreatedEntry)
           stop showing DisplayList, show DisplayEntry
-          */}
-      </div>
-    </>
-  );
-};
+          */
 
-// default active display component
+// default to active display component
 // it shows the entry for the provided entry date
 export const DisplayEntry = ({
   wizard,
@@ -165,6 +212,7 @@ export const DisplayEntry = ({
         return r;
       }),
     };
+    console.log('setEntry(updatedEntry)', updatedEntry);
     setEntry(updatedEntry);
 
     // update entry in database
@@ -174,9 +222,7 @@ export const DisplayEntry = ({
         headers: {
           'Content-Type': 'appliction/json',
         },
-        body: JSON.stringify({
-          updatedEntry, // ensure most recent data
-        }),
+        body: JSON.stringify(updatedEntry), // ensure most recent data
       };
 
       const res = await fetch(
@@ -186,7 +232,9 @@ export const DisplayEntry = ({
       if (!res.ok) {
         throw new Error('Failed to update routine in database.');
       }
+
       console.log('Routine updated successfully.');
+      console.log('UPDATE:', updatedEntry);
     } catch (err) {
       console.error(`Error updating the routine: ${err}`);
     }
@@ -195,6 +243,26 @@ export const DisplayEntry = ({
   return (
     <>
       <div className='routines-div'>
+        {entry && entry.routines ? (
+          entry.routines.length > 0 ? (
+            entry.routines.map((r) => (
+              <Routine
+                {...r}
+                key={r.id}
+                onComplete={() => handleComplete(entryDate, r.id)}
+              />
+            ))
+          ) : (
+            <>
+              <h4>Entry for {entryDate} is empty.</h4>
+              <p>Add some routines.</p>
+            </>
+          )
+        ) : (
+          <p>This entry has no routines.</p>
+        )}
+      </div>
+      {/*   <div>
         {entry && entry.routines.length > 0 ? (
           entry.routines.map((r) => (
             <Routine
@@ -209,7 +277,7 @@ export const DisplayEntry = ({
             <p>Add some routines.</p>
           </>
         )}
-      </div>
+      </div> */}
     </>
   );
 };
@@ -252,7 +320,6 @@ export const DisplayList = ({
   setWizard,
   candidates,
   inputDate,
-  // createNewEntryFromList,
 }: DisplayListProps) => {
   if (wizard !== 2) {
     return null;
@@ -285,10 +352,14 @@ export const DisplayList = ({
           </>
         ) : (
           <>
-            <p>{before[0]} is the closest date with a saved routine list.</p>
+            <p>{before} is the closest date with a saved routine list.</p>
           </>
         )}
       </div>
+      {/* <DisplayOption
+        inputDate={inputDate}
+        option={before}
+      /> */}
       <div>
         <span>
           <button
@@ -298,9 +369,11 @@ export const DisplayList = ({
             {before[0]}
           </button>
           <ul>
-            {before[1].map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
+            {before[1].length > 0 ? (
+              before[1].map((item, idx) => <li key={idx}>{item}</li>)
+            ) : (
+              <p>No routines saved.</p>
+            )}
           </ul>
         </span>
         <span>
@@ -311,9 +384,11 @@ export const DisplayList = ({
             {after[0]}
           </button>
           <ul>
-            {after[1].map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
+            {after[1].length > 0 ? (
+              after[1].map((item, idx) => <li key={idx}>{item}</li>)
+            ) : (
+              <p>No routines saved.</p>
+            )}
           </ul>
         </span>
         <span>
@@ -335,27 +410,26 @@ const Routine = ({ id, name, complete, onComplete }: RoutineProps) => {
       onComplete(id);
     }
   }
-
   return (
     <>
+      {/* <div
+        id={id}
+        className='routine-container-div'
+      > */}
       <li
         className='entry-routine-li'
         key={id}
       >
-        <div
+        <input
+          type='checkbox'
           id={id}
-          className='routine-container-div'
-        >
-          <input
-            type='checkbox'
-            id={id}
-            checked={complete}
-            onChange={handleToggle}
-            className='routine-checkbox'
-          />
-          <p>{name}</p>{' '}
-        </div>
+          checked={complete}
+          onChange={handleToggle}
+          className='routine-checkbox'
+        />
+        <p className='routine-name-p'>{name}</p>
       </li>
+      {/* </div> */}
     </>
   );
 };
