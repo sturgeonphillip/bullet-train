@@ -7,6 +7,7 @@
  * 6 stringify object using JSON.stringify()
  * 7 write back to file using fs
  */
+
 interface ListProps {
   [dateKey: string]: string[];
 }
@@ -39,17 +40,42 @@ export default function sortEntries(entriesObject: EntriesObjectProps) {
   return sortedEntries;
 }
 
-export function sortRoutineList(listObject: ListProps) {
-  return Object.keys(listObject)
-    .map((x) => new Date(x).getTime())
-    .sort((a, b) => a - b);
+// returns array of tuples from obj entries, keys as unix epoch numbers
+export function sortTimeKeyRoutine(listObject: ListProps) {
+  return Object.entries(listObject)
+    .map((x) => {
+      const time = new Date(x[0]).getTime();
+      const str = x[1];
+      return [time, str];
+    })
+    .sort((a: (number | string[])[], b: (number | string[])[]) => {
+      return Number(a[0]) - Number(b[0]);
+    });
 }
 
-// const dates = {
-//   '2024-02-23': ['Pray', 'Walk Dogs', 'Code'],
-//   '2024-02-21': ['Pray', 'Walk Dogs', 'Eat', 'Code'],
+// returns array of tuples from obj entries, keys as strings YYYY-MM-DD
+export function sortStringKeyRoutine(listObject: ListProps) {
+  return Object.entries(listObject)
+    .map((x) => {
+      const time = new Date(x[0]).getTime();
+      const str = x[1];
+      return [time, str];
+    })
+    .sort((a: (number | string[])[], b: (number | string[])[]) => {
+      return Number(a[0]) - Number(b[0]);
+    })
+    .map((x) => {
+      const dateStr = new Date(Number(x[0])).toISOString().split('T')[0];
+      return [dateStr, x[1]];
+    });
+}
+
+// const datesObj = {
+//   '2022-02-23': ['Pray', 'Walk Dogs', 'Code'],
+//   '2027-02-21': ['Pray', 'Eat', 'Pick Up Dog Poop', 'Code'],
 //   '2023-09-05': ['Nap', 'Every Day is Leg Day', 'Get a Slurpee'],
-//   '2024-03-01': ['Pray', 'Walk Dogs', 'Code'],
+//   '2024-03-01': ['Read', 'Walk Dogs', 'Code'],
 // };
 
-// console.log(sortRoutineList(dates));
+// console.log(sortTimeKeyRoutine(datesObj));
+// console.log(sortStringKeyRoutine(datesObj));
