@@ -1,13 +1,3 @@
-/**
- * 1 read json file using fs
- * 2 parse json string - convert into js object with JSON.parse()
- * 3 convert to an array of k:v pairs with Object.entries()
- * 4 sort by key with sort(), comparing keys chronologically
- * 5 convert sorted array back into an object with Object.fromEntries()
- * 6 stringify object using JSON.stringify()
- * 7 write back to file using fs
- */
-
 interface ListProps {
   [dateKey: string]: string[];
 }
@@ -69,13 +59,3 @@ export function sortStringKeyRoutine(listObject: ListProps) {
       return [dateStr, x[1]];
     });
 }
-
-// const datesObj = {
-//   '2022-02-23': ['Pray', 'Walk Dogs', 'Code'],
-//   '2027-02-21': ['Pray', 'Eat', 'Pick Up Dog Poop', 'Code'],
-//   '2023-09-05': ['Nap', 'Every Day is Leg Day', 'Get a Slurpee'],
-//   '2024-03-01': ['Read', 'Walk Dogs', 'Code'],
-// };
-
-// console.log(sortTimeKeyRoutine(datesObj));
-// console.log(sortStringKeyRoutine(datesObj));
