@@ -6,7 +6,6 @@ import {
   findPrecedingSucceedingPoints,
   isoDateKey,
   fetchToday,
-  // handleToday,
 } from './mainPageFunctions';
 import {
   RoutineProps,
@@ -16,7 +15,6 @@ import {
   DisplayListProps,
   // ListOptionProps,
 } from './mainPageTypes';
-// import { DisplayOption } from './temp';
 
 // component for current day's entry of routines
 // or entry based on user input
@@ -37,28 +35,13 @@ const Main = () => {
   });
 
   const [entryDate, setEntryDate] = useState('');
-  // const [listOptions, setListOptions] = useState<ListOptionProps[]>([]);
 
   /**
-   * Asynchronous State Updates: If there's any asynchronous operation triggered by the entryDate state change (e.g., fetching data based on the date), ensure that these operations do not inadvertently reset the state or cause unnecessary re-renders.
+   * Remember: If there's any asynchronous operation triggered by the entryDate state change (e.g., fetching data based on the date), ensure that these operations do not inadvertently reset the state or cause unnecessary re-renders.
    */
 
   useEffect(() => {
     const today = isoDateKey();
-    // let fresh: EntryProps;
-    // const fetchToday = async () => {
-    //   fresh = await fetchEntry(today);
-
-    //   if (fresh === null) {
-    //     console.log("create entry using yesterday's routines.");
-    //     fresh = await handleToday();
-    //     // setEntry(fresh);
-    //   } else {
-    //     fresh = await fetchEntry(today);
-    //   }
-    //   setEntry(fresh);
-    //   setEntryDate(today);
-    // };
 
     fetchToday({ today, setEntry, setEntryDate });
   }, []);
@@ -220,7 +203,7 @@ export const DisplayEntry = ({
       const options = {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'appliction/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedEntry), // ensure most recent data
       };
@@ -262,22 +245,6 @@ export const DisplayEntry = ({
           <p>This entry has no routines.</p>
         )}
       </div>
-      {/*   <div>
-        {entry && entry.routines.length > 0 ? (
-          entry.routines.map((r) => (
-            <Routine
-              {...r}
-              key={r.id}
-              onComplete={() => handleComplete(entryDate, r.id)}
-            />
-          ))
-        ) : (
-          <>
-            <h4>Entry for {entryDate} is empty.</h4>
-            <p>Add some routines.</p>
-          </>
-        )}
-      </div> */}
     </>
   );
 };
