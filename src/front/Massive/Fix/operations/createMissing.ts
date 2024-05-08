@@ -43,16 +43,28 @@ export function createMissingEntry(date?: unknown) {
 // fetch list db
 // sorts keys
 
+const listDB: { [key: string]: string[] } = {
+  '1970-01-01': ['Initiate the Unix Epoch'],
+  '2001-02-23': ['Pray', 'Walk Dogs', 'Code'],
+  '2024-02-21': ['Pray', 'Walk Dogs', 'Eat', 'Code'],
+  '2024-02-23': ['Pray', 'Walk Dogs', 'Code'],
+  '2024-03-16': ['Pray', 'Walk Dogs', 'Eat', 'Code', 'Watch Movie'],
+};
+
 export function findAdjacentDates(inputDate: string) {
   // ensure dates are sorted
   const sortedDates = Object.keys(listDB).sort(
     (a, b) => new Date(a).getTime() - new Date(b).getTime()
   );
 
+  console.log('SD', sortedDates);
+
   // find index of closest date before
   let beforeIndex = sortedDates.findIndex(
     (date) => new Date(date) >= new Date(inputDate)
   );
+  console.log('BI', beforeIndex);
+
   if (beforeIndex === -1) {
     // if inputDate is after all existing dates, take last one
     beforeIndex = sortedDates.length - 1;
@@ -76,3 +88,8 @@ export function findAdjacentDates(inputDate: string) {
     after: { date: afterDate, tasks: listDB[afterDate] },
   };
 }
+
+console.log(findAdjacentDates('1942-01-01'));
+// console.log(findAdjacentDates('1970-01-01'));
+// console.log(findAdjacentDates('2024-01-01'));
+// console.log(findAdjacentDates('2024-08-25'));
