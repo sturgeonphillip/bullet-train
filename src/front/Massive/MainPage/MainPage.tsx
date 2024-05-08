@@ -20,6 +20,7 @@ import {
 // or entry based on user input
 const Main = () => {
   // const epoch = '1970-01-01';
+  const [entryDate, setEntryDate] = useState('');
   const [wizard, setWizard] = useState(0);
   const [entry, setEntry] = useState<EntryProps | null>({
     id: '4mem4d1s-liv3-t4lk-54v3-d35ir0u5',
@@ -33,8 +34,6 @@ const Main = () => {
       },
     ],
   });
-
-  const [entryDate, setEntryDate] = useState('');
 
   /**
    * Remember: If there's any asynchronous operation triggered by the entryDate state change (e.g., fetching data based on the date), ensure that these operations do not inadvertently reset the state or cause unnecessary re-renders.

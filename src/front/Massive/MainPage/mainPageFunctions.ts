@@ -6,10 +6,13 @@ import {
   RoutineProps,
 } from './mainPageTypes';
 
+// create string formatted date usable as key
 export function isoDateKey() {
   return new Date(Date.now()).toISOString().split('T')[0];
 }
 
+// turns a unix format to string date
+// 1715043960527 -> 2024-05-07
 export function fromUnix(unixTime: number) {
   return new Date(unixTime).toISOString().split('T')[0];
 }
@@ -136,7 +139,7 @@ function getTimecode(dateString: string): number {
 // find appropriate points
 export async function findPrecedingSucceedingPoints(
   inputDate: string
-): Promise<[string, string[]] | null> {
+): Promise<[string, string] | null> {
   // const routineLists: ListOptionProps[] = [];
   // let storedLists: ListProps = {};
 
@@ -154,14 +157,14 @@ export async function findPrecedingSucceedingPoints(
   const inputTimecode = getTimecode(inputDate);
 
   let precedingDate: string | null = null;
-  let succeedingDate: string;
+  let succeedingDate: string | null = null;
 
   for (const key of sortedKeys) {
     if (key < inputTimecode) {
       precedingDate = new Date(key).toISOString().split('T')[0];
     } else if (key > inputTimecode) {
       succeedingDate = new Date(key).toISOString().split('T')[0];
-      break;
+      // return [succeedingDate, []];
     }
   }
 
@@ -171,74 +174,3 @@ export async function findPrecedingSucceedingPoints(
     return null;
   }
 }
-// const inputDate = '2024-01-01';
-
-// findPrecedingSucceedingPoints(inputDate)
-//   .then((result) => {
-//     console.log('null?', result);
-//   })
-//   .catch((err) => {
-//     console.error(`Error fetching list data: ${err}`);
-//   });
-
-interface FetchTodayProps {
-  today: string;
-  setEntry: React.Dispatch<React.SetStateAction<EntryProps | null>>;
-  setEntryDate: React.Dispatch<React.SetStateAction<string>>;
-}
-export async function fetchToday({
-  today,
-  setEntry,
-  setEntryDate,
-}: FetchTodayProps) {
-  let fresh: EntryProps = await fetchEntry(today);
-
-  if (fresh === null) {
-    console.log("create entry using yesterday's routines.");
-    fresh = await handleToday();
-  } else {
-    fresh = await fetchEntry(today);
-  }
-
-  setEntry(fresh);
-  setEntryDate(today);
-}
-//   try {
-//     const res = await fetch(`http://localhost:3001/list/`);
-//     if (!res.ok) {
-//       throw new Error('Network response error.');
-//     }
-
-//   //   storedLists = await res.json();
-//   //   console.log(storedLists);
-//   // } catch (err) {
-//   //   console.error(err);
-//   // }
-//   // timecodes.sort((a, b) => a - b);
-//   // console.log(timecodes);
-//   const midIdx = timecodes.indexOf(midpoint);
-
-//   const before = midIdx > 0 ? timecodes[midIdx - 1] : timecodes[midIdx];
-
-//   const after =
-//     midIdx < timecodes.length - 1 ? timecodes[midIdx + 1] : timecodes[midIdx];
-
-//   const beforeList = listWithKey(before, storedLists);
-//   const afterList = listWithKey(after, storedLists);
-//   routineLists.push(beforeList);
-
-//   if (afterList[1] !== undefined) {
-//     routineLists.push(afterList);
-//   }
-
-//   return routineLists;
-// }
-
-// (async () => {
-//   // findPrecedingSucceedingPoints('2024-04-27');
-//   const starWars = await fetchEntry('2024-05-06');
-
-//   // return starWars;
-
-//   // return 'dogs';
-// })();
