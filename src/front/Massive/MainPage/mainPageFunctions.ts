@@ -139,7 +139,7 @@ function getTimecode(dateString: string): number {
 // find appropriate points
 export async function findPrecedingSucceedingPoints(
   inputDate: string
-): Promise<[string, string] | null> {
+): Promise<[string, string[]] | null> {
   // const routineLists: ListOptionProps[] = [];
   // let storedLists: ListProps = {};
 

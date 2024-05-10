@@ -3,34 +3,110 @@ import './fix.css';
 import { DisplayEntry } from './DisplayEntry';
 import { DisplayMissing } from './DisplayMissing';
 import { DisplayListOption } from './DisplayListOption';
-import { fetchEntry } from './fixFunctions';
-// import {...} from './functions';
+// import { fetchEntry, isoDateKey } from './fixFunctions';
+import { isoDateKey } from './operations/fixFunctions';
 import { EntryProps } from './types';
 
 const Main = () => {
-  const [entryDate, setEntryDate] = useState('');
+  const [entryDate, setEntryDate] = useState(isoDateKey());
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [wizard, setWizard] = useState(0);
+
+  async function fetchEntry(date: string) {
+    try {
+      const res = await fetch(`http://localhost:3001/entry/${date}`);
+
+      if (!res.ok) {
+        throw new Error(`Unable to fetch entry. Response not ok.`);
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error(`Network response error. ${err}`);
+      return null;
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {
-      // prevent an empty request
-      return;
+      return; // prevent an empty request
     }
 
-    const storedEntry = await fetchEntry(entryDate);
-    console.log('STORED', storedEntry);
-    if (storedEntry) {
-      setWizard(0);
-      setEntry(storedEntry);
+    const submittedEntry = await fetchEntry(entryDate);
+    console.log('STORED', submittedEntry);
+    if (submittedEntry) {
+      // setWizard(0);
+      setEntry(submittedEntry);
     } else {
       setEntry(null);
       setWizard(1);
     }
   }
 
-  // async function handleCreateMissing(verdict: boolean) {}
+  function handleMissingEntry(verdict: boolean) {
+    if (verdict === true) {
+      console.log('TRUE');
+      setWizard(2);
+    } else if (verdict === false) {
+      console.log('FALSE');
+      setEntry(null);
+      setEntryDate(isoDateKey());
+      setWizard(0);
+    }
+    return;
+  }
+
+  function renderWizard() {
+    switch (wizard) {
+      case 0:
+        return (
+          <div>
+            <DisplayEntry
+              inputDate={entryDate}
+              entry={entry}
+              wizard={wizard}
+              setEntry={setEntry}
+            />
+          </div>
+        );
+      case 1:
+        return (
+          <div>
+            <DisplayMissing
+              inputDate={entryDate}
+              handler={(verdict) => handleMissingEntry(verdict)}
+              wizard={wizard}
+            />
+          </div>
+        );
+      case 2:
+        return (
+          <div>
+            <DisplayListOption
+              inputDate={entryDate}
+              candidates={[]}
+              wizard={wizard}
+              setWizard={setWizard}
+            />
+          </div>
+        );
+
+      // TODO: is this default case necessary or repetitive? what's a fail safe?
+      default:
+        return (
+          <div>
+            <DisplayEntry
+              inputDate={entryDate}
+              entry={entry}
+              wizard={wizard}
+              setEntry={setEntry}
+            />
+          </div>
+        );
+    }
+  }
 
   return (
     <>
@@ -46,48 +122,9 @@ const Main = () => {
         <button type='submit'>GO</button>
       </form>
 
-      <div>
-        {wizard === 0 && entry && (
-          <div>
-            <DisplayEntry
-              inputDate={entryDate}
-              entry={entry}
-              wizard={wizard}
-              setEntry={setEntry}
-            />
-          </div>
-        )}
-        {wizard === 1 && (
-          <div>
-            <DisplayMissing
-              inputDate={entryDate}
-              entry={entry}
-              setEntry={setEntry}
-              handler={handleCreateMissing}
-              wizard={wizard}
-              setWizard={setWizard}
-            />
-          </div>
-        )}
-        {wizard === 2 && (
-          <div>
-            <DisplayListOption
-              inputDate={entryDate}
-              candidates={[]}
-              wizard={wizard}
-              setWizard={setWizard}
-            />
-          </div>
-        )}
-      </div>
+      <div>{renderWizard()}</div>
     </>
   );
 };
-
-/**
- * useEffect
- * createEntry
- * fetchEntry
- */
 
 export default Main;

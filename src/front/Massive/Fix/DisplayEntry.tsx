@@ -72,12 +72,12 @@ export const DisplayEntry = ({
               <Routine
                 {...r}
                 key={r.id}
-                onComplete={() => handleComplete(entryDate, r.id)}
+                onComplete={() => handleComplete(inputDate, r.id)}
               />
             ))
           ) : (
             <>
-              <h4>Entry for {entryDate} is empty.</h4>
+              <h4>Entry for {inputDate} is empty.</h4>
               <p>Add some routines.</p>
             </>
           )
