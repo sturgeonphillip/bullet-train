@@ -5,11 +5,18 @@ import { EntryProps, RoutineProps } from '../types';
 // create a string formatted date usable as key
 export function isoDateKey(unixTime?: number) {
   unixTime = unixTime ?? Date.now();
+  console.log('IDK', unixTime, 'Date.now()', Date.now());
+
   const local = new Date(unixTime).toLocaleDateString();
+
+  console.log('local', local);
   const parts = local.split('/');
   const convert = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
   return convert;
 }
+
+console.log('WOO', Date.now());
+console.log('isoDateKey', isoDateKey(Date.now()));
 
 export function createRoutine(name: string): RoutineProps {
   name = name ?? '[EMPTY]';
@@ -44,4 +51,15 @@ export async function fetchEntry(date: string) {
     console.error(`Network response error. ${err}`);
     return null;
   }
+}
+
+export function yesterdayDateKey(unixTime?: number) {
+  const unix = unixTime ?? Date.now();
+  const oneDay = 24 * 60 * 60 * 1000;
+  const local = new Date(unix - oneDay).toLocaleDateString();
+
+  const parts = local.split('/');
+  console.log('CONVERT');
+  const convert = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+  return convert;
 }

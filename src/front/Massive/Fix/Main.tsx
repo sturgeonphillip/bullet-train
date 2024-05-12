@@ -3,8 +3,8 @@ import './fix.css';
 import { DisplayEntry } from './DisplayEntry';
 import { DisplayMissing } from './DisplayMissing';
 import { DisplayListOption } from './DisplayListOption';
-// import { fetchEntry, isoDateKey } from './fixFunctions';
-import { isoDateKey } from './operations/fixFunctions';
+import { fetchEntry, isoDateKey } from './operations/fixFunctions';
+import { loadToday } from './operations/loadToday';
 import { EntryProps } from './types';
 
 const Main = () => {
@@ -12,21 +12,9 @@ const Main = () => {
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [wizard, setWizard] = useState(0);
 
-  async function fetchEntry(date: string) {
-    try {
-      const res = await fetch(`http://localhost:3001/entry/${date}`);
-
-      if (!res.ok) {
-        throw new Error(`Unable to fetch entry. Response not ok.`);
-      }
-
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      console.error(`Network response error. ${err}`);
-      return null;
-    }
-  }
+  useEffect(() => {
+    loadToday(entryDate);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,8 +25,8 @@ const Main = () => {
     const submittedEntry = await fetchEntry(entryDate);
     console.log('STORED', submittedEntry);
     if (submittedEntry) {
-      // setWizard(0);
       setEntry(submittedEntry);
+      setWizard(0);
     } else {
       setEntry(null);
       setWizard(1);

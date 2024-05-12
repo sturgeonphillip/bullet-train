@@ -13,6 +13,12 @@ export const DisplayEntry = ({
   }
 
   async function handleComplete(entryDate: string, id: string) {
+    if (!entry) {
+      console.error(
+        `Attempt to update a routine failed. Entry is either null or undefined. Entry logs as: ${entry}`
+      );
+      return;
+    }
     // create the updated entry
     const updatedEntry = {
       ...entry,

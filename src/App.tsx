@@ -7,12 +7,11 @@ import { Loader } from './front/Loader/Loader';
 function App() {
   return (
     <>
-      <Clock />
-      <Loader />
       <Fix />
-
       <hr />
+      <Clock />
       <hr />
+      <Loader />
     </>
   );
 }

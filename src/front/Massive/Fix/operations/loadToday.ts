@@ -2,8 +2,8 @@ import { EntryProps } from '../types';
 import { isoDateKey, createEntry } from './fixFunctions';
 import { ListProps } from '../types';
 
-export async function loadToday() {
-  const today = isoDateKey();
+export async function loadToday(entryDate?: string) {
+  const today = entryDate ?? isoDateKey();
   // try to fetch the entry for today
   try {
     const res = await fetch(`http://localhost:3001/entry/${today}`);
@@ -11,13 +11,14 @@ export async function loadToday() {
     if (!res.ok) {
       // throw new Error('Network response error.');
       const todayEntry = await buildTodayEntry(today);
-      const newData = await createToday(today, todayEntry);
-      console.log('new data', newData);
-      return newData;
+
+      const newEntryData = await postTodayEntry(today, todayEntry);
+      console.log('created new entry', newEntryData);
+      return newEntryData;
     }
 
     const data = await res.json();
-    console.log('data', data);
+    console.log('fetched entry from db', data);
     return data;
   } catch (err) {
     console.error('Network response error.', err);
@@ -28,10 +29,11 @@ export async function loadToday() {
   // then, setEntryDate(today)
 }
 
+// build a new entry for today
 export async function buildTodayEntry(todayInput: string) {
   let storedLists: ListProps = {};
 
-  // TODO: move logic of getting yesterday's entries to the server and just returning the most recent entries
+  // TODO: move logic of getting yesterday's entries to the server and just return the most recent entries
   try {
     const res = await fetch(`http://localhost:3001/list/`);
     if (!res.ok) {
@@ -44,15 +46,9 @@ export async function buildTodayEntry(todayInput: string) {
   }
 
   const today = new Date(todayInput);
-  console.log('today', today);
 
-  const yesterday = today.setDate(today.getDate() - 1);
+  console.log('todayInput', todayInput, 'today', today);
 
-  console.log('YESTERDAY', yesterday);
-  const yesterdayKey = isoDateKey(Number(yesterday));
-  console.log('yesterdayKey', yesterdayKey);
-
-  console.log('SL', storedLists);
   const lastListTimes = Object.keys(storedLists)
     .map((x) => new Date(x).getTime())
     .sort((a, b) => a - b);
@@ -66,7 +62,10 @@ export async function buildTodayEntry(todayInput: string) {
   return createEntry(todayList, todayInput);
 }
 
-export async function createToday(today: string, entry: EntryProps) {
+buildTodayEntry('2024-05-11');
+
+// post new entry to the db
+export async function postTodayEntry(todayDate: string, entry: EntryProps) {
   const options = {
     method: 'POST',
     headers: {
@@ -74,10 +73,19 @@ export async function createToday(today: string, entry: EntryProps) {
     },
     body: JSON.stringify(entry),
   };
+  try {
+    const response = await fetch(
+      `http://localhost:3001/entry/${todayDate}`,
+      options
+    );
 
-  const response = await fetch(`http://localhost:3001/entry/${today}`, options);
-
-  return response.json();
+    if (!response.ok) {
+      throw new Error(`Error while writing new entry into the database.`);
+    }
+    return response.json();
+  } catch (err) {
+    console.error(`Caught error: ${err}.`);
+  }
 }
 
-loadToday();
+loadToday('2024-05-11');
