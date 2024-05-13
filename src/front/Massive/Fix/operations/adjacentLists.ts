@@ -1,7 +1,3 @@
-// import { useState } from 'react';
-
-// const [tempWizard, setTempWizard] = useState(0);
-
 // const listDB: { [key: string]: string[] } = {
 //   '1970-01-01': ['Initiate the Unix Epoch'],
 //   '2001-02-23': ['Pray', 'Walk Dogs', 'Code'],
@@ -31,7 +27,7 @@ export async function handleCreateMissing(
     // revamp to:
     // call next function and move on
     // TODO: incorporate loader while fetching the appropriate lists
-    handleListOption(entryDate);
+    // handleListOption(entryDate);
     setWizard(2);
 
     return;
@@ -43,7 +39,7 @@ export async function handleCreateMissing(
     // setWizard(0);
   }
 }
-interface ListOptionProps {
+export interface ListOptionProps {
   before: {
     date: string | null;
     tasks: string[];
@@ -54,16 +50,15 @@ interface ListOptionProps {
   };
 }
 
-export function handleListOption(
-  inputDate: string,
-  listOption: ListOptionProps
-) {
-  // TODO: incorporate loader while fetching the appropriate lists
-
-  console.log(inputDate);
-  console.log(listOption);
-  console.log('create a missing entry!');
-}
+// export function handleListOption(
+//   inputDate: string,
+//   listOption: ListOptionProps
+// ) {
+//   // TODO: incorporate loader while fetching the appropriate lists
+//   console.log(inputDate);
+//   console.log(listOption);
+//   console.log('create a missing entry!');
+// }
 
 interface ListProps {
   [key: string]: string[];

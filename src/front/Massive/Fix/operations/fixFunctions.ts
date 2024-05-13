@@ -1,11 +1,12 @@
 import { v4 as uuid } from 'uuid';
 import { EntryProps, RoutineProps } from '../types';
+import { loadToday } from './loadToday';
+import { SetStateAction } from 'react';
 
 // TODO: change function name because we're no longer using the ISOString method.
 // create a string formatted date usable as key
 export function isoDateKey(unixTime?: number) {
   unixTime = unixTime ?? Date.now();
-  console.log('IDK', unixTime, 'Date.now()', Date.now());
 
   const local = new Date(unixTime).toLocaleDateString();
 

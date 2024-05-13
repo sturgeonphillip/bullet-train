@@ -1,6 +1,7 @@
 import { EntryProps } from '../types';
 import { isoDateKey, createEntry } from './fixFunctions';
 import { ListProps } from '../types';
+import { Dispatch, SetStateAction } from 'react';
 
 export async function loadToday(entryDate?: string) {
   const today = entryDate ?? isoDateKey();
@@ -9,11 +10,11 @@ export async function loadToday(entryDate?: string) {
     const res = await fetch(`http://localhost:3001/entry/${today}`);
 
     if (!res.ok) {
-      // throw new Error('Network response error.');
+      console.log(`Error request for ${today} on loadToday().`);
       const todayEntry = await buildTodayEntry(today);
 
       const newEntryData = await postTodayEntry(today, todayEntry);
-      console.log('created new entry', newEntryData);
+      console.log('created new entry', newEntryData[today]);
       return newEntryData;
     }
 
@@ -44,10 +45,6 @@ export async function buildTodayEntry(todayInput: string) {
   } catch (err) {
     console.error(`Caught error in handleToday function: ${err}`);
   }
-
-  const today = new Date(todayInput);
-
-  console.log('todayInput', todayInput, 'today', today);
 
   const lastListTimes = Object.keys(storedLists)
     .map((x) => new Date(x).getTime())
@@ -88,4 +85,48 @@ export async function postTodayEntry(todayDate: string, entry: EntryProps) {
   }
 }
 
-loadToday('2024-05-11');
+export async function createEntryForToday(todayDate: string) {
+  const newEntry = buildTodayEntry(todayDate);
+
+  const options = {
+    method: 'POST',
+    header: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newEntry),
+  };
+
+  try {
+    const response = await fetch(
+      `http://localhost:3001/entry/${todayDate}`,
+      options
+    );
+    if (!response.ok) {
+      throw new Error(`Error while creating new entry: ${response.statusText}`);
+    }
+
+    const createdEntry = await response.json();
+    return createdEntry;
+  } catch (err) {
+    console.error(`Error creating entry for today: ${err}`);
+    return null;
+  }
+}
+
+export async function fetchOrCreateTodayEntry(
+  entryDate: string,
+  setEntry: Dispatch<SetStateAction<EntryProps | null>>
+) {
+  const today = entryDate ?? isoDateKey();
+  const data = await loadToday(today);
+
+  if (data) {
+    setEntry(data);
+  } else {
+    // If data is null, it means the entry for today does not exist and needs to be created
+    const createdEntry = await createEntryForToday(today);
+    if (createdEntry) {
+      setEntry(createdEntry);
+    }
+  }
+}

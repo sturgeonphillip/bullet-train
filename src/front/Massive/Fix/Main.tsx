@@ -3,8 +3,12 @@ import './fix.css';
 import { DisplayEntry } from './DisplayEntry';
 import { DisplayMissing } from './DisplayMissing';
 import { DisplayListOption } from './DisplayListOption';
-import { fetchEntry, isoDateKey } from './operations/fixFunctions';
-import { loadToday } from './operations/loadToday';
+import {
+  fetchEntry,
+  isoDateKey,
+  fetchOrCreateTodayEntry,
+} from './operations/fixFunctions';
+// import { loadToday } from './operations/loadToday';
 import { EntryProps } from './types';
 
 const Main = () => {
@@ -13,7 +17,7 @@ const Main = () => {
   const [wizard, setWizard] = useState(0);
 
   useEffect(() => {
-    loadToday(entryDate);
+    fetchOrCreateTodayEntry(entryDate, setEntry);
   }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
