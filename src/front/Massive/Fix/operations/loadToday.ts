@@ -5,12 +5,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 export async function loadToday(entryDate?: string) {
   const today = entryDate ?? isoDateKey();
-  // try to fetch the entry for today
+
   try {
     const res = await fetch(`http://localhost:3001/entry/${today}`);
 
     if (!res.ok) {
-      console.log(`Error request for ${today} on loadToday().`);
+      console.log(`Error request for ${today} on loadToday function.`);
       const todayEntry = await buildTodayEntry(today);
 
       const newEntryData = await postTodayEntry(today, todayEntry);
@@ -58,8 +58,6 @@ export async function buildTodayEntry(todayInput: string) {
 
   return createEntry(todayList, todayInput);
 }
-
-buildTodayEntry('2024-05-11');
 
 // post new entry to the db
 export async function postTodayEntry(todayDate: string, entry: EntryProps) {
@@ -130,3 +128,43 @@ export async function fetchOrCreateTodayEntry(
     }
   }
 }
+
+/**
+ * 
+ "2024-05-13": {
+    "id": "33c333c6-ada3-4b1b-97e3-38adacc35831",
+    "date": "2024-05-13",
+    "routines": [
+      {
+        "id": "d57196a6-5831-443e-9813-2cf11ee32c6a",
+        "name": "Pray",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "986a7c4f-669e-4d4d-9b63-cbc5b6c1e3df",
+        "name": "Walk Dogs",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "3c87230a-b4de-4540-9d46-4931c82bbe2e",
+        "name": "Code",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "57ce5060-eac1-42ac-a5ef-e0184ed488dc",
+        "name": "Row",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "91fc2382-a30d-4960-9ac1-5864c6ab3beb",
+        "name": "Fix Fetch Calls",
+        "complete": false,
+        "timestamp": 0
+      }
+    ]
+  }
+ */

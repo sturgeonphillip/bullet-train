@@ -8,7 +8,7 @@ router.get('/', entryController.getEntries);
 
 router.get('/:date', entryController.getEntry);
 
-// router.post('/', entryController.createEntry);
+router.post('/today/:date', entryController.createEntryFromYesterday);
 
 router.post('/:date', entryController.createEntryByDate);
 

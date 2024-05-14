@@ -1,46 +1,45 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './fix.css';
 import { DisplayEntry } from './DisplayEntry';
 import { DisplayMissing } from './DisplayMissing';
 import { DisplayListOption } from './DisplayListOption';
 import { fetchEntry, isoDateKey } from './operations/fixFunctions';
-import { createEntryForToday, loadToday } from './operations/loadToday';
+
 import { EntryProps } from './types';
+import { buildTodayEntry, postTodayEntry } from './operations/loadToday';
 
 const Main = () => {
   const [entryDate, setEntryDate] = useState(isoDateKey());
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [wizard, setWizard] = useState(0);
 
-  async function fetchOrCreateTodayEntry(
-    entryDate: string,
-    setEntry: Dispatch<SetStateAction<EntryProps | null>>
-  ) {
-    const today = entryDate ?? isoDateKey();
-    const data = await loadToday(today);
-
-    if (data) {
-      setEntry(data);
-    } else {
-      // If data is null, it means the entry for today does not exist and needs to be created
-      const createdEntry = await createEntryForToday(today);
-      if (createdEntry) {
-        setEntry(createdEntry[today]);
-        console.log('Entry set:', createdEntry[today]);
-      }
-    }
-  }
-
   useEffect(() => {
-    fetchOrCreateTodayEntry(entryDate, setEntry);
+    const createEntry = async () => {
+      const todayEntry = await buildTodayEntry(entryDate);
+      const newEntryData = await postTodayEntry(entryDate, todayEntry);
+
+      setEntry(newEntryData);
+    };
+
+    createEntry();
+
+    // const fetchData = async () => {
+    //   try {
+    //     const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
+
+    //     if (!res.ok) {
+    //       throw new Error(`Unable to fetch entry. Response not ok.`);
+    //     }
+
+    //     const data = await res.json();
+    //     setEntry(data);
+    //   } catch (err) {
+    //     console.error(`Network response error. ${err}`);
+    //     return null;
+    //   }
+    // };
+    // fetchData();
   }, [entryDate]);
-
-  async function handleLink(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    alert('click!');
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {

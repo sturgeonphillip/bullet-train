@@ -1,7 +1,7 @@
 import './App.css';
-import Clock from '../attic/components/Clock';
+import { Clock } from './front/Clock/Clock';
 
-import Fix from './front/Massive/Fix/Main';
+import Fix from './front/Massive/Fix/Remain';
 import { Loader } from './front/Loader/Loader';
 
 function App() {

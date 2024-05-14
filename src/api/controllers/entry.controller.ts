@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
 import sortEntries from '../../utils/sortEntries';
+import { createEntry } from '../factories';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,38 +58,39 @@ const getEntryRoutine = async (req: Request, res: Response) => {
   }
 };
 
-// const createEntry = async (req: Request, res: Response) => {
-//   try {
-//     let existingData = {};
+const createTodayEntry = async (req: Request, res: Response) => {
+  try {
+    let existingData = {};
 
-//     try {
-//       const content = await fs.readFile(filePath, 'utf8');
+    try {
+      const content = await fs.readFile(filePath, 'utf8');
 
-//       existingData = await JSON.parse(content);
-//     } catch (err) {
-//       if (err instanceof SyntaxError) {
-//         existingData = {};
-//       } else {
-//         handleError(err, res, 'Error reading existing content from file.');
-//       }
-//     }
+      existingData = await JSON.parse(content);
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        existingData = {};
+      } else {
+        handleError(err, res, 'Error reading existing content from file.');
+      }
+    }
 
-//     const entryKey = req.params.date;
-//     const entryData = req.body;
-//     const allEntries = {
-//       ...existingData,
-//       [entryKey]: entryData,
-//     };
+    const entryKey = req.params.date;
+    // const entryData = req.body;
+    const entryData = createTodayFromYesterday(entryKey);
+    const allEntries = {
+      ...existingData,
+      [entryKey]: entryData,
+    };
 
-//     const sorted = sortEntries(allEntries);
+    const sorted = sortEntries(allEntries);
 
-//     await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
 
-//     res.status(201).json(allEntries);
-//   } catch (err) {
-//     handleError(err, res, 'Error while writing new entry.');
-//   }
-// };
+    res.status(201).json(allEntries);
+  } catch (err) {
+    handleError(err, res, 'Error while writing new entry.');
+  }
+};
 
 const createEntryByDate = async (req: Request, res: Response) => {
   try {
@@ -261,14 +263,27 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
   }
 };
 
+// GET and POST revision
+// assumes a function to get an entry by date
+const getEntryByDate = async (date: string) => {
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    const entries = JSON.parse(data);
+    return entries[date];
+  } catch (err) {
+    console.error('Error reading entry:', err);
+    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
+    return null;
+  }
+};
+
 export {
   getEntries,
   getEntry,
   getEntryRoutine,
-  // createEntry,
+  getEntryByDate,
   createEntryByDate,
   updateEntry,
-  // updateEntryRoutine,
   destroyEntry,
   destroyEntryRoutine,
 };
@@ -309,36 +324,30 @@ interface EntryProps {
 //   return true;
 // }
 
-// GET and POST revision
-// assumes a function to get an entry by date
-const getEntryByDate = async (date: string) => {
-  try {
-    const data = await fs.readFile(filePath, 'utf8');
-    const entries = JSON.parse(data);
-    return entries[date];
-  } catch (err) {
-    console.error('Error reading entry:', err);
-    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
-    return null;
-  }
-};
-
 // create a new entry if it doesn't exist
-const createEntryDoesntExist = async (date: string, entryData: any) => {
-  const existingEntry = await getEntryByDate(date);
-  if (!existingEntry) {
-    // no entry exists, proceed to create a new one
-    const newEntry = {
-      ...entryData,
-      date: date, // assumes date is part of entry data
-    };
+// export const createEntryDoesntExist = async (date: string, entryData: any) => {
+//   const existingEntry = await getEntryByDate(date);
+//   if (!existingEntry) {
+//     // no entry exists, proceed to create a new one
+//     const newEntry = {
+//       ...entryData,
+//       date: date, // assumes date is part of entry data
+//     };
 
-    // add logic to write the new entry to the database
-    console.log('Creating new entry:', newEntry);
-  } else {
-    console.log('Entry already exists for the given date.');
-  }
-};
+//     // add logic to write the new entry to the database
+//     console.log('Creating new entry:', newEntry);
+//   } else {
+//     console.log('Entry already exists for the given date.');
+//   }
+// };
+
+(async () => {
+  const today = await createTodayFromYesterday('2024-04-18');
+
+  console.log('TODAY!', today);
+})();
+
+console.log('ydDate', yesterdayDate('2024-05-18'));
 
 // app.post('/create-entry', async (req, res) => {
 //   const { date, entryData } = req.body;

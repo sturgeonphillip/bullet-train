@@ -1,7 +1,5 @@
 import { v4 as uuid } from 'uuid';
 import { EntryProps, RoutineProps } from '../types';
-import { loadToday } from './loadToday';
-import { SetStateAction } from 'react';
 
 // TODO: change function name because we're no longer using the ISOString method.
 // create a string formatted date usable as key
@@ -10,14 +8,10 @@ export function isoDateKey(unixTime?: number) {
 
   const local = new Date(unixTime).toLocaleDateString();
 
-  console.log('local', local);
   const parts = local.split('/');
   const convert = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
   return convert;
 }
-
-console.log('WOO', Date.now());
-console.log('isoDateKey', isoDateKey(Date.now()));
 
 export function createRoutine(name: string): RoutineProps {
   name = name ?? '[EMPTY]';
