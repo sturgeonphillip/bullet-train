@@ -3,9 +3,9 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 
-import { handleError } from '../../utils/errorHandler';
-import sortEntries from '../../utils/sortEntries';
-import { createEntry } from '../factories';
+import { handleError } from '../../../utils/errorHandler';
+import { sortEntries } from '../../../utils/sortEntries';
+// import { createEntry } from '../factories';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -58,37 +58,17 @@ const getEntryRoutine = async (req: Request, res: Response) => {
   }
 };
 
-const createTodayEntry = async (req: Request, res: Response) => {
+// GET and POST revision
+// assumes a function to get an entry by date
+const getEntryByDate = async (date: string) => {
   try {
-    let existingData = {};
-
-    try {
-      const content = await fs.readFile(filePath, 'utf8');
-
-      existingData = await JSON.parse(content);
-    } catch (err) {
-      if (err instanceof SyntaxError) {
-        existingData = {};
-      } else {
-        handleError(err, res, 'Error reading existing content from file.');
-      }
-    }
-
-    const entryKey = req.params.date;
-    // const entryData = req.body;
-    const entryData = createTodayFromYesterday(entryKey);
-    const allEntries = {
-      ...existingData,
-      [entryKey]: entryData,
-    };
-
-    const sorted = sortEntries(allEntries);
-
-    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
-
-    res.status(201).json(allEntries);
+    const data = await fs.readFile(filePath, 'utf8');
+    const entries = JSON.parse(data);
+    return entries[date];
   } catch (err) {
-    handleError(err, res, 'Error while writing new entry.');
+    console.error('Error reading entry:', err);
+    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
+    return null;
   }
 };
 
@@ -263,20 +243,6 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
   }
 };
 
-// GET and POST revision
-// assumes a function to get an entry by date
-const getEntryByDate = async (date: string) => {
-  try {
-    const data = await fs.readFile(filePath, 'utf8');
-    const entries = JSON.parse(data);
-    return entries[date];
-  } catch (err) {
-    console.error('Error reading entry:', err);
-    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
-    return null;
-  }
-};
-
 export {
   getEntries,
   getEntry,
@@ -340,14 +306,6 @@ interface EntryProps {
 //     console.log('Entry already exists for the given date.');
 //   }
 // };
-
-(async () => {
-  const today = await createTodayFromYesterday('2024-04-18');
-
-  console.log('TODAY!', today);
-})();
-
-console.log('ydDate', yesterdayDate('2024-05-18'));
 
 // app.post('/create-entry', async (req, res) => {
 //   const { date, entryData } = req.body;
