@@ -1,14 +1,12 @@
 import { Router } from 'express';
 
-import * as entryController from '../controllers/entry.controller';
+import * as entryController from '../controllers/entryControllers/index';
 
 const router = Router();
 
 router.get('/', entryController.getEntries);
 
 router.get('/:date', entryController.getEntry);
-
-router.post('/today/:date', entryController.createEntryFromYesterday);
 
 router.post('/:date', entryController.createEntryByDate);
 

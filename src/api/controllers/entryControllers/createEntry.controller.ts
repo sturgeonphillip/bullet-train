@@ -86,7 +86,7 @@ export const createTodayEntry = async (req: Request, res: Response) => {
 
     await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
 
-    res.status(201).json(allEntries);
+    res.status(201).json(entryData);
   } catch (err) {
     handleError(err, res, 'Error while writing new entry.');
   }
@@ -101,7 +101,7 @@ export async function createTodayFromYesterday(date: string) {
     const existingEntry = await getEntryByDate(date);
     if (!existingEntry) {
       console.log(
-        `WARNING: No entry found for ${date}. Entry will be created using routines from ${yesterday}. Creating now...`
+        `INFO: No entry found for today, ${date}. Entry will be created using routines from ${yesterday}. Creating now...`
       );
 
       const yesterdayEntry = await getEntryByDate(yesterday);
@@ -109,8 +109,13 @@ export async function createTodayFromYesterday(date: string) {
       if (!yesterdayEntry) {
         // go back to most recent entry list
         // use sorted entries to find last/most recent
+        const mostRecent = await getMostRecentExistingEntry();
+        if (mostRecent) {
+          routineList = mostRecent['routineList'];
+        }
+      } else {
+        routineList = yesterdayEntry.routines.map((x: RoutineProps) => x.name);
       }
-      routineList = yesterdayEntry.routines.map((x: RoutineProps) => x.name);
 
       todayEntry = createEntry(routineList, date);
 
@@ -155,10 +160,27 @@ export async function getEntryByDate(date: string) {
   }
 }
 
-// (async () => {
-//   const today = await createTodayFromYesterday('2024-04-18');
+export async function getMostRecentExistingEntry() {
+  // let existingData;
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    const json = JSON.parse(data);
 
-//   console.log('TODAY!', today);
-// })();
+    const entryTuples: [string, EntryProps][] | undefined = Object.entries(
+      json
+    ).map(([key, val]) => [key, val as EntryProps]);
 
-// console.log('ydDate', yesterdayDate('2024-05-18'));
+    const mostRecent = entryTuples[entryTuples.length - 1];
+
+    return {
+      date: mostRecent[0],
+      routineList: mostRecent[1]['routines'].map((x) => x.name),
+    };
+  } catch (err) {
+    console.error(`ERROR at getMostRecentExistingEntry: ${err}`);
+  }
+}
+
+// TODO: write functions like findAdjacentLists on the server side.
+
+// console.log(yesterdayDate('2024-08-12'));

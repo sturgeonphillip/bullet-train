@@ -10,7 +10,7 @@ import { EntryProps } from '../../factories';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const filePath = path.join(__dirname, '../../../db/entries.json');
+const filePath = path.join(__dirname, '../../../../db/entries.json');
 
 export const destroyEntry = async (req: Request, res: Response) => {
   try {

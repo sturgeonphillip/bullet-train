@@ -9,6 +9,10 @@ export function dateKey(unixTime?: number) {
   return `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
 }
 
+// export interface ExistingDataProps {
+//   [key: string]: string[];
+// }
+
 export interface EntryProps {
   id: string;
   date: string;
@@ -21,6 +25,10 @@ export interface RoutineProps {
   complete: boolean;
   timestamp: number;
   onComplete?: (id: string) => void;
+}
+
+export interface EntriesObjectProps {
+  [date: string]: EntryProps;
 }
 
 export function createRoutine(name: string): RoutineProps {

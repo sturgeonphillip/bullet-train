@@ -1,4 +1,4 @@
-export { createTodayEntry } from './createEntry.controller';
+export { createTodayEntry, createEntryByDate } from './createEntry.controller';
 
 export {
   getEntries,
@@ -10,3 +10,5 @@ export {
 export { updateEntry } from './updateEntry.controller';
 
 export { destroyEntry, destroyEntryRoutine } from './destroyEntry.controller';
+
+export { handleToday } from './today.controller';

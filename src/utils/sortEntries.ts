@@ -1,25 +1,25 @@
-interface ListProps {
+export interface ListProps {
   [dateKey: string]: string[];
 }
 
-interface RoutineProps {
+export interface RoutineProps {
   id: string;
   name: string;
   complete: boolean;
   timestamp: number;
 }
 
-interface EntryProps {
+export interface EntryProps {
   id: string;
   date: string;
   routines: RoutineProps[];
 }
 
-interface EntriesObjectProps {
+export interface EntriesObjectProps {
   [date: string]: EntryProps;
 }
 
-export default function sortEntries(entriesObject: EntriesObjectProps) {
+export function sortEntries(entriesObject: EntriesObjectProps) {
   const entriesArray = Object.entries(entriesObject);
   entriesArray.sort((a, b) => {
     return a[0].localeCompare(b[0]);

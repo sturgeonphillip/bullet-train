@@ -6,40 +6,25 @@ import { DisplayListOption } from './DisplayListOption';
 import { fetchEntry, isoDateKey } from './operations/fixFunctions';
 
 import { EntryProps } from './types';
-import { buildTodayEntry, postTodayEntry } from './operations/loadToday';
+// import { buildTodayEntry, postTodayEntry } from './operations/loadToday';
 
 const Main = () => {
   const [entryDate, setEntryDate] = useState(isoDateKey());
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [wizard, setWizard] = useState(0);
 
+  async function showToday() {
+    const res = await fetch(`http://localhost:3001/today`);
+    const json = await res.json();
+
+    if (json) {
+      setEntry(json);
+    }
+  }
   useEffect(() => {
-    const createEntry = async () => {
-      const todayEntry = await buildTodayEntry(entryDate);
-      const newEntryData = await postTodayEntry(entryDate, todayEntry);
+    showToday();
+  }, []);
 
-      setEntry(newEntryData);
-    };
-
-    createEntry();
-
-    // const fetchData = async () => {
-    //   try {
-    //     const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
-
-    //     if (!res.ok) {
-    //       throw new Error(`Unable to fetch entry. Response not ok.`);
-    //     }
-
-    //     const data = await res.json();
-    //     setEntry(data);
-    //   } catch (err) {
-    //     console.error(`Network response error. ${err}`);
-    //     return null;
-    //   }
-    // };
-    // fetchData();
-  }, [entryDate]);
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {
