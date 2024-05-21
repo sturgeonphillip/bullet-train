@@ -35,12 +35,6 @@ const Main = () => {
     fetchOrCreateTodayEntry(entryDate, setEntry);
   }, [entryDate]);
 
-  async function handleLink(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    alert('click!');
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!entryDate) {

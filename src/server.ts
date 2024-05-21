@@ -21,7 +21,11 @@ const port = process.env.PORT || 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const approvedOrigins = ['http://localhost:3001', 'http://localhost:5173'];
+const approvedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3001/today',
+  'http://localhost:5173',
+];
 app.use(cors({ origin: approvedOrigins }));
 
 app.use(express.json());
