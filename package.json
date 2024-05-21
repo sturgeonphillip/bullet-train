@@ -11,8 +11,7 @@
     "dust": "eslint . --fix-dry-run --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "server": "npx tsx watch ./src/server.ts",
-    "go": "concurrently -s all -p {time} \"npm:server\" \"npm:dev\""
+    "server": "npx tsx watch ./src/server.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
