@@ -1,0 +1,20 @@
+:root {
+  --aquatic: rgb(24, 190, 228);
+  --fuschatic: rgb(245, 0, 188);
+}
+
+.clock {
+  font-style: italic;
+  background: linear-gradient(
+    to right,
+    var(--aquatic),
+    var(--aquatic),
+    var(--aquatic),
+    var(--aquatic),
+    var(--fuschatic),
+    var(--fuschatic),
+    var(--fuschatic)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

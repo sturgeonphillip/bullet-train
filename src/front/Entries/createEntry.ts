@@ -29,9 +29,11 @@ export function createEntry(current: string[] = [], date?: string): EntryProps {
 export async function requestEntry(entryDate: string) {
   try {
     const res = await fetch(`http://localhost:3001/entry/${entryDate}`);
+
     if (!res.ok) {
       throw new Error('Network response error.');
     }
+
     const data = await res.json();
     return data;
   } catch (err) {
@@ -39,5 +41,3 @@ export async function requestEntry(entryDate: string) {
     return null; // indicate failure
   }
 }
-// const active = ['Pray', 'Walk Dogs', 'Row'];
-// console.log(createEntry(active));

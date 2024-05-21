@@ -9,9 +9,11 @@ import express, {
   NextFunction,
 } from 'express';
 
+// TODO: validate all requests server side
 import entryRoutes from './api/routes/entry.routes';
 import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
+import todayRoutes from './api/routes/today.routes';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -19,7 +21,11 @@ const port = process.env.PORT || 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const approvedOrigins = ['http://localhost:3001', 'http://localhost:5173'];
+const approvedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3001/today',
+  'http://localhost:5173',
+];
 app.use(cors({ origin: approvedOrigins }));
 
 app.use(express.json());
@@ -33,6 +39,7 @@ app.use(
 app.use('/entry', entryRoutes);
 app.use('/list', listRoutes);
 app.use('/errands', errandRoutes);
+app.use('/today', todayRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
@@ -153,6 +160,8 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
+
+// from MDN: Warning: Client-side form validation is no substitute for validating on the server. It's easy for someone to modify the HTML, or bypass your HTML entirely and submit the data directly to your server. If your server fails to validate the received data, disaster could strike with data that is badly-formatted, too large, of the wrong type, etc.
 
 /**
  * let today = new Date(lapse);

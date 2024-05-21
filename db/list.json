@@ -1,5 +1,14 @@
 {
-  "2024-02-23": ["Pray", "Walk Dogs", "Code"],
+  "1970-01-01": ["Initiate the Unix Epoch"],
   "2024-02-21": ["Pray", "Walk Dogs", "Eat", "Code"],
-  "2024-03-01": ["Pray", "Walk Dogs", "Code"]
+  "2024-02-23": ["Pray", "Walk Dogs", "Code"],
+  "2024-03-16": ["Pray", "Walk Dogs", "Eat", "Code", "Watch Movie"],
+  "2024-03-26": ["Pray", "Walk Dogs", "Eat", "Code", "Prep for NAB"],
+  "2024-04-01": ["Pray", "Walk Dogs", "Code"],
+  "2024-04-02": ["Pray", "Walk Dogs", "Code"],
+  "2024-04-03": ["Pray", "Walk Dogs", "Code"],
+  "2024-04-20": ["Pray", "Walk Dogs", "Code", "Row"],
+  "2024-04-21": ["Pray", "Walk Dogs", "Code", "Row"],
+  "2024-04-22": ["Pray", "Walk Dogs", "Code", "Row"],
+  "2024-04-23": ["Pray", "Walk Dogs", "Code", "Row", "Fix Fetch Calls"]
 }

@@ -1,28 +1,11 @@
 import { createEntry } from '../createEntry';
-// interface HandleNoProps {}
-
-/**
- * const [entryDate, setEntryDate] = useState('');
-  const [entry, setEntry] = useState<EntryProps | null>(null);
-  const [error, setError] = useState('');
-  const [entryPrompt, setEntryPrompt] = useState(false);
-//  */
-
-// function handlePrompt(create: boolean, inputDate?: string) {
-//   if (create === false) {
-//     // setEntryDate && fetch unixEpoch
-//     handleNo();
-//   } else {
-//     handleYes(inputDate as string);
-//   }
-// }
 
 export function handleNo(callbacks?: unknown) {
   return callbacks;
 }
 
 export async function handleYes(inputDate: string) {
-  const entry = createEntry([], inputDate);
+  const entry = createEntry(['walk dogs', 'drop off returns'], inputDate);
 
   console.log('handleYes, entry: ', entry);
   const options = {
@@ -40,7 +23,6 @@ export async function handleYes(inputDate: string) {
       options
     );
 
-    console.log(res);
     if (!res.ok) {
       throw new Error('Network response is not ok.');
     }
@@ -49,7 +31,7 @@ export async function handleYes(inputDate: string) {
   }
 }
 
-handleYes('2024-03-17');
+handleYes('2024-04-17');
 // export default handlePrompt;
 
 /**

@@ -1,35 +1,39 @@
 import { useState } from 'react';
 import './index.css';
-import ExampleRoutine from './Example.tsx';
 import { EntryProps, requestEntry } from './createEntry';
-import PromptEntry from './Prompt/PromptEntry.tsx';
-import { isoDateKey } from '../../utils/dateKey.ts';
-import unixEpoch from './epoch.ts';
+import PromptEntry from './Prompt/PromptEntry';
+import { isoDateKey } from '../../utils/dateKey';
+import { unixEpoch } from './epoch';
+import RoutineDisplay from '../Routines/Display';
+import { useRoutines } from '../Routines/useRoutines';
 
-const CurrentEntry = () => {
+const Entry = () => {
   const today = isoDateKey();
   const [entryDate, setEntryDate] = useState(today);
   const [entry, setEntry] = useState<EntryProps | null>(null);
   const [error, setError] = useState('');
   const [entryPrompt, setEntryPrompt] = useState(false);
+  // TODO: better name for this hook
+  const { routines, handleComplete } = useRoutines(entryDate);
 
-  const setEpoch = () => {
+  const showEpoch = () => {
     setEntryDate('1970-01-01');
     setEntry(unixEpoch);
     setEntryPrompt(false);
   };
+
   const handleEntryDate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!entryDate) {
       setError('Please select a date.');
-      return; // prevent making a request with an empty date
+      return; // prevent making a request with empty date
     }
 
     try {
       const storedEntry = await requestEntry(entryDate);
       if (storedEntry) {
         setEntry(storedEntry);
-        setError(''); // clear previous error
+        setError(''); // clear any previous error
       } else {
         setEntry(null);
         setError('No entry found for the given date.');
@@ -42,7 +46,6 @@ const CurrentEntry = () => {
     }
   };
 
-  console.log('Entry Date:', entryDate);
   return (
     <>
       <div className='ce-container-div'>
@@ -52,10 +55,7 @@ const CurrentEntry = () => {
             type='date'
             id='entry-date'
             value={entryDate}
-            onChange={(e) => {
-              console.log('INPUT VALUE:', e.target.value);
-              setEntryDate(e.target.value);
-            }}
+            onChange={(e) => setEntryDate(e.target.value)}
             className='ce-input-date'
           />
           <button
@@ -69,26 +69,24 @@ const CurrentEntry = () => {
         {entryPrompt && (
           <PromptEntry
             inputDate={entryDate}
-            setEpoch={setEpoch}
+            showEpoch={showEpoch}
             cleanUp={() => setEntryPrompt(false)}
           />
         )}
-        {entry && entry.routines && (
-          <div>
-            <ul>
-              {entry.routines.map((r) => (
-                <li key={r.id}>
-                  <ExampleRoutine {...r} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <p>FORM: Add a Routine</p>
-        {/* TODO add form: add a routine to entry */}
+        {(entry && entry.routines && (
+          <RoutineDisplay
+            routines={routines}
+            handleComplete={handleComplete}
+          />
+        )) ?? <p>nothing to see here!</p>}
+        {/* <RoutineForm
+          onNewRoutineAdd={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+        /> */}
       </div>
     </>
   );
 };
 
-export default CurrentEntry;
+export default Entry;

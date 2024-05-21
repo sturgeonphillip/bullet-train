@@ -1,27 +1,17 @@
 import './App.css';
-import Clock from '../attic/components/Clock';
-import RoutineDisplay from './front/Routines/Display';
-import ErrandsDisplay from './front/Errands/Display';
-import ListDisplay from './front/Lists/Display';
-import CurrentEntry from './front/Entries/CurrentEntry';
+import { Clock } from './front/Clock/Clock';
+
+import Fix from './front/Massive/Fix/Remain';
+import { Loader } from './front/Loader/Loader';
 
 function App() {
   return (
     <>
+      <Fix />
+      <hr />
       <Clock />
-      <CurrentEntry />
-      <div
-        id='display-container'
-        className='display-container'
-      >
-        <div className='display'>
-          <RoutineDisplay />
-          <ListDisplay />
-        </div>
-        <div className='display'>
-          <ErrandsDisplay />
-        </div>
-      </div>
+      <hr />
+      <Loader />
     </>
   );
 }
