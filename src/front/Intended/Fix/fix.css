@@ -1,0 +1,15 @@
+.entry-routine-li {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  margin: 0 0 -25px 0;
+  font-size: larger;
+}
+
+.entry-routine-li input[type='checkbox'] {
+  /* margin-right: 10px; */
+}
+
+.routine-name-p {
+  padding: 0 5px;
+}

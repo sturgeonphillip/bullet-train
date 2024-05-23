@@ -1,9 +1,9 @@
-type ListProps = {
+export type RoutineHistoryListProps = {
   dateKey: string;
-  routines: unknown[];
+  routines: string[];
 };
 
-const List = ({ dateKey, routines }: ListProps) => {
+const List = ({ dateKey, routines }: RoutineHistoryListProps) => {
   return (
     <div
       id={dateKey}
@@ -14,7 +14,7 @@ const List = ({ dateKey, routines }: ListProps) => {
         {routines.length > 0
           ? routines.map((rl) => (
               <li
-                key={`${dateKey}-${rl as string}`}
+                key={`${dateKey}-${rl}`}
                 className='list-routines-li'
               >
                 {rl as string}

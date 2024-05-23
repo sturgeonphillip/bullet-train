@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import './index.css';
+import './history.css';
 import List from './List';
-export type RoutineHistoryProps = [date: string, routines: unknown[]];
+
+export type RoutineHistoryProps = [date: string, routines: string[]];
 
 const Display = () => {
   const [lists, setLists] = useState<RoutineHistoryProps[]>([]);
@@ -30,7 +31,14 @@ const Display = () => {
   return (
     <div>
       <h4>History of Routine Lists</h4>
+      <h5>AS TABLE</h5>
+      {lists.length > 0 ? (
+        <h3>dogs rule</h3>
+      ) : (
+        <p>no routine history for table</p>
+      )}
       <ul>
+        <h5>AS UL</h5>
         {lists.length > 0 ? (
           lists.map((list) => (
             <div key={list[0]}>
