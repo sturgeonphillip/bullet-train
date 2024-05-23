@@ -1,9 +1,15 @@
-/* .errand-item {
-  text-decoration: none;
-} */
-
 .errand-li {
+  display: flex;
+  flex-direction: row;
   list-style-type: none;
-  text-decoration: none;
+  margin: -15px 0;
   color: aqua;
+}
+
+.errand-li input[type='checkbox'] {
+  /* margin-right: 10px; */
+}
+
+.errand-name-p {
+  padding: 0 5px;
 }

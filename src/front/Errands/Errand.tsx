@@ -10,18 +10,18 @@ const Errand = ({ id, name, complete, onComplete }: ErrandProps) => {
 
   return (
     <>
-      <div
+      <li
         id={id}
-        className='errand-display-div'
+        className='errand-li'
       >
-        <p>{name}</p>
         <input
           type='checkbox'
           id={id}
           checked={complete}
           onChange={handleToggle}
         />
-      </div>
+        <p className='errand-name-p'>{name}</p>
+      </li>
     </>
   );
 };

@@ -1,17 +1,25 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
-
-import Fix from './front/Massive/Fix/Remain';
+// import Errands from './front/Errands/Display';
+// import Main from './front/Intended/Fix/Main';
+import List from './front/Lists/Display';
+import { History } from './front/Lists/HistoryTable-v2';
 import { Loader } from './front/Loader/Loader';
 
 function App() {
   return (
     <>
-      <Fix />
+      {/* <Main /> */}
       <hr />
       <Clock />
+      {/* <Errands /> */}
       <hr />
       <Loader />
+      <hr />
+      <History />
+      <hr />
+
+      <List />
     </>
   );
 }

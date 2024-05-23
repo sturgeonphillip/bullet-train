@@ -3,7 +3,7 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 import { handleError } from '../../../utils/errorHandler';
-// import { sortEntries } from '../../../utils/sortEntries';
+
 import {
   dateKey,
   createEntry,
@@ -23,7 +23,6 @@ export const handleToday = async (_req: Request, res: Response) => {
     const entryDate = dateKey();
     const dataExists = await checkIfDataExists(entryDate);
 
-    console.log('data exists?', dataExists);
     if (!dataExists) {
       const todayData = await createTodayFromYesterday(entryDate);
       if (todayData) {

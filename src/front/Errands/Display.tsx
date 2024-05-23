@@ -52,19 +52,19 @@ const Display = () => {
       <ul>
         {errands.length > 0 ? (
           errands.map((errand) => (
-            <li
-              key={errand.id}
-              // TODO: sort out css className situation
-              className={'errand-li'}
-            >
-              <Errand
-                id={errand.id}
-                name={errand.name}
-                complete={errand.complete}
-                onComplete={handleComplete}
-                timeExecuted={errand.timeExecuted}
-              />
-            </li>
+            // <li
+            //   key={errand.id}
+            //   // TODO: sort out css className situation
+            //   className={'errand-li'}
+            // >
+            <Errand
+              id={errand.id}
+              name={errand.name}
+              complete={errand.complete}
+              onComplete={handleComplete}
+              timeExecuted={errand.timeExecuted}
+            />
+            // </li>
           ))
         ) : (
           <p>no errands to complete.</p>
