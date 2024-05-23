@@ -1,0 +1,65 @@
+/* HistoryTable */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  max-height: 100%;
+  margin: auto;
+  overflow-y: scroll;
+  width: 500px;
+}
+
+.row-header {
+  /* display: flex; */
+  /* align-content: flex-start; */
+  width: 115px;
+}
+
+.row-data {
+  /* max-width: 100%; */
+  width: 100px;
+  align-self: flex-end;
+  border: 1px solid rgb(225, 225, 225);
+}
+
+/*
+menu/dropdown opens to view historical pattern of routines
+ordered in columns, number of columns based on screen size
+date | one  - two  - three
+     | four - five - six
+
+date | one  - two  - three
+ 
+date | one  - two
+
+date | one  - two  - three
+ -   | four
+
+date | one  - two  - three
+ -   | four - five
+*/
+
+/* 
+my database is an object of key:value pairs from db/list.json
+  the keys are strings - [key: string]
+  the values are strings indexed in an array - idx[]
+    like this:
+    {
+      [key1]: [idx[0], idx[1], idx[2]],
+      [key2]: [idx[0], idx[1], idx[2], idx[3]],
+      [key3]: [idx[0], idx[1]], 
+    }
+create a table where each k:v pair is a column
+  - the <th> is the key
+  - the <td> rows are the indexex values
+
+ so that the table is formed like this:
+<table>
+<th>{string key}</th>  <th>{string key}</th>  <th>{string key}</th>
+<td>{idx[0]}</td>      <td>{idx[0]}</td>      <td>{idx[0]}</td>
+<td>{idx[1]}</td>      <td>{idx[1]}</td>      <td>{idx[1]}</td>
+<td>{idx[2]}</td>      <td>{idx[2]}</td>      
+                       <td>{idx[3]}</td>      
+</table>
+
+how would I do this as a component */
