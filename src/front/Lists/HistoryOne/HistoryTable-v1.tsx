@@ -1,39 +1,35 @@
-import { useEffect, useState } from 'react';
-
+import { useCallback, useEffect, useState } from 'react';
+import './history1.css';
 export interface RoutineHistoryProps {
   [dateKey: string]: string[];
 }
 
-export const History = () => {
+const History = () => {
   const [list, setList] = useState<RoutineHistoryProps[] | null>(null);
 
-  useEffect(() => {
-    requestLists();
-  }, []);
-
-  async function requestLists() {
+  const requestLists = useCallback(async () => {
     try {
       const res = await fetch('http://localhost:3001/list');
       if (!res.ok) {
-        throw new Error('Network response error.');
+        throw new Error(`Network response error. Status code: ${res.status}`);
       }
+
       const data: RoutineHistoryProps = await res.json();
 
-      // assert types for fetched JSON data safety
       const entries = Object.entries(data);
       const formattedEntries = entries.map(([dataKey, value]) => ({
         [dataKey]: value,
       }));
 
-      console.log('LIST', list);
-
       setList(formattedEntries);
-      console.log('setList');
-      console.log('LIST', list);
     } catch (err) {
-      console.error(`There was a problem with the fetch operation: ${err}`);
+      console.error(`There was a problem fetching within requestLists: ${err}`);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    requestLists();
+  }, [requestLists]);
 
   return (
     <>
@@ -59,16 +55,4 @@ export const History = () => {
   );
 };
 
-/**
- * <table>
-        <tr>
-          <th scope='row'>Monday</th>
-          <td>8:00 AM - 9:00 AM</td>
-        </tr>
-        <tr>
-          <th scope='row'>Tuesday</th>
-          <td>9:00 AM - 10:00 AM</td>
-        </tr>
-         <!-- Add more rows as needed --> 
-        </table>
- */
+export default History;

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import './history2.css';
+import './history-table.css';
 export interface RoutineHistoryProps {
   [dateKey: string]: string[];
 }
 
-const History = () => {
+export const HistoryRows = () => {
   type ListItem = [string, string[]];
 
   const [list, setList] = useState<ListItem[]>([]);
@@ -40,45 +40,26 @@ const History = () => {
     requestLists();
   }, [requestLists]);
 
-  const entries = Object.entries(list);
-  console.log(entries);
   return (
-    <>
-      {list && list.length && (
-        <>
-          <table>
-            {list.map((x) => {
-              return (
-                <DataEntry
-                  key={x[0]}
-                  keyDate={String(x[0])}
-                  tasks={x[1]}
-                />
-              );
-            })}
-          </table>
-        </>
-      )}
-    </>
-  );
-};
-
-interface DataEntryProps {
-  keyDate: string;
-  tasks: string[];
-}
-
-const DataEntry = ({ keyDate, tasks }: DataEntryProps) => {
-  return (
-    <>
-      <tr key={keyDate}>
-        <th>{keyDate}</th>
-        {tasks.map((x) => (
-          <td key={x}>{x}</td>
+    <table className='history-table'>
+      <tbody className='history-tbody'>
+        {list.map((x, index) => (
+          <tr
+            key={index}
+            className='history-tr'
+          >
+            <th className='history-th'>{x[0]}</th>
+            {x[1].map((item, itemIndex) => (
+              <td
+                key={itemIndex}
+                className='history-td'
+              >
+                {item}
+              </td>
+            ))}
+          </tr>
         ))}
-      </tr>
-    </>
+      </tbody>
+    </table>
   );
 };
-
-export default History;

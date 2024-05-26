@@ -1,0 +1,49 @@
+/* history-table.css */
+.history-table {
+  /* table-layout: fixed; */
+  width: 100%; /* Adjust as needed */
+  /* border-collapse: collapse; */
+  /* Optional, for better table appearance */
+}
+
+.history-tbody {
+  display: block; /* Change display to block to enable scrolling */
+  max-height: 300px; /* Set maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 3px solid #aaa;
+  padding: 2px;
+}
+
+.history-tr {
+  /* border-bottom: 1px solid #ddd; Optional, for better table appearance */
+}
+
+.history-th,
+.history-td {
+  margin: 0;
+  padding: 8px; /* Adjust as needed */
+  text-align: left; /* Adjust alignment as needed */
+  border-right: 1px solid #ddd; Optional, for better table appearance
+}
+
+.history-td {
+  /* overflow-x: auto; */
+  width: 80px;
+  border: none;
+  padding: 8px;
+  text-align: left;
+  word-wrap: normal;
+}
+
+.history-th {
+  width: 75px;
+  margin: 0;
+  border: 1px solid #ddd;
+  padding; 8px;
+  text-align: left;
+}
+
+.history-th:first-child {
+  box-sizing: border-box;
+  border: 2px solid #ddd; /* Optional, for better table appearance */
+}
