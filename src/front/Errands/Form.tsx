@@ -10,7 +10,6 @@ const Form = ({ onNewErrandAdd }: FormProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     const errand = createErrand(name);
 
     if (errand.name.length < 2) {
@@ -24,10 +23,8 @@ const Form = ({ onNewErrandAdd }: FormProps) => {
       },
       body: JSON.stringify(errand),
     };
-
     try {
       const response = await fetch('http://localhost:3001/errands', options);
-
       if (!response.ok) {
         throw new Error('Network response is not ok.');
       }
@@ -40,15 +37,20 @@ const Form = ({ onNewErrandAdd }: FormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        name='errand-form'
-        type='text'
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <button type='submit'>Add</button>
-    </form>
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className='errands-form'
+      >
+        <input
+          name='errand-form'
+          type='text'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button type='submit'>Add</button>
+      </form>
+    </>
   );
 };
 
