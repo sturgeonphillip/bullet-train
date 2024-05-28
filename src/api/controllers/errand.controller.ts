@@ -85,7 +85,7 @@ const updateErrand = async (req: Request, res: Response) => {
     }
 
     const errand: ErrandProps = req.body;
-    existingData[errandIdx] = { ...errand };
+    existingData[errandIdx] = { ...existingData[errandIdx], ...errand };
 
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
 

@@ -71,9 +71,6 @@ const createRoutineList = async (req: Request, res: Response) => {
 
     const { addDate, addRoutineList } = await req.body;
 
-    // if (!Object.prototype.hasOwnProperty.call(routineList, addDate)) {
-    //   routineList[addDate] = [];
-    // }
     routineList[addDate] = addRoutineList;
 
     await fs.writeFile(filePath, JSON.stringify(routineList), 'utf8');
