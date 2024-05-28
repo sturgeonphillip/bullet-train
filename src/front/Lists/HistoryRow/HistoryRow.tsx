@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import './history-table.css';
+import './history-row.css';
 export interface RoutineHistoryProps {
   [dateKey: string]: string[];
 }
 
-export const HistoryRows = () => {
+export const HistoryRow = () => {
   type ListItem = [string, string[]];
 
   const [list, setList] = useState<ListItem[]>([]);
@@ -41,7 +41,10 @@ export const HistoryRows = () => {
   }, [requestLists]);
 
   return (
-    <table className='history-table'>
+    <table
+      className='history-table'
+      id='history-list-table'
+    >
       <tbody className='history-tbody'>
         {list.map((x, index) => (
           <tr

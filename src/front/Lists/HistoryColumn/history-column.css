@@ -1,0 +1,47 @@
+table {
+  --aquatic: rgb(24, 190, 228);
+  --fuschiatic: rgb(245, 0, 188, 0.15);
+}
+
+.history-col-div {
+  margin: 15px;
+}
+
+.history-col-table {
+  display: block;
+  empty-cells: hide;
+  overflow: scroll;
+  border: 1px solid rgb(100, 100, 100);
+  padding: 3px;
+  white-space: nowrap;
+  max-width: 100%;
+  width: 705px;
+}
+
+.history-col-th {
+  display: block;
+  padding: 0 10px;
+  border-bottom: 1px solid #999;
+  font-style: italic;
+  padding: 0 15px;
+  text-align: left;
+}
+
+.history-col-td {
+  display: block;
+  padding: 4px 11px;
+  text-align: left;
+}
+
+.history-col-tr {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.history-col-tr th {
+  background-color: rgba(230, 233, 234, 0.3);
+}
+
+.history-col-tr td:nth-child(odd) {
+  background-color: rgb(230, 233, 234, 0.09);
+}

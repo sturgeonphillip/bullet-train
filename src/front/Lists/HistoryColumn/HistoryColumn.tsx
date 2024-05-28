@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-// import './history-column.css';
+import './history-column.css';
 export interface RoutineHistoryProps {
   [dateKey: string]: string[];
 }
 
-export const HistoryColumns = () => {
+export const HistoryColumn = () => {
   type ListItem = [string, string[]];
 
   const [list, setList] = useState<ListItem[]>([]);
@@ -49,8 +49,8 @@ export const HistoryColumns = () => {
     <>
       {list && list.length && (
         <>
-          <div className='history-container-div'>
-            <table className='history-table'>
+          <div className='history-col-div'>
+            <table className='history-col-table'>
               <tbody>
                 {list.map((x) => {
                   return (
@@ -85,7 +85,7 @@ const DataEntryColumns = ({
   const cells = tasks.map((task, idx) => (
     <td
       key={`${keyDate}-${idx}-${task}`}
-      className='history-td'
+      className='history-col-td'
     >
       {task}
     </td>
@@ -96,7 +96,7 @@ const DataEntryColumns = ({
     (_, idx) => (
       <td
         key={`${keyDate}-empty-${idx}`}
-        className='history-td'
+        className='history-col-td'
       >
         &nbsp;
       </td>
@@ -106,9 +106,9 @@ const DataEntryColumns = ({
     <>
       <tr
         key={keyDate}
-        className='history-tr'
+        className='history-col-tr'
       >
-        <th className='history-th'>{keyDate}</th>
+        <th className='history-col-th'>{keyDate}</th>
 
         {cells}
         {emptyCells}

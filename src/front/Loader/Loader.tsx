@@ -6,8 +6,8 @@ export const Loader = () => {
     <>
       <div className='loader'>
         <div className='newton'></div>
-        <div className='watch'></div>
-        <div className='greenYellow'></div>
+        {/* <div className='watch'></div> */}
+        {/* <div className='greenYellow'></div> */}
       </div>
     </>
   );

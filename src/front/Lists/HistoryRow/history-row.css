@@ -1,12 +1,10 @@
-/* history-table.css */
-.history-table {
-  /* table-layout: fixed; */
-  width: 100%; /* Adjust as needed */
-  /* border-collapse: collapse; */
-  /* Optional, for better table appearance */
+/* history-row-table.css */
+.history-row-table {  
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.history-tbody {
+.history-row-tbody {
   display: block; /* Change display to block to enable scrolling */
   max-height: 300px; /* Set maximum height */
   overflow-y: auto; /* Enable vertical scrolling */
@@ -14,28 +12,30 @@
   padding: 2px;
 }
 
-.history-tr {
-  /* border-bottom: 1px solid #ddd; Optional, for better table appearance */
+.history-row-tr {
+  border-bottom: 1px solid #ddd;
+   /* Optional, for better table appearance */ */
 }
 
-.history-th,
-.history-td {
+.history-row-th,
+.history-row-td {
   margin: 0;
   padding: 8px; /* Adjust as needed */
   text-align: left; /* Adjust alignment as needed */
-  border-right: 1px solid #ddd; Optional, for better table appearance
+  border-right: 1px solid #ddd; 
+  /* Optional, for better table appearance */
 }
 
-.history-td {
+.history-row-td {
   /* overflow-x: auto; */
   width: 80px;
-  border: none;
+  border: 1 px #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center;
   word-wrap: normal;
 }
 
-.history-th {
+.history-row-th {
   width: 75px;
   margin: 0;
   border: 1px solid #ddd;
@@ -43,7 +43,7 @@
   text-align: left;
 }
 
-.history-th:first-child {
+.history-row-th:first-child {
   box-sizing: border-box;
   border: 2px solid #ddd; /* Optional, for better table appearance */
 }
