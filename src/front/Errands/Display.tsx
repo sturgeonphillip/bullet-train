@@ -6,11 +6,6 @@ import { ErrandProps } from './createErrand';
 
 const Display = () => {
   const [errands, setErrands] = useState<ErrandProps[]>([]);
-  const [showDeleteOption, setShowDeleteOption] = useState(false);
-
-  const handleShowDelete = () => {
-    setShowDeleteOption((prev) => !prev);
-  };
 
   const handleComplete = async (id: string) => {
     if (!id) {
@@ -143,11 +138,10 @@ const Display = () => {
                 id={errand.id}
                 name={errand.name}
                 complete={errand.complete}
-                onComplete={handleComplete}
-                onDelete={handleDelete}
                 timeAssigned={errand.timeAssigned}
                 timeExecuted={errand.timeExecuted}
-                showDelete={showDeleteOption}
+                onComplete={handleComplete}
+                onDelete={handleDelete}
               />
             ))
           ) : (

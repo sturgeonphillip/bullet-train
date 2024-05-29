@@ -1,3 +1,5 @@
+@import url('../../css/colors.css');
+
 .errands-container {
   display: flex;
   flex-direction: column;
@@ -5,7 +7,6 @@
 }
 
 .errands-container ul {
-  /* margin-left: -50px; */
   padding: 0;
 }
 
@@ -53,16 +54,26 @@
   justify-content: space-between;
   align-items: center;
   list-style-type: none;
-  color: aqua;
+  color: var(--aquatic);
   width: 300px;
 }
 
-.dropped {
+.errand-li-dropped {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  list-style-type: none;
+  color: var(--aquatic);
+  width: 300px;
+}
+
+/* .dropped {
   border: 1px solid #000;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  background: rgba(15, 15, 15, 0.75);
-}
+  background: rgba(15, 15, 15, 0.75); 
+} */
 
 /* .errand-li-input-div {
   display: flex;
@@ -96,7 +107,7 @@
 }
 
 .detail-container-div {
-  background-color: rgb(15, 15, 15);
+  background-color: rgb(15, 15, 15, 0.75);
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   position: relative;
@@ -116,7 +127,7 @@
 
 /* B!!!! */
 .table-b {
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .table-b th,
@@ -125,8 +136,7 @@ td {
 }
 
 .table-b th {
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .table-time-td {
@@ -139,7 +149,8 @@ td {
 }
 
 .detail-container-div .table-b tr:nth-child(odd) {
-  background-color: rgba(0, 255, 255, 0.508);
+  background-color: rgba(24, 190, 228, 0.25);
+  /* --aquatic: rgb(24, 190, 228); */
 }
 
 .detail-container-div .table-b th {
@@ -149,6 +160,7 @@ td {
 }
 
 .detail-container-div .table-b td {
+  font-style: italic;
   padding-right: 8px;
   text-align: right;
 }

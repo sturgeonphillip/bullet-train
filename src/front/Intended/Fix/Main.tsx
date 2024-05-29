@@ -132,7 +132,7 @@ const Main = () => {
 
       <div>{renderWizard()}</div>
       <hr />
-      <ListHistory />
+      {/* <ListHistory /> */}
     </>
   );
 };
