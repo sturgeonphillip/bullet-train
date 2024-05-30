@@ -1,0 +1,133 @@
+.bottle-container-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.bottle-cap-div {
+  background-color: #000;
+  border-radius: 3px;
+  width: 76px;
+  height: 20px;
+  margin-bottom: 2px;
+}
+
+.bottle-overflow-div {
+  display: block;
+  position: absolute;
+  margin-top: 18px;
+  width: 65px;
+  height: 3px;
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  background-color: transparent;
+  display: block;
+}
+
+.bottle-overflow-div.full {
+  background-color: #3b82f6;
+}
+
+.bottle-slider-root {
+  display: flex;
+  position: relative;
+  height: 11rem;
+  width: 100px;
+}
+
+.bottle-slider-root-full {
+  display: flex;
+  position: relative;
+  height: 11rem;
+  width: 100px;
+}
+
+.bottle-slider-range {
+  background-color: #3b82f6;
+  box-shadow: -2px 0 0 0 #000;
+  position: absolute;
+  width: 96px;
+  left: 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.bottle-slider-range.full {
+  width: 96px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.bottle-slider-track {
+  position: relative;
+  width: 100px;
+  background-color: transparent;
+  border: 2px solid #000;
+  flex-grow: 1;
+  border-radius: 0.75rem;
+}
+
+.bottle-slider-track {
+  flex-grow: 1;
+  position: relative;
+  width: 100px;
+  border: 2px solid #000;
+  border-radius: 12px;
+}
+
+.bottle-thumb-full {
+  width: 96px;
+  outline: none;
+  height: 14px;
+  display: block;
+  border-top: 2px solid #000;
+  border-left: 2px solid #000;
+  border-right: 2px solid #000;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  border-color: #000;
+  position: relative;
+}
+
+.bottle-thumb-div {
+  width: 98px;
+  outline: none;
+  height: 14px;
+  display: block;
+  /* position: relative; */
+}
+
+.bottle-thumb-empty {
+  width: 98px;
+  margin-left: 1px;
+  outline: none;
+  height: 14px;
+  display: block;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-color: #000;
+  background-color: transparent;
+  position: relative;
+}
+
+/* .bottle-slider-thumb:hover, */
+/* .bottle-slider-thumb:focus { */
+/* background-color: #3b82f6; */
+/* } */
+
+.bottle-slider-thumb.bottom {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-width: 0;
+  height: 14px;
+}
+
+.bottle-slider-thumb.top {
+  kborder-top-width: 2px;
+  border-bottom-width: 0;
+  border-color: #000;
+  border-left-width: 2px;
+  border-right-width: 2px;
+}
