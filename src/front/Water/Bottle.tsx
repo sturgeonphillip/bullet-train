@@ -1,12 +1,15 @@
+// import { v4 as uuid } from 'uuid';
 import * as Slider from '@radix-ui/react-slider';
 
 export interface BottleProps {
+  // id: string;
+  name: string;
   ounces: number[];
   setOunces: (oz: number[]) => void;
 }
 
-export const Bottle = ({ ounces, setOunces }: BottleProps) => {
-  console.log('water bottle component');
+export const Bottle = ({ name, ounces, setOunces }: BottleProps) => {
+  console.log('water bottle component', name);
 
   return (
     <>

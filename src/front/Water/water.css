@@ -1,8 +1,15 @@
+.bottle-display-div {
+  display: flex;
+}
+
 .bottle-container-div {
   display: flex;
+  /* background-color: #5f5d5d; */
   flex-direction: column;
   align-items: center;
+  padding: 10px;
   position: relative;
+  transition: box-shadow 0.3s ease;
 }
 
 .bottle-cap-div {
@@ -14,7 +21,7 @@
 }
 
 .bottle-overflow-div {
-  display: block;
+  background-color: #242424;
   position: absolute;
   margin-top: 18px;
   width: 65px;
@@ -24,38 +31,53 @@
   border-right: 2px solid #000;
   background-color: transparent;
   display: block;
+  z-index: 10;
 }
 
 .bottle-overflow-div.full {
   background-color: #3b82f6;
 }
 
+.bottle-overflow-div.full:hover,
+.bottle-overflow-div.full:focus {
+  background-color: #296ad3;
+  opacity: 65%;
+}
+
 .bottle-slider-root {
   display: flex;
   position: relative;
   height: 11rem;
-  width: 100px;
+}
+
+.bottle-slider-root:active {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.bottle-slider-root:hover {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
 }
 
 .bottle-slider-root-full {
   display: flex;
   position: relative;
   height: 11rem;
-  width: 100px;
+  /* width: 100px; */
 }
 
 .bottle-slider-range {
   background-color: #3b82f6;
   box-shadow: -2px 0 0 0 #000;
   position: absolute;
-  width: 96px;
+  width: 100px;
   left: 0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
 .bottle-slider-range.full {
-  width: 96px;
+  width: 100px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -78,45 +100,77 @@
 }
 
 .bottle-thumb-full {
-  width: 96px;
+  width: 100px;
   outline: none;
   height: 14px;
   display: block;
   border-top: 2px solid #000;
   border-left: 2px solid #000;
   border-right: 2px solid #000;
+
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   border-color: #000;
+  /* border-style: solid; */
   position: relative;
+}
+
+.bottle-thumb-full:hover,
+.bottle-thumb-full:focus {
+  background-color: #296ad3;
+  opacity: 65%;
+  height: 12px;
+  border-bottom-style: none;
 }
 
 .bottle-thumb-div {
-  width: 98px;
+  width: 100px;
+  margin-left: 2px;
   outline: none;
-  height: 14px;
+  height: 12px;
   display: block;
-  /* position: relative; */
+}
+
+.bottle-thumb-div:hover,
+.bottle-thumb-div:focus {
+  background-color: #3b82f6;
+  opacity: 65%;
+  height: 12px;
+  border-bottom-style: none;
 }
 
 .bottle-thumb-empty {
-  width: 98px;
-  margin-left: 1px;
+  width: 100px;
+  margin-left: 2px;
   outline: none;
-  height: 14px;
+  height: 12px;
   display: block;
   border-left-width: 2px;
   border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
   border-color: #000;
   background-color: transparent;
   position: relative;
+}
+
+.bottle-thumb-empty:hover,
+.bottle-thumb-empty:focus {
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #000;
+  background-color: #3b82f6;
+  opacity: 65%;
+  margin-bottom: 4px;
 }
 
 /* .bottle-slider-thumb:hover, */
 /* .bottle-slider-thumb:focus { */
 /* background-color: #3b82f6; */
 /* } */
-
+/* 
 .bottle-slider-thumb.bottom {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -130,4 +184,4 @@
   border-color: #000;
   border-left-width: 2px;
   border-right-width: 2px;
-}
+} */
