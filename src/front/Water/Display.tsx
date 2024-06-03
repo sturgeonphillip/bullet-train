@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bottle, BottleProps } from './Bottle';
+import { Bottle } from './Bottle';
 import './water.css';
 
 const Display = () => {
@@ -14,28 +14,30 @@ const Display = () => {
 
   return (
     <>
-      <h3>Water Total Ounces: {totalOunces}</h3>
       <div className='bottle-display-div'>
-        <Bottle
-          name={'blue'}
-          ounces={blueOunces}
-          setOunces={setBlueOunces}
-        />
-        <Bottle
-          name={'red'}
-          ounces={redOunces}
-          setOunces={setRedOunces}
-        />
-        <Bottle
-          name={'yellow'}
-          ounces={yellowOunces}
-          setOunces={setYellowOunces}
-        />
-        <Bottle
-          name={'green'}
-          ounces={greenOunces}
-          setOunces={setGreenOunces}
-        />
+        <div>
+          <Bottle
+            name={'blue'}
+            ounces={blueOunces}
+            setOunces={setBlueOunces}
+          />
+          <Bottle
+            name={'red'}
+            ounces={redOunces}
+            setOunces={setRedOunces}
+          />
+          <Bottle
+            name={'yellow'}
+            ounces={yellowOunces}
+            setOunces={setYellowOunces}
+          />
+          <Bottle
+            name={'green'}
+            ounces={greenOunces}
+            setOunces={setGreenOunces}
+          />
+        </div>
+        <h3>Ounces: {totalOunces}</h3>
       </div>
     </>
   );
