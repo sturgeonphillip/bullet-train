@@ -3,7 +3,6 @@ import { Bottle } from './Bottle';
 import './water.css';
 
 const Display = () => {
-  console.log('WATER!');
   const [blueOunces, setBlueOunces] = useState([0]);
   const [redOunces, setRedOunces] = useState([0]);
   const [yellowOunces, setYellowOunces] = useState([0]);
@@ -12,32 +11,33 @@ const Display = () => {
   const totalOunces =
     blueOunces[0] + redOunces[0] + yellowOunces[0] + greenOunces[0];
 
+  // const check = document.activeElement;
   return (
     <>
       <div className='bottle-display-div'>
-        <div>
+        <div className='bottle-group-div'>
           <Bottle
-            name={'blue'}
+            id={'blue'}
             ounces={blueOunces}
             setOunces={setBlueOunces}
           />
           <Bottle
-            name={'red'}
+            id={'red'}
             ounces={redOunces}
             setOunces={setRedOunces}
           />
           <Bottle
-            name={'yellow'}
+            id={'yellow'}
             ounces={yellowOunces}
             setOunces={setYellowOunces}
           />
           <Bottle
-            name={'green'}
+            id={'green'}
             ounces={greenOunces}
             setOunces={setGreenOunces}
           />
         </div>
-        <h3>Ounces: {totalOunces}</h3>
+        <h3>Total Ounces: {totalOunces}</h3>
       </div>
     </>
   );

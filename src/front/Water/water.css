@@ -1,13 +1,28 @@
+@import url('../../css/colors.css');
+
+:root {
+  --thumb-aquatic: rgb(8, 140, 170);
+
+  --melon: rgb(90, 231, 21);
+  --thumb-melon: rgb(73, 172, 24);
+}
+
 .bottle-display-div {
   display: flex;
+  flex-direction: column;
+}
+
+.bottle-group-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .bottle-container-div {
   display: flex;
-  /* background-color: #5f5d5d; */
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  padding: 5px 10px 0 10px;
   position: relative;
   transition: box-shadow 0.3s ease;
 }
@@ -35,13 +50,12 @@
 }
 
 .bottle-overflow-div.full {
-  background-color: #3b82f6;
+  background-color: var(--aquatic);
 }
 
 .bottle-overflow-div.full:hover,
 .bottle-overflow-div.full:focus {
-  background-color: #296ad3;
-  opacity: 65%;
+  background-color: var(--thumb-aquatic);
 }
 
 .bottle-slider-root {
@@ -50,24 +64,14 @@
   height: 11rem;
 }
 
-.bottle-slider-root:active {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
+.bottle-slider-root:active,
 .bottle-slider-root:hover {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
 }
 
-.bottle-slider-root-full {
-  display: flex;
-  position: relative;
-  height: 11rem;
-  /* width: 100px; */
-}
-
 .bottle-slider-range {
-  background-color: #3b82f6;
+  background-color: var(--aquatic);
   box-shadow: -2px 0 0 0 #000;
   position: absolute;
   width: 100px;
@@ -83,20 +87,21 @@
 }
 
 .bottle-slider-track {
-  position: relative;
-  width: 100px;
   background-color: transparent;
   border: 2px solid #000;
-  flex-grow: 1;
+  border: 2px solid #000;
   border-radius: 0.75rem;
-}
-
-.bottle-slider-track {
+  border-radius: 12px;
+  flex-grow: 1;
   flex-grow: 1;
   position: relative;
+  position: relative;
   width: 100px;
-  border: 2px solid #000;
-  border-radius: 12px;
+  width: 100px;
+}
+
+.bottle-slider-track.full:active {
+  box-shadow: 0 0 50px rgba(197, 197, 197, 0.5);
 }
 
 .bottle-thumb-full {
@@ -111,14 +116,12 @@
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   border-color: #000;
-  /* border-style: solid; */
   position: relative;
 }
 
 .bottle-thumb-full:hover,
 .bottle-thumb-full:focus {
-  background-color: #296ad3;
-  opacity: 65%;
+  background-color: var(--thumb-aquatic);
   height: 12px;
   border-bottom-style: none;
 }
@@ -133,8 +136,7 @@
 
 .bottle-thumb-div:hover,
 .bottle-thumb-div:focus {
-  background-color: #3b82f6;
-  opacity: 65%;
+  background-color: var(--thumb-aquatic);
   height: 12px;
   border-bottom-style: none;
 }
@@ -161,14 +163,18 @@
   border-right-width: 2px;
   border-bottom-width: 2px;
   border-color: #000;
-  background-color: #3b82f6;
+  background-color: var(--aquatic);
   opacity: 65%;
   margin-bottom: 4px;
 }
 
+.ounces-p {
+  font-weight: bold;
+  margin-bottom: 0;
+}
 /* .bottle-slider-thumb:hover, */
 /* .bottle-slider-thumb:focus { */
-/* background-color: #3b82f6; */
+/* background-color: var(--aquatic); */
 /* } */
 /* 
 .bottle-slider-thumb.bottom {
@@ -185,3 +191,5 @@
   border-left-width: 2px;
   border-right-width: 2px;
 } */
+.bottle-blue {
+}

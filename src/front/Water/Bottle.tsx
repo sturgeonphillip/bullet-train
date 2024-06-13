@@ -2,18 +2,17 @@
 import * as Slider from '@radix-ui/react-slider';
 
 export interface BottleProps {
-  // id: string;
-  name: string;
+  id: string;
   ounces: number[];
   setOunces: (oz: number[]) => void;
 }
 
-export const Bottle = ({ name, ounces, setOunces }: BottleProps) => {
-  console.log('water bottle component', name);
+export const Bottle = ({ id, ounces, setOunces }: BottleProps) => {
+  const color = `bottle-${id}`;
 
   return (
     <>
-      <div className='bottle-container-div'>
+      <div className={`bottle-container-div ${color}`}>
         {/* cap */}
         <div className='bottle-cap-div'></div>
 
@@ -45,7 +44,7 @@ export const Bottle = ({ name, ounces, setOunces }: BottleProps) => {
             className={`${ounces[0] === 0 ? 'bottle-thumb-empty' : ounces[0] === 32 ? 'bottle-thumb-full' : 'bottle-thumb-div'}`}
           />
         </Slider.Root>
-        <h4>{ounces[0]}</h4>
+        <p className='ounces-p'>{ounces[0]}</p>
       </div>
     </>
   );

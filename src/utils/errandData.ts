@@ -1,4 +1,4 @@
-function capitalize(data) {
+export function capitalize(data) {
   const input = data.split(' ');
   // TODO: if word is an article, don't capitalize.
   // https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case
@@ -9,8 +9,6 @@ function capitalize(data) {
   });
   return mod.join(' ');
 }
-
-console.log(capitalize('walk dogs'));
 
 // TODO: fix and add to server.ts
 app.delete('/errands/:id', async (request, response) => {
