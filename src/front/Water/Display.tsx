@@ -4,14 +4,19 @@ import './water.css';
 
 const Display = () => {
   const [blueOunces, setBlueOunces] = useState([0]);
-  const [redOunces, setRedOunces] = useState([0]);
-  const [yellowOunces, setYellowOunces] = useState([0]);
+  const [pinkOunces, setPinkOunces] = useState([0]);
+  const [orangeOunces, setOrangeOunces] = useState([0]);
   const [greenOunces, setGreenOunces] = useState([0]);
 
-  const totalOunces =
-    blueOunces[0] + redOunces[0] + yellowOunces[0] + greenOunces[0];
+  const totalOunces = [
+    blueOunces,
+    pinkOunces,
+    orangeOunces,
+    greenOunces,
+  ].reduce((acc, crv) => {
+    return (acc += crv[0]);
+  }, 0);
 
-  // const check = document.activeElement;
   return (
     <>
       <div className='bottle-display-div'>
@@ -22,14 +27,14 @@ const Display = () => {
             setOunces={setBlueOunces}
           />
           <Bottle
-            id={'red'}
-            ounces={redOunces}
-            setOunces={setRedOunces}
+            id={'pink'}
+            ounces={pinkOunces}
+            setOunces={setPinkOunces}
           />
           <Bottle
-            id={'yellow'}
-            ounces={yellowOunces}
-            setOunces={setYellowOunces}
+            id={'orange'}
+            ounces={orangeOunces}
+            setOunces={setOrangeOunces}
           />
           <Bottle
             id={'green'}

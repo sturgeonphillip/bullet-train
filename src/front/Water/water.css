@@ -2,9 +2,15 @@
 
 :root {
   --thumb-aquatic: rgb(8, 140, 170);
-
-  --melon: rgb(90, 231, 21);
-  --thumb-melon: rgb(73, 172, 24);
+  /* --aquatic */
+  --river: rgb(8, 140, 170);
+  --thumb-river: rgb(8, 97, 170);
+  --kapowski: rgb(234, 127, 145);
+  --thumb-kapowski: rgb(254, 47, 90);
+  --tangerine: rgb(253, 150, 47);
+  --thumb-tangerine: rgb(248, 93, 6);
+  --melon: rgb(150, 237, 107);
+  --thumb-melon: rgb(63, 171, 9);
 }
 
 .bottle-display-div {
@@ -50,12 +56,14 @@
 }
 
 .bottle-overflow-div.full {
-  background-color: var(--aquatic);
+  /* background-color: var(--aquatic); */
+  background-color: var(--color-main);
 }
 
 .bottle-overflow-div.full:hover,
 .bottle-overflow-div.full:focus {
-  background-color: var(--thumb-aquatic);
+  /* background-color: var(--thumb-aquatic); */
+  background-color: var(--color-thumb);
 }
 
 .bottle-slider-root {
@@ -71,7 +79,8 @@
 }
 
 .bottle-slider-range {
-  background-color: var(--aquatic);
+  /* background-color: var(--aquatic); */
+  background-color: var(--color-main);
   box-shadow: -2px 0 0 0 #000;
   position: absolute;
   width: 100px;
@@ -121,7 +130,8 @@
 
 .bottle-thumb-full:hover,
 .bottle-thumb-full:focus {
-  background-color: var(--thumb-aquatic);
+  /* background-color: var(--thumb-aquatic); */
+  background-color: var(--color-thumb);
   height: 12px;
   border-bottom-style: none;
 }
@@ -136,7 +146,8 @@
 
 .bottle-thumb-div:hover,
 .bottle-thumb-div:focus {
-  background-color: var(--thumb-aquatic);
+  /* background-color: var(--thumb-aquatic); */
+  background-color: var(--color-thumb);
   height: 12px;
   border-bottom-style: none;
 }
@@ -163,7 +174,8 @@
   border-right-width: 2px;
   border-bottom-width: 2px;
   border-color: #000;
-  background-color: var(--aquatic);
+  /* background-color: var(--aquatic); */
+  background-color: var(--color-main);
   opacity: 65%;
   margin-bottom: 4px;
 }
@@ -192,4 +204,21 @@
   border-right-width: 2px;
 } */
 .bottle-blue {
+  --color-main: var(--river);
+  --color-thumb: var(--thumb-river);
+}
+
+.bottle-pink {
+  --color-main: var(--kapowski);
+  --color-thumb: var(--thumb-kapowski);
+}
+
+.bottle-orange {
+  --color-main: var(--tangerine);
+  --color-thumb: var(--thumb-tangerine);
+}
+
+.bottle-green {
+  --color-main: var(--melon);
+  --color-thumb: var(--thumb-melon);
 }

@@ -19,9 +19,7 @@ export const Bottle = ({ id, ounces, setOunces }: BottleProps) => {
         {/* overflow */}
         <div
           className={`bottle-overflow-div + ${ounces[0] < 32 ? 'empty' : 'full'}`}
-        >
-          {/* `absolute z-10 mt-[15px] rounded-md block w-[70px] h-[8px] ml-[15px] border-t-2 border-l-2 bordre-r-2 border-black + ${ounces[0] < 32 ? 'bg-neutral-100' : 'bg-sky-500' } */}
-        </div>
+        ></div>
 
         <Slider.Root
           className='bottle-slider-root'
