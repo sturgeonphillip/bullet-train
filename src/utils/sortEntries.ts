@@ -29,6 +29,17 @@ export function sortEntries(entriesObject: EntriesObjectProps) {
 
   return sortedEntries;
 }
+type WaterRecordProps = { [key: string]: number };
+export function sortRecords(recordsObject: WaterRecordProps) {
+  const recordsArray = Object.entries(recordsObject);
+  recordsArray.sort((a, b) => {
+    return a[0].localeCompare(b[0]);
+  });
+
+  const sortedRecords = Object.fromEntries(recordsArray);
+
+  return sortedRecords;
+}
 
 // returns array of tuples from obj entries, keys as unix epoch numbers
 export function sortTimeKeyRoutine(listObject: ListProps) {

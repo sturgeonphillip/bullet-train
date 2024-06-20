@@ -23,7 +23,6 @@ export function longMonthFormat(dateString: string) {
   const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long' });
   const formattedMonth = monthFormatter.format(date);
 
-  console.log(formattedMonth);
   return formattedMonth;
 }
 

@@ -4,35 +4,45 @@ import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
+import { sortRecords } from '../../utils/sortEntries';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, '../../../db/water.json');
 
-const getWaterStats = async (req: Request, res: Response) => {
+const getWaterRecords = async (_req: Request, res: Response) => {
+  try {
+    const data = await fs.readFile(filePath, 'utf8');
+    res.status(200).send(data);
+  } catch (err) {
+    handleError(err, res, 'Error reading water levels from database.');
+  }
+};
+
+const getWaterRecordByDate = async (req: Request, res: Response) => {
   try {
     const byDate = req.params.date;
     const data = await fs.readFile(filePath, 'utf8');
-    const waterHistory = await JSON.parse(data);
+    const records = await JSON.parse(data);
 
-    const water = waterHistory[byDate];
+    const water = records[byDate];
+
     if (water) {
       res.status(200).json(water);
     } else {
       res
         .status(404)
-        .send({ message: 'Water history not found for specified date.' });
+        .send({ message: 'Water record not found for specified date.' });
     }
   } catch (err) {
-    handleError(err, res, 'Error reading water stats from database.');
-    return;
+    handleError(err, res, 'Error reading water data from database.');
   }
 };
 
-const createWaterStats = async (req: Request, res: Response) => {
+const createWaterRecord = async (req: Request, res: Response) => {
   try {
-    const byDate = req.params.date;
+    const recordDate = req.params.date;
     let existingData = {};
 
     try {
@@ -48,32 +58,34 @@ const createWaterStats = async (req: Request, res: Response) => {
           res,
           'Error reading existing water history from file.'
         );
-        return;
       }
     }
 
-    const waterStats = req.body;
+    const waterRecord = req.body;
 
-    const allWaterStats = {
+    const allWaterRecords = {
       ...existingData,
-      [byDate]: waterStats,
+      [recordDate]: waterRecord,
     };
 
-    await fs.writeFile(filePath, JSON.stringify(allWaterStats), 'utf8');
+    const sorted = sortRecords(allWaterRecords);
 
-    res.status(201).json(waterStats);
+    console.log('sorted water records: ', sorted);
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+
+    res.status(201).json(sorted);
   } catch (err) {
     handleError(err, res, 'Error while writing new water stats.');
     return;
   }
 };
 
-const updateWaterStats = async (req: Request, res: Response) => {
+const updateWaterRecords = async (req: Request, res: Response) => {
   try {
     const dateKey = req.params.date;
-    const updatedWaterStats = req.body;
+    const updatedWaterRecords = req.body;
 
-    console.log('UPDATED WATER STATS', updatedWaterStats);
+    console.log('UPDATED WATER STATS', updatedWaterRecords);
 
     let existingData: { [key: string]: number } = {};
 
@@ -89,10 +101,10 @@ const updateWaterStats = async (req: Request, res: Response) => {
       }
     }
 
-    let waterStats = existingData[dateKey];
+    let waterRecord = existingData[dateKey];
 
-    waterStats = { ...req.body };
-    existingData[dateKey] = waterStats;
+    waterRecord = { ...req.body };
+    existingData[dateKey] = waterRecord;
 
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
 
@@ -103,7 +115,7 @@ const updateWaterStats = async (req: Request, res: Response) => {
   }
 };
 
-const destroyWaterStats = async (req: Request, res: Response) => {
+const destroyWaterRecord = async (req: Request, res: Response) => {
   try {
     const dateKey = req.params.date;
     let existingData: { [key: string]: number } = {};
@@ -116,7 +128,6 @@ const destroyWaterStats = async (req: Request, res: Response) => {
         existingData = {};
       } else {
         handleError(err, res, `Error reading water stats.`);
-        return;
       }
     }
 
@@ -136,4 +147,10 @@ const destroyWaterStats = async (req: Request, res: Response) => {
   }
 };
 
-export { getWaterStats, createWaterStats, updateWaterStats, destroyWaterStats };
+export {
+  getWaterRecords,
+  getWaterRecordByDate,
+  createWaterRecord,
+  updateWaterRecords,
+  destroyWaterRecord,
+};

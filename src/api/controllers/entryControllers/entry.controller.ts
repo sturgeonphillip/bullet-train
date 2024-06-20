@@ -100,7 +100,7 @@ const createEntryByDate = async (req: Request, res: Response) => {
 
     await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
 
-    res.status(201).json(allEntries);
+    res.status(201).json(sorted);
   } catch (err) {
     handleError(err, res, 'Error while writing new entry.');
   }
@@ -141,17 +141,8 @@ const updateEntry = async (req: Request, res: Response) => {
   }
 };
 
-// const updateEntryRoutine = async (req: Request, res: Response) => {
-//   try {
-//     // updateEntryRoutine
-//   } catch (err) {
-//     handleError(err, res, 'HANDLED!');
-//   }
-// };
-
 const destroyEntry = async (req: Request, res: Response) => {
   try {
-    // destroyEntry
     const entryKey = req.params.date;
     let existingData: { [key: string]: EntryProps } = {};
 
@@ -163,20 +154,17 @@ const destroyEntry = async (req: Request, res: Response) => {
         existingData = {};
       } else {
         handleError(err, res, `Error reading file contents: ${err}`);
-        return;
       }
     }
 
     if (!Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
       res
         .status(404)
-        .send({ message: `Entry not found for specified date (${entryKey}.)` });
+        .send({ message: `Entry not found for specified date (${entryKey}).` });
       return;
     }
 
-    console.log('PRE', existingData);
     delete existingData[entryKey];
-    console.log('POST', existingData);
 
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
     res.status(204).send();

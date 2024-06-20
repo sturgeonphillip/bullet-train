@@ -14,6 +14,7 @@ import entryRoutes from './api/routes/entry.routes';
 import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
 import todayRoutes from './api/routes/today.routes';
+import waterRoutes from './api/routes/water.routes';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -40,6 +41,7 @@ app.use('/entry', entryRoutes);
 app.use('/list', listRoutes);
 app.use('/errands', errandRoutes);
 app.use('/today', todayRoutes);
+app.use('/water', waterRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));

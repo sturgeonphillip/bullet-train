@@ -3,13 +3,13 @@
 :root {
   --thumb-aquatic: rgb(8, 140, 170);
   /* --aquatic */
-  --river: rgb(8, 140, 170);
+  --river: rgb(8, 140, 170, 0.75);
   --thumb-river: rgb(8, 97, 170);
-  --kapowski: rgb(234, 127, 145);
+  --kapowski: rgb(234, 127, 145, 0.75);
   --thumb-kapowski: rgb(254, 47, 90);
-  --tangerine: rgb(253, 150, 47);
+  --tangerine: rgb(253, 150, 47, 0.75);
   --thumb-tangerine: rgb(248, 93, 6);
-  --melon: rgb(150, 237, 107);
+  --melon: rgb(150, 237, 107, 0.75);
   --thumb-melon: rgb(63, 171, 9);
 }
 
@@ -42,7 +42,6 @@
 }
 
 .bottle-overflow-div {
-  background-color: #242424;
   position: absolute;
   margin-top: 18px;
   width: 65px;
@@ -56,13 +55,11 @@
 }
 
 .bottle-overflow-div.full {
-  /* background-color: var(--aquatic); */
   background-color: var(--color-main);
 }
 
 .bottle-overflow-div.full:hover,
 .bottle-overflow-div.full:focus {
-  /* background-color: var(--thumb-aquatic); */
   background-color: var(--color-thumb);
 }
 
@@ -174,7 +171,6 @@
   border-right-width: 2px;
   border-bottom-width: 2px;
   border-color: #000;
-  /* background-color: var(--aquatic); */
   background-color: var(--color-main);
   opacity: 65%;
   margin-bottom: 4px;

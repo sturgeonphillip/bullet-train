@@ -1,50 +1,56 @@
-import React, { useEffect, useState } from 'react';
 import * as Slider from '@radix-ui/react-slider';
+// import { useEffect, useState } from 'react';
+
 export interface BottleProps {
+  dateKey?: string;
   id: string;
   ounces: number[];
   setOunces: (oz: number[]) => void;
-  overflowRef: React.RefObject<HTMLDivElement>;
-  thumbRef: React.RefObject<HTMLDivElement>;
 }
 
-export const Bottle2 = ({
-  id,
-  ounces,
-  setOunces,
-  overflowRef,
-  thumbRef,
-}: BottleProps) => {
+export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
   const color = `bottle-${id}`;
+  if (dateKey === '2024-02-29') {
+    console.log(dateKey, 'DOGS');
+  }
 
-  const [isThumbFocused, setIsThumbFocused] = useState(false);
+  // debounce
+  let debounceTimer: NodeJS.Timeout;
 
-  useEffect(() => {
-    const currentThumbRef = thumbRef.current;
+  const debounceFetch = (value: number) => {
+    clearTimeout(debounceTimer);
 
-    const handleFocusBlur = () => {
-      setIsThumbFocused(currentThumbRef === document.activeElement);
-    };
+    debounceTimer = setTimeout(() => {
+      // perform fetch request here
+      console.log(`fetch request w/ value:`, value);
 
-    if (currentThumbRef) {
-      currentThumbRef.addEventListener('focus', handleFocusBlur);
-      currentThumbRef.addEventListener('blur', handleFocusBlur);
-
-      return () => {
-        currentThumbRef.removeEventListener('focus', handleFocusBlur);
-        currentThumbRef.removeEventListener('blur', handleFocusBlur);
+      // replace console.log() with fetch request to update database
+      const options = {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ounces),
       };
-    }
-  }, [thumbRef]);
 
-  // determine if overflow div is 'full' based on logic
-  const isOverflowFull = true; // placeholder
+      (async () => {
+        await fetch(`http://localhost:3001/water/${dateKey}`, options);
+      })();
+      console.log('added to the db!');
+    }, 1500); // adjust delay as needed
+  };
 
-  // conditionally apply styles based on state
-  const overflowStyle =
-    isThumbFocused && isOverflowFull
-      ? { backgroundColor: 'var(--thumb-aquatic)' }
-      : {};
+  const handleSliderChange = (newValue: number) => {
+    setOunces([newValue]);
+
+    // call function to debounce fetch request
+    debounceFetch(newValue);
+  };
+
+  // useEffect(() => {
+  //   debounceFetch(slider); // initial fetch or other initialization logic
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   return (
     <>
@@ -58,13 +64,15 @@ export const Bottle2 = ({
         ></div>
 
         <Slider.Root
-          className=''
+          className='bottle-slider-root'
           defaultValue={[0]}
           step={4}
           max={32}
           orientation='vertical'
+          // value={ounces}
+          // onValueChange={setOunces}
           value={ounces}
-          onValueChange={setOunces}
+          onValueChange={(newValues) => handleSliderChange(newValues[0])}
         >
           <Slider.Track
             id='track'
@@ -80,15 +88,38 @@ export const Bottle2 = ({
         </Slider.Root>
         <p className='ounces-p'>{ounces[0]}</p>
       </div>
-      <div
-        ref={overflowRef}
-        className='bottle-overflow-div full'
-        style={overflowStyle}
-      ></div>
-      <div
-        ref={thumbRef}
-        className='bottle-thumb-div'
-      ></div>
     </>
   );
 };
+
+/**
+ * 
+  // track changes with local state
+  // const [localOz, setLocalOz] = useState(ounces);
+
+  // useEffect(() => {
+  //   // update when props changes
+  //   // setLocalOz(ounces);
+  // }, [ounces]);
+
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(async () => {
+  //     // send update to server after debounce delay
+  //     const options = {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(localOz),
+  //     };
+  //     await fetch(`http://localhost:3001/water/${id}`, options).then(() => {
+  //       // update global state after successful update
+  //       setOunces(localOz);
+  //     });
+  //     // cleanup function clears timeout if component unmounts or there's a new update
+  //     return () => clearTimeout(timeoutId);
+  //   }, 500); // debounce delay in ms
+
+  //   return () => clearTimeout(timeoutId); // return cleanup
+  // }, [id, localOz, setOunces]);
+ */

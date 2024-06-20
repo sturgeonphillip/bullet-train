@@ -1,14 +1,15 @@
-// import { v4 as uuid } from 'uuid';
 import * as Slider from '@radix-ui/react-slider';
 
 export interface BottleProps {
+  dateKey?: string;
   id: string;
   ounces: number[];
   setOunces: (oz: number[]) => void;
 }
 
-export const Bottle = ({ id, ounces, setOunces }: BottleProps) => {
+export const Bottle = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
   const color = `bottle-${id}`;
+  // console.log(dateKey);
 
   return (
     <>
@@ -32,7 +33,7 @@ export const Bottle = ({ id, ounces, setOunces }: BottleProps) => {
         >
           <Slider.Track
             id='track'
-            className='bottle-slider-track'
+            className='bottle-slider-track wavy-border'
           >
             <Slider.Range
               className={`bottle-slider-range + ${ounces[0] < 32 ? 'empty' : 'full'}`}
