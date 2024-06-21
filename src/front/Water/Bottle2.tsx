@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import * as Slider from '@radix-ui/react-slider';
-// import { useEffect, useState } from 'react';
 
 export interface BottleProps {
   dateKey?: string;
@@ -9,10 +9,20 @@ export interface BottleProps {
 }
 
 export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
-  const color = `bottle-${id}`;
-  if (dateKey === '2024-02-29') {
-    console.log(dateKey, 'DOGS');
-  }
+  const color = `${id}`;
+
+  const [focus, setFocus] = useState(false);
+  // const [blur, setBlur] = useState(false);
+
+  const handleFocus = () => {
+    setFocus(true);
+  };
+  const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
+    setFocus(false);
+    console.log(`Element lost focus: ${e.target.className}`);
+  };
+
+  const focusStyle = focus ? 'focus-glow' : '';
 
   // debounce
   let debounceTimer: NodeJS.Timeout;
@@ -25,18 +35,22 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
       console.log(`fetch request w/ value:`, value);
 
       // replace console.log() with fetch request to update database
+      const reqBody = {
+        ounces: ounces[0],
+        color,
+      };
       const options = {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(ounces),
+        body: JSON.stringify(reqBody),
       };
 
       (async () => {
         await fetch(`http://localhost:3001/water/${dateKey}`, options);
       })();
-      console.log('added to the db!');
+      console.log('added to the db!', JSON.stringify(reqBody));
     }, 1500); // adjust delay as needed
   };
 
@@ -46,11 +60,6 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
     // call function to debounce fetch request
     debounceFetch(newValue);
   };
-
-  // useEffect(() => {
-  //   debounceFetch(slider); // initial fetch or other initialization logic
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   return (
     <>
@@ -64,7 +73,6 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
         ></div>
 
         <Slider.Root
-          className='bottle-slider-root'
           defaultValue={[0]}
           step={4}
           max={32}
@@ -73,6 +81,7 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
           // onValueChange={setOunces}
           value={ounces}
           onValueChange={(newValues) => handleSliderChange(newValues[0])}
+          className={`bottle-slider-root ${focusStyle}`}
         >
           <Slider.Track
             id='track'
@@ -83,7 +92,9 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
             />
           </Slider.Track>
           <Slider.Thumb
-            className={`${ounces[0] === 0 ? 'bottle-thumb-empty' : ounces[0] === 32 ? 'bottle-thumb-full' : 'bottle-thumb-div'}`}
+            onFocus={() => handleFocus()}
+            onBlur={(e) => handleBlur(e)}
+            className={`${color} bottle-thumb-${ounces[0] === 0 ? 'empty' : ounces[0] === 32 ? 'full' : 'div'}`}
           />
         </Slider.Root>
         <p className='ounces-p'>{ounces[0]}</p>

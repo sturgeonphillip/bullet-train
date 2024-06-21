@@ -33,6 +33,18 @@
   transition: box-shadow 0.3s ease;
 }
 
+.bottle-container-div:hover > .bottle-slider-root,
+.bottle-container-div:active > .bottle-slider-root,
+.bottle-container-div:focus > .bottle-slider-root {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
+}
+
+.glow {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
+}
+
 .bottle-cap-div {
   background-color: #000;
   border-radius: 3px;
@@ -69,14 +81,13 @@
   height: 11rem;
 }
 
-.bottle-slider-root:active,
+/* .bottle-slider-root:active,
 .bottle-slider-root:hover {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
-}
+} */
 
 .bottle-slider-range {
-  /* background-color: var(--aquatic); */
   background-color: var(--color-main);
   box-shadow: -2px 0 0 0 #000;
   position: absolute;
@@ -95,19 +106,19 @@
 .bottle-slider-track {
   background-color: transparent;
   border: 2px solid #000;
-  border: 2px solid #000;
   border-radius: 0.75rem;
-  border-radius: 12px;
-  flex-grow: 1;
+  box-shadow: 0 0 2px rgba(197, 197, 197, 0.25);
   flex-grow: 1;
   position: relative;
-  position: relative;
-  width: 100px;
   width: 100px;
 }
 
+.bottle-slider-track:active,
+.bottle-slider-track:focus {
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
+}
 .bottle-slider-track.full:active {
-  box-shadow: 0 0 50px rgba(197, 197, 197, 0.5);
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
 }
 
 .bottle-thumb-full {
@@ -118,7 +129,6 @@
   border-top: 2px solid #000;
   border-left: 2px solid #000;
   border-right: 2px solid #000;
-
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
   border-color: #000;
@@ -127,7 +137,6 @@
 
 .bottle-thumb-full:hover,
 .bottle-thumb-full:focus {
-  /* background-color: var(--thumb-aquatic); */
   background-color: var(--color-thumb);
   height: 12px;
   border-bottom-style: none;
@@ -141,11 +150,14 @@
   display: block;
 }
 
+/* span.bottle-thumb-div:focus {
+
+} */
+
 .bottle-thumb-div:hover,
 .bottle-thumb-div:focus {
-  /* background-color: var(--thumb-aquatic); */
   background-color: var(--color-thumb);
-  height: 12px;
+  height: 10px;
   border-bottom-style: none;
 }
 
@@ -166,7 +178,10 @@
 }
 
 .bottle-thumb-empty:hover,
-.bottle-thumb-empty:focus {
+.bottle-thumb-empty:focus,
+.bottle-thumb-empty:active {
+  /* border-radius: 10px;
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5); */
   border-left-width: 2px;
   border-right-width: 2px;
   border-bottom-width: 2px;
@@ -176,45 +191,38 @@
   margin-bottom: 4px;
 }
 
+.focus-glow {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(197, 197, 197, 0.5);
+}
+
 .ounces-p {
   font-weight: bold;
   margin-bottom: 0;
 }
-/* .bottle-slider-thumb:hover, */
-/* .bottle-slider-thumb:focus { */
-/* background-color: var(--aquatic); */
-/* } */
-/* 
-.bottle-slider-thumb.bottom {
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-  border-top-width: 0;
-  height: 14px;
-}
 
-.bottle-slider-thumb.top {
-  kborder-top-width: 2px;
-  border-bottom-width: 0;
-  border-color: #000;
-  border-left-width: 2px;
-  border-right-width: 2px;
-} */
-.bottle-blue {
+.blue {
   --color-main: var(--river);
   --color-thumb: var(--thumb-river);
 }
 
-.bottle-pink {
+.pink {
   --color-main: var(--kapowski);
   --color-thumb: var(--thumb-kapowski);
 }
 
-.bottle-orange {
+.orange {
   --color-main: var(--tangerine);
   --color-thumb: var(--thumb-tangerine);
 }
 
-.bottle-green {
+.green {
   --color-main: var(--melon);
   --color-thumb: var(--thumb-melon);
 }
+
+/* bottle-container-div 
+  - add class that matches whatever child initiates the hovered glow
+*/
+
+/*  */
