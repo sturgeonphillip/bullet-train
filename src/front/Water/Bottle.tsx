@@ -33,7 +33,7 @@ export const Bottle = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
         >
           <Slider.Track
             id='track'
-            className='bottle-slider-track wavy-border'
+            className='bottle-slider-track'
           >
             <Slider.Range
               className={`bottle-slider-range + ${ounces[0] < 32 ? 'empty' : 'full'}`}

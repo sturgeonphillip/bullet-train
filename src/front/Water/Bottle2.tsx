@@ -9,36 +9,34 @@ export interface BottleProps {
 }
 
 export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
+  // TODO judge impact of removing 'bottle-' from color='bottle-id'
   const color = `${id}`;
 
   const [focus, setFocus] = useState(false);
-  // const [blur, setBlur] = useState(false);
 
   const handleFocus = () => {
     setFocus(true);
   };
-  const handleBlur = (e: React.FocusEvent<HTMLElement>) => {
+
+  const handleBlur = () => {
     setFocus(false);
-    console.log(`Element lost focus: ${e.target.className}`);
   };
-
-  const focusStyle = focus ? 'focus-glow' : '';
-
-  // debounce
-  let debounceTimer: NodeJS.Timeout;
+  /**
+  let debounceTimer: NodeJS.Timeout | null = null;
 
   const debounceFetch = (value: number) => {
-    clearTimeout(debounceTimer);
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
 
     debounceTimer = setTimeout(() => {
-      // perform fetch request here
-      console.log(`fetch request w/ value:`, value);
+      console.log(`Fetch request with value:`, value);
 
-      // replace console.log() with fetch request to update database
       const reqBody = {
-        ounces: ounces[0],
+        ounces: value,
         color,
       };
+
       const options = {
         method: 'PATCH',
         headers: {
@@ -47,29 +45,83 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
         body: JSON.stringify(reqBody),
       };
 
-      (async () => {
-        await fetch(`http://localhost:3001/water/${dateKey}`, options);
-      })();
-      console.log('added to the db!', JSON.stringify(reqBody));
-    }, 1500); // adjust delay as needed
+      fetch(`http://localhost:3001/water/${dateKey}`, options)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to update water data.');
+          }
+          console.log(
+            `Successfully updated water data: ${JSON.stringify(reqBody)}`
+          );
+        })
+        .catch((err) => {
+          console.error(`Error updating water data: ${err}`);
+        });
+    }, 1500);
+  };
+ */
+
+  let timeoutId: NodeJS.Timeout | null = null;
+  let abortController: AbortController | null = null;
+
+  const debounceFetch = (value: number) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    if (abortController) {
+      abortController.abort(); // cancel previous request
+    }
+    abortController = new AbortController();
+
+    const reqBody = {
+      ounces: value,
+      color,
+    };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqBody),
+      signal: abortController.signal, // pass signal to fetch request
+    };
+
+    timeoutId = setTimeout(() => {
+      fetch(`http://localhost:3001/water/${dateKey}`, options)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to update water data.');
+          }
+          console.log(
+            `Successfully updated water data: ${JSON.stringify(reqBody)}`
+          );
+        })
+        .catch((err) => {
+          console.error(`Error updating water data: ${err}`);
+        });
+    }, 500);
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   };
 
-  const handleSliderChange = (newValue: number) => {
-    setOunces([newValue]);
-
-    // call function to debounce fetch request
-    debounceFetch(newValue);
+  const handleSliderChange = (newValue: number[]) => {
+    setOunces(newValue);
+    debounceFetch(newValue[0]);
   };
 
   return (
     <>
       <div className={`bottle-container-div ${color}`}>
-        {/* cap */}
         <div className='bottle-cap-div'></div>
 
-        {/* overflow */}
         <div
-          className={`bottle-overflow-div + ${ounces[0] < 32 ? 'empty' : 'full'}`}
+          className={`bottle-overflow-div ${ounces[0] < 32 ? 'empty' : 'full'}`}
         ></div>
 
         <Slider.Root
@@ -77,23 +129,21 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
           step={4}
           max={32}
           orientation='vertical'
-          // value={ounces}
-          // onValueChange={setOunces}
           value={ounces}
-          onValueChange={(newValues) => handleSliderChange(newValues[0])}
-          className={`bottle-slider-root ${focusStyle}`}
+          onValueChange={handleSliderChange}
+          className={`bottle-slider-root ${focus ? 'focus-glow' : ''}`}
         >
           <Slider.Track
             id='track'
             className='bottle-slider-track'
           >
             <Slider.Range
-              className={`bottle-slider-range + ${ounces[0] < 32 ? 'empty' : 'full'}`}
+              className={`bottle-slider-range ${ounces[0] < 32 ? 'empty' : 'full'}`}
             />
           </Slider.Track>
           <Slider.Thumb
-            onFocus={() => handleFocus()}
-            onBlur={(e) => handleBlur(e)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             className={`${color} bottle-thumb-${ounces[0] === 0 ? 'empty' : ounces[0] === 32 ? 'full' : 'div'}`}
           />
         </Slider.Root>
@@ -102,35 +152,3 @@ export const Bottle2 = ({ id, ounces, setOunces, dateKey }: BottleProps) => {
     </>
   );
 };
-
-/**
- * 
-  // track changes with local state
-  // const [localOz, setLocalOz] = useState(ounces);
-
-  // useEffect(() => {
-  //   // update when props changes
-  //   // setLocalOz(ounces);
-  // }, [ounces]);
-
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(async () => {
-  //     // send update to server after debounce delay
-  //     const options = {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(localOz),
-  //     };
-  //     await fetch(`http://localhost:3001/water/${id}`, options).then(() => {
-  //       // update global state after successful update
-  //       setOunces(localOz);
-  //     });
-  //     // cleanup function clears timeout if component unmounts or there's a new update
-  //     return () => clearTimeout(timeoutId);
-  //   }, 500); // debounce delay in ms
-
-  //   return () => clearTimeout(timeoutId); // return cleanup
-  // }, [id, localOz, setOunces]);
- */
