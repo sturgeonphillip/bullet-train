@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import {
+  useState,
+  // useEffect
+} from 'react';
 import { Bottle } from './Bottle';
 import { Bottle2 } from './Bottle2';
 import './water.css';
@@ -11,7 +14,7 @@ const Display = () => {
   const [orangeOunces, setOrangeOunces] = useState([0]);
   const [greenOunces, setGreenOunces] = useState([0]);
 
-  const [totalOz, setTotalOz] = useState(0);
+  // const [totalOz, setTotalOz] = useState<number>(0);
 
   const totalOunces = [
     blueOunces,
@@ -23,50 +26,49 @@ const Display = () => {
   }, 0);
 
   // debounce logic
-  let debounceTimer: NodeJS.Timeout | null = null;
+  // let debounceTimer: NodeJS.Timeout | null = null;
 
-  const debounceFetch = (value: number) => {
-    clearTimeout(debounceTimer as NodeJS.Timeout);
+  // const debounceFetch = (value: number) => {
+  //   clearTimeout(debounceTimer as NodeJS.Timeout);
 
-    debounceTimer = setTimeout(() => {
-      // perform fetch request
-      console.log(`Fetch request with totalOz: ${totalOz}`);
+  // debounceTimer = setTimeout(() => {
+  //   // perform fetch request
+  //   console.log(`Fetch request with totalOz: ${totalOz}`);
 
-      const options = {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          blueOunces,
-          pinkOunces,
-          orangeOunces,
-          greenOunces,
-          totalOunces,
-        }),
-      };
+  //   const options = {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       blueOunces,
+  //       pinkOunces,
+  //       orangeOunces,
+  //       greenOunces,
+  //       totalOunces,
+  //     }),
+  //   };
 
-      (async () => {
-        await fetch(`http://localhost:3001/water/${dateKey}`, options);
-      })();
-      console.log(
-        'added to the db!',
-        JSON.stringify({
-          blueOunces,
-          pinkOunces,
-          orangeOunces,
-          greenOunces,
-          totalOunces,
-        })
-      );
-    }, 1500);
-  };
+  //   (async () => {
+  //     await fetch(`http://localhost:3001/water/${dateKey}`, options);
+  //   })();
+  //   console.log(
+  //     'added to the db!',
+  //     JSON.stringify({
+  //       blueOunces,
+  //       pinkOunces,
+  //       orangeOunces,
+  //       greenOunces,
+  //       totalOunces,
+  //     })
+  //   );
+  // }, 1500);
 
-  const handleSliderChange = (newValue: number) => {
-    setOunces([newValue]);
+  // const handleSliderChange = (newValue: number) => {
+  //   setOunces([newValue]);
 
-    debounceFetch(newValue);
-  };
+  //   debounceFetch(newValue);
+  // };
 
   // end new logic
 
@@ -75,39 +77,30 @@ const Display = () => {
       <div className='bottle-display-div'>
         <div className='bottle-group-div'>
           <Bottle
-            dateKey={currentDateKey}
             id={'blue'}
+            dateKey={currentDateKey}
+            color={'blue'}
             ounces={blueOunces}
             setOunces={setBlueOunces}
           />
           <Bottle
-            dateKey={currentDateKey}
             id={'pink'}
+            dateKey={currentDateKey}
+            color={'pink'}
             ounces={pinkOunces}
             setOunces={setPinkOunces}
           />
-          {/* <Bottle
-            dateKey={currentDateKey}
-            id={'orange'}
-            ounces={orangeOunces}
-            setOunces={setOrangeOunces}
-          />
-          <Bottle
-          dateKey={currentDateKey}  
-          id={'green'}
-            ounces={greenOunces}
-            setOunces={setGreenOunces}
-          /> */}
-
           <Bottle2
-            dateKey={currentDateKey}
             id={'orange'}
+            dateKey={currentDateKey}
+            color={'orange'}
             ounces={orangeOunces}
             setOunces={setOrangeOunces}
           />
           <Bottle2
-            dateKey={currentDateKey}
             id={'green'}
+            dateKey={currentDateKey}
+            color={'green'}
             ounces={greenOunces}
             setOunces={setGreenOunces}
           />
