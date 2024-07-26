@@ -1,3 +1,4 @@
+import { Server } from 'http';
 import fs from 'node:fs/promises';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -8,6 +9,8 @@ import express, {
   Response,
   NextFunction,
 } from 'express';
+
+// const server: Server;
 
 // TODO: validate all requests server side
 import entryRoutes from './api/routes/entry.routes';
@@ -47,99 +50,46 @@ app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
 });
 
-app.get('/errands', async (_req: Request, res: Response) => {
-  const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
-
-app.post('/errands', async (req: Request, res: Response) => {
+app.post('/draft', async (req: Request, res: Response) => {
   try {
-    const dataPath = path.join(__dirname, './data/errands.json');
-    const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
+    const dataPath = path.join(__dirname, '../db/adjustments.json');
+
+    let existingData = [];
+
+    try {
+      const content = await fs.readFile(dataPath, 'utf8');
+
+      existingData = JSON.parse(content);
+      console.log('EXIST', existingData);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        existingData = [];
+      } else {
+        console.error(`Error reading file contents: ${error}`);
+      }
+    }
+
+    const oldRoutine = existingData.at(-1).routines; // ?? [];
+    const newRoutine = [...oldRoutine, req.body];
+    const routine = {
+      date: Date.now(),
+      routines: newRoutine,
+    };
+    // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
 
     await fs.writeFile(
       dataPath,
-      JSON.stringify([...errands, req.body]),
+      JSON.stringify([...existingData, routine]),
       'utf8'
     );
-    res.status(201).json({ message: 'Errand saved.' });
-  } catch (err) {
-    console.error('Error saving errands: ', err);
-    res.status(500).json({ message: 'Error saving errand', error: err });
+    res.status(201).json(routine);
+  } catch (error) {
+    console.error('Error adding a new routine.', error);
+    res.status(500).json({
+      message: 'Error adding a new routine.',
+      error,
+    });
   }
-});
-
-// app.post('/routineList', async (req: Request, res: Response) => {
-//   try {
-//     const dataPath = path.join(__dirname, '../db/adjustments.json');
-
-//     let existingData = [];
-
-//     try {
-//       const content = await fs.readFile(dataPath, 'utf8');
-
-//       existingData = JSON.parse(content);
-//       console.log('EXIST', existingData);
-//     } catch (error) {
-//       if (error instanceof SyntaxError) {
-//         existingData = [];
-//       } else {
-//         console.error(`Error reading file contents: ${error}`);
-//       }
-//     }
-
-//     const oldRoutine = existingData.at(-1).routines; // ?? [];
-//     const newRoutine = [...oldRoutine, req.body];
-//     const routine = {
-//       date: Date.now(),
-//       routines: newRoutine,
-//     };
-//     // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
-
-//     await fs.writeFile(
-//       dataPath,
-//       JSON.stringify([...existingData, routine]),
-//       'utf8'
-//     );
-//     res.status(201).json(routine);
-//   } catch (error) {
-//     console.error('Error adding a new routine.', error);
-//     res.status(500).json({
-//       message: 'Error adding a new routine.',
-//       error,
-//     });
-//   }
-// });
-
-app.delete('/errands/:id', async (req: Request, res: Response) => {
-  const idToDelete = await req.params.id;
-
-  try {
-    const dataPath = path.join(__dirname, './data/errands.json');
-    const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
-
-    const updatedErrands = errands.filter(
-      (errand: { id: string }) => errand.id !== idToDelete
-    );
-
-    await fs.writeFile(dataPath, JSON.stringify(updatedErrands), 'utf8');
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error('Error saving errands: ', err);
-      res.status(500).json({
-        message: 'Error deleting errand',
-        error: err.message,
-      });
-    }
-  }
-});
-
-app.get('/entries', async (req: Request, res: Response) => {
-  await console.log(req.body);
-  const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
 });
 
 const errorHandler: ErrorRequestHandler = (
@@ -149,6 +99,7 @@ const errorHandler: ErrorRequestHandler = (
   next: NextFunction
 ) => {
   if (err instanceof Error) {
+    console.error('Error:', err);
     res.status(500).send({
       msg: 'possible CORS Error',
       detail: err.message,
@@ -159,8 +110,18 @@ const errorHandler: ErrorRequestHandler = (
 };
 
 app.use(errorHandler);
-app.listen(port, () => {
+
+const server: Server = app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
+});
+
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. Performing cleanup...');
+
+  server.close(() => {
+    console.log('Server closed.');
+    process.exitCode = 0;
+  });
 });
 
 // from MDN: Warning: Client-side form validation is no substitute for validating on the server. It's easy for someone to modify the HTML, or bypass your HTML entirely and submit the data directly to your server. If your server fails to validate the received data, disaster could strike with data that is badly-formatted, too large, of the wrong type, etc.
