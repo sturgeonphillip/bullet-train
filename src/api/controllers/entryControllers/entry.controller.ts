@@ -15,6 +15,11 @@ const filePath = path.join(__dirname, '../../../../db/entries.json');
 const getEntries = async (_req: Request, res: Response) => {
   try {
     const data = await fs.readFile(filePath, 'utf8');
+
+    if (!data) {
+      throw new Error('File is empty or does not exist.');
+    }
+
     res.status(200).send(data);
   } catch (err) {
     handleError(err, res, 'Error reading entries from database.');
@@ -67,8 +72,7 @@ const getEntryByDate = async (date: string) => {
     return entries[date];
   } catch (err) {
     console.error('Error reading entry:', err);
-    // returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
-    return null;
+    // return null; *see conflicting notes
   }
 };
 
@@ -108,7 +112,7 @@ const createEntryByDate = async (req: Request, res: Response) => {
 
 const updateEntry = async (req: Request, res: Response) => {
   try {
-    const entryKey = req.params.date;
+    const entryDate = req.params.date;
     const updatedRoutines = req.body.routines;
 
     console.log('UPDATEDROUTINES', updatedRoutines);
@@ -127,15 +131,15 @@ const updateEntry = async (req: Request, res: Response) => {
 
     // console.log('PRE', existingData);
 
-    let entry: EntryProps = existingData[entryKey];
+    let entry: EntryProps = existingData[entryDate];
 
     entry = { ...req.body };
-    existingData[entryKey] = entry;
+    existingData[entryDate] = entry;
 
     // console.log('POST', existingData);
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
 
-    res.status(204).send();
+    res.status(204).send({ message: 'Update successful.' });
   } catch (err) {
     handleError(err, res, 'Error updating entry.');
   }
@@ -143,7 +147,7 @@ const updateEntry = async (req: Request, res: Response) => {
 
 const destroyEntry = async (req: Request, res: Response) => {
   try {
-    const entryKey = req.params.date;
+    const entryDate = req.params.date;
     let existingData: { [key: string]: EntryProps } = {};
 
     try {
@@ -157,14 +161,16 @@ const destroyEntry = async (req: Request, res: Response) => {
       }
     }
 
-    if (!Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
+    if (!Object.prototype.hasOwnProperty.call(existingData, entryDate)) {
       res
         .status(404)
-        .send({ message: `Entry not found for specified date (${entryKey}).` });
+        .send({
+          message: `Entry not found for specified date (${entryDate}).`,
+        });
       return;
     }
 
-    delete existingData[entryKey];
+    delete existingData[entryDate];
 
     await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
     res.status(204).send();
@@ -175,9 +181,9 @@ const destroyEntry = async (req: Request, res: Response) => {
 
 const destroyEntryRoutine = async (req: Request, res: Response) => {
   try {
-    const entryKey = req.params.date;
+    const entryDate = req.params.date;
     const routineId = req.params.id;
-    console.log(entryKey, routineId);
+    console.log(entryDate, routineId);
 
     let existingData: { [key: string]: EntryProps } = {};
 
@@ -194,8 +200,8 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
     }
 
     console.log('EXISTINGDATA', existingData);
-    if (Object.prototype.hasOwnProperty.call(existingData, entryKey)) {
-      const entry: EntryProps = existingData[entryKey];
+    if (Object.prototype.hasOwnProperty.call(existingData, entryDate)) {
+      const entry: EntryProps = existingData[entryDate];
 
       console.log('ENTRY', entry);
       const routineIndex = entry.routine.findIndex(
@@ -209,7 +215,7 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
         console.log('SPLICE', entry);
 
         // update entry in existingData object
-        existingData[entryKey] = entry;
+        existingData[entryDate] = entry;
 
         // write updated data back to the file
         console.log('writing updates:');
@@ -223,7 +229,7 @@ const destroyEntryRoutine = async (req: Request, res: Response) => {
       }
     } else {
       res.status(404).send({
-        message: `Entry not found for specified date (${entryKey}).`,
+        message: `Entry not found for specified date (${entryDate}).`,
       });
     }
   } catch (err) {
@@ -328,3 +334,45 @@ interface EntryProps {
 //     return null;
 //   }
 // }
+
+/** *** *** *** */
+// regarding return null:
+/** unexpectedly, Phind produced a response that included the return null at the end of a catch statement.
+ * As a follow up, I asked why. Response:
+ * Returning null is useful because it allows the calling code to handle the error gracefully without having to deal with the error directly within the getEntryByDate function, and it keeps the function's signature simple because it always returns a value (either the entry object or null).
+ */
+
+/** blackbox.ai thoughts on returning null:
+ *
+ *In the provided code, the getEntryByDate function returns null when an error occurs while reading the entry from the file. However, it's worth considering whether returning null is the best approach in this case.
+
+Here are a few potential issues with returning null:
+
+Loss of error information: By returning null, you're losing the error information that could be useful for debugging or logging purposes.
+Ambiguous return value: null could be a valid return value in some cases (e.g., if the entry is not found), making it difficult to distinguish between a successful return and an error.
+Caller needs to handle null explicitly: The caller of getEntryByDate needs to explicitly check for null and handle it accordingly, which can lead to additional complexity.
+Instead of returning null, you could consider the following alternatives:
+
+Rethrow the error: If you don't want to handle the error in getEntryByDate, you can rethrow it to propagate the error up the call stack. This way, the caller can handle the error as needed.
+```
+catch (err) {
+  throw err;
+}
+```
+
+Return an error object: You can return an error object that contains information about the error. This way, the caller can handle the error explicitly.
+```
+catch (err) {
+  return { error: err };
+}
+```
+
+Use a more explicit return value: If you want to indicate that the entry was not found, you can return a more explicit value, such as undefined or an empty object {}.
+```
+catch (err) {
+  return undefined;
+}
+```
+
+Ultimately, the choice of return value depends on the specific requirements of your application and the expectations of the caller. It's essential to document the return values and error handling behavior of your functions to ensure that they are used correctly.
+ */

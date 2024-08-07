@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'node:url';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
 import { sortRecords } from '../../utils/sortEntries';
@@ -20,7 +20,11 @@ const getWaterRecords = async (_req: Request, res: Response) => {
   }
 };
 
-const getWaterRecordByDate = async (req: Request, res: Response) => {
+const getWaterRecordByDate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const byDate = req.params.date;
     const data = await fs.readFile(filePath, 'utf8');
@@ -30,10 +34,8 @@ const getWaterRecordByDate = async (req: Request, res: Response) => {
 
     if (water) {
       res.status(200).json(water);
-    } else {
-      res
-        .status(404)
-        .send({ message: 'Water record not found for specified date.' });
+    } else if (!water) {
+      return next();
     }
   } catch (err) {
     handleError(err, res, 'Error reading water data from database.');

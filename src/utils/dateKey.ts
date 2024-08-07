@@ -3,7 +3,7 @@ export function localDTKey() {
 }
 
 export function isoDateKey() {
-  return new Date(Date.now()).toISOString().split('T')[0];
+  return new Date().toISOString().split('T')[0];
 }
 
 export function intlDTFKey() {
