@@ -1,0 +1,81 @@
+{
+  "2024-06-02": {
+    "date": "2024-06-02",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1717311600000,
+        "ounces": [0],
+        "bladders": 2,
+        "bottles": [
+          {
+            "id": "egg9fe13-2636-4394-8684-5377fb553a38",
+            "ounces": 8,
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
+  },
+
+  "2024-06-03": {
+    "date": "2024-06-03",
+    "metrics": [
+      {
+        "gauge": 2,
+        "timestamp": 1717399300000,
+        "ounces": 60,
+        "bladders": 2,
+        "bottles": [
+          {
+            "id": "4e5ceccb-8d55-47c5-8e82-61b55757b59d",
+            "ounces": 28,
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "b4e89550-2749-4a6f-ae91-54d816629539",
+            "ounces": 32,
+            "capacity": 32,
+            "complete": true
+          }
+        ]
+      },
+      {
+        "gauge": 1,
+        "timestamp": 1717399000000,
+        "ounces": 44,
+        "bladders": 2,
+        "bottles": [
+          {
+            "id": "4e5ceccb-8d55-47c5-8e82-61b55757b59d",
+            "ounces": 12,
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "b4e89550-2749-4a6f-ae91-54d816629539",
+            "ounces": 32,
+            "capacity": 32,
+            "complete": true
+          }
+        ]
+      },
+      {
+        "gauge": 0,
+        "timestamp": 1717398000000,
+        "ounces": 0,
+        "bladders": 1,
+        "bottles": [
+          {
+            "id": "b4e89550-2749-4a6f-ae91-54d816629539",
+            "ounces": 0,
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
+  }
+}
