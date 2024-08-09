@@ -4,11 +4,11 @@ import * as keroseneController from '../controllers/kerosene.controller';
 
 const router = Router();
 
-router.get('/', keroseneController.getFullWaterLog);
+router.get('/', keroseneController.getWaterLog);
 
-router.get('/:date', keroseneController.getLog);
+router.get('/:date', keroseneController.getLogByDate);
 
-router.get('/:date/:id', keroseneController.getLogByBottle);
+router.get('/:date/:gauge', keroseneController.getGaugeByDate);
 
 router.post('/:date', keroseneController.createLog);
 
