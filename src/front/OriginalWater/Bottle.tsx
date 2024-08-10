@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as Slider from '@radix-ui/react-slider';
 // import { debounceFetch, DebounceFetchProps } from './debounceTotalOz';
-// import { BottleProps } from './createBottle';
 
 interface TotalOzProps {
   color: string;
@@ -50,7 +49,7 @@ export const Bottle = ({
   // };
 
   useEffect(() => {
-    console.log('Updated ounces:', ounces[0]);
+    console.log('Original Water Update:', ounces[0]);
   }, [ounces]);
 
   return (
@@ -69,7 +68,6 @@ export const Bottle = ({
           orientation='vertical'
           value={ounces}
           onValueChange={handleSliderChange}
-          // onValueCommit={handleSliderCommit}
           onValueCommit={commitValue}
           className={`bottle-slider-root ${focus ? 'focus-glow' : ''}`}
         >
