@@ -29,17 +29,30 @@ export function createWaterMetric(
   };
 }
 
-// Create a water log with default properties
-export function createWaterLog({ date }: Partial<WaterLogProps>) {
-  if (!date) {
-    date = isoDateKey();
-  }
+// Create a water log with a date argument
+// TODO: implement a return output with default properties
+export function createNewDayWaterLog(date: Partial<WaterLogProps>) {
+  console.log('DATE:', date, 'type:', typeof date);
+  const logDate = date.date ?? isoDateKey();
+  console.log('logDATE:', logDate, 'type:', typeof logDate);
 
   const bottle = createBottle();
   const metric = createWaterMetric([bottle]);
 
   return {
-    date,
+    date: logDate as string,
+    metrics: [metric],
+  };
+}
+
+// Create a water log with default properties
+export function createWaterLog(date: Partial<WaterLogProps>) {
+  const logDate = date.date ?? isoDateKey();
+  const bottle = createBottle();
+  const metric = createWaterMetric([bottle]);
+
+  return {
+    date: logDate as string,
     metrics: [metric],
   };
 }
@@ -59,7 +72,7 @@ export function createNonconsecutiveWaterLog({
   };
 }
 
-interface BottleProps {
+export interface BottleProps {
   id: string;
   ounces: number[];
   capacity: number;
@@ -67,7 +80,7 @@ interface BottleProps {
   color?: string;
 }
 
-interface WaterMetricProps {
+export interface WaterMetricProps {
   gauge: number;
   timestamp: number;
   ounces: number;
@@ -75,16 +88,64 @@ interface WaterMetricProps {
   bottles: BottleProps[];
 }
 
-interface WaterLogProps {
+export interface WaterLogProps {
   date: string;
   metrics: WaterMetricProps[];
 }
 
-const today = isoDateKey();
+// console.log(createNewDayWaterLog({ date: '2024-08-11' }));
 
-console.log(today);
+export function createWaterLogWithPartial(date: Partial<WaterLogProps>) {
+  // console.log('DATE:', date, 'type:', typeof date);
+  const logDate = date.date ?? isoDateKey();
+  // console.log('logDATE:', logDate, 'type:', typeof logDate);
 
-const water = createWaterLog({ date: today });
+  const bottle = createBottle();
+  const metric = createWaterMetric([bottle]);
 
-console.log(water);
-console.log(water.metrics[0].bottles);
+  return {
+    date: logDate as string,
+    metrics: [metric],
+  };
+}
+
+// adjust parameters to be optional
+
+// handle logic to merge provided values with defaults
+
+export function createWaterLogWithPartialProvision({
+  date = isoDateKey(),
+  metrics = [],
+}: Partial<WaterLogProps> = {}) {
+  // if metrics are provided, process to ensure they meet our expected structure, using default values where there are none
+  const processedMetrics = metrics.map((metric) => ({
+    ...metric,
+    gauge: metric.gauge || 0,
+    timestamp: metric.timestamp || Date.now(),
+    ounces: metric.ounces || 0,
+    bladders: metric.bladders || 0,
+    bottles: metric.bottles || [createBottle()],
+  }));
+
+  /** seems wrong at first glance */
+  // create new bottle if none specified & add to metrics
+  const bottleA = createBottle();
+  const bottleB = createBottle();
+
+  processedMetrics.push({
+    gauge: 0,
+    timestamp: Date.now(),
+    ounces: 0,
+    bladders: 1,
+    bottles: [bottleA, bottleB],
+  });
+
+  return {
+    date,
+    metrics: processedMetrics,
+  };
+}
+
+const loggy = createWaterLogWithPartialProvision();
+// createWaterLogWithPartialPhind();
+console.log('loggy', loggy.metrics[0].bottles);

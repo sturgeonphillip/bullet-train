@@ -26,6 +26,7 @@ const getWaterData = async (): Promise<{
   }
 };
 
+// get entire water log
 const getWaterLog = async (_req: Request, res: Response) => {
   try {
     const data = await getWaterData();
@@ -41,7 +42,7 @@ const getWaterLog = async (_req: Request, res: Response) => {
   }
 };
 
-// entire log for specified date
+// get log for specified date
 const getLogByDate = async (req: Request, res: Response) => {
   try {
     const byDate = req.params.date;
