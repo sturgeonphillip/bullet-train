@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import * as Slider from '@radix-ui/react-slider';
+import { isoDateKey } from '../../utils/dateKey';
 import './kerosene.css';
 
 const Display = () => {
   const [color, setColor] = useState('');
   const [ounces, setOunces] = useState([0]);
+
+  const today = isoDateKey();
 
   useEffect(() => {
     // fetch initial values from backend
@@ -32,6 +35,18 @@ const Display = () => {
         setOunces={setOunces}
         commitValue={handleCommitValueData}
       />
+      <div>
+        <button
+        // add an empty bottle to the metrics
+        >
+          add bottle
+        </button>
+        <button
+        // add a new waterlog for today
+        >
+          add {today}
+        </button>
+      </div>
     </>
   );
 };

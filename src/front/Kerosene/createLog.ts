@@ -93,8 +93,6 @@ export interface WaterLogProps {
   metrics: WaterMetricProps[];
 }
 
-// console.log(createNewDayWaterLog({ date: '2024-08-11' }));
-
 export function createWaterLogWithPartial(date: Partial<WaterLogProps>) {
   // console.log('DATE:', date, 'type:', typeof date);
   const logDate = date.date ?? isoDateKey();
@@ -145,7 +143,3 @@ export function createWaterLogWithPartialProvision({
     metrics: processedMetrics,
   };
 }
-
-const loggy = createWaterLogWithPartialProvision();
-// createWaterLogWithPartialPhind();
-console.log('loggy', loggy.metrics[0].bottles);
