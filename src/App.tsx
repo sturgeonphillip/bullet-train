@@ -1,22 +1,26 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
-import Water from './front/OriginalWater/Display';
-import Kerosene from './front/Kerosene/Display';
+import Water from './front/OriginalWater/Box';
+import BlackBottle from './front/Kerosene/BlackboxII';
 
 function App() {
   return (
     <>
       <div>
-        <div>
+        <div className='display-container'>
           <Clock />
           <hr />
           <div className='holding'>
             <h4>Original</h4>
-            <Water />
+            {/* <Water /> */}
           </div>
-          <div className='holding'>
+          {/* <div className='holding'>
             <h4>Kerosene!</h4>
             <Kerosene />
+          </div> */}
+          <div className='holding'>
+            <h4>Black Bottle</h4>
+            <BlackBottle />
           </div>
         </div>
       </div>

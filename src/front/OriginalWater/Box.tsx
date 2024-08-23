@@ -52,7 +52,7 @@ function debounceTotalOz({
     fetch(`http://localhost:3001/water/${dateKey}`, options)
       .then((res) => {
         if (!res.ok) {
-          throw new Error('Failed to update water data. ');
+          throw new Error('Failed to update water data.');
         }
         console.log('Successfully updated water data.');
         onSuccess(); // call the callback
