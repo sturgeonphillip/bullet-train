@@ -1,7 +1,7 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
 import Water from './front/OriginalWater/Box';
-import BlackBottle from './front/Kerosene/BlackboxII';
+import BlackBottle from './front/Kerosene/Kerosene';
 
 function App() {
   return (
