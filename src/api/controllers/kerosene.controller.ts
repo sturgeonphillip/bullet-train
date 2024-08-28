@@ -6,11 +6,11 @@ import { Request, Response } from 'express';
 import { handleError } from '../../utils/errorHandler';
 
 // TODO: move these functions to a better place than front/Kerosene
-// import {
-//   createWaterBottle,
-//   createWaterMetric,
-//   createNonconsecutiveWaterLog,
-// } from '../../front/Kerosene/createWaterLog';
+import {
+  createWaterBottle,
+  createWaterMetric,
+  createNonconsecutiveWaterLog,
+} from '../../front/Kerosene/createWaterLog';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -192,7 +192,21 @@ const createLogByDate = async (req: Request, res: Response) => {
     }
 
     if (!metrics[date]) {
-      metrics[date] = { gauge: 0, bottles: [] };
+      metrics[date] = {
+        /**
+         * // TODO
+       * error with gauge not existing is that it's on WaterMetricProps, not WaterLogProps
+      date variable should be logDate and should look like this:
+        metrics[logDate] = {
+          date: logDate,
+          metrics: {
+            // add all the needed WaterMetricProps properties here     
+          }
+
+      */
+        gauge: 0,
+        bottles: [],
+      };
     }
 
     // i already have a function to create a new bottle. see below.
@@ -217,7 +231,7 @@ const createLogByDate = async (req: Request, res: Response) => {
 
 const createLogBottle = async (req: Request, res: Response) => {
   try {
-    const date = req.params.date;
+    // const date = req.params.date;
     const { ounces, capacity } = req.body;
     const logDate = req.params.date;
     let existingData = {};
