@@ -54,7 +54,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 app.post('/draft', async (req: Request, res: Response) => {
   try {
-    const dataPath = path.join(__dirname, '../db/adjustments.json');
+    const dataPath = path.join(__dirname, '../db/drafts.json');
 
     let existingData = [];
 

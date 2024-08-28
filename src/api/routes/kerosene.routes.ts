@@ -10,7 +10,7 @@ router.get('/:date', keroseneController.getLogByDate);
 
 router.get('/:date/:gauge', keroseneController.getGaugeByDate);
 
-router.post('/:date', keroseneController.createLog);
+router.post('/:date', keroseneController.createLogByDate);
 
 router.patch('/:date', keroseneController.updateLog);
 

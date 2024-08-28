@@ -5,6 +5,13 @@ import { Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
 
+// TODO: move these functions to a better place than front/Kerosene
+// import {
+//   createWaterBottle,
+//   createWaterMetric,
+//   createNonconsecutiveWaterLog,
+// } from '../../front/Kerosene/createWaterLog';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -142,7 +149,7 @@ const createLogByDateRewrite = async (req: Request, res: Response) => {
       waterLog[date] = createNonconsecutiveWaterLog({ date });
     }
 
-    const firstBottle = createBottle();
+    const firstBottle = createWaterBottle();
     firstBottle.ounces = [ounces];
     firstBottle.capacity = capacity;
 
@@ -249,7 +256,7 @@ const createLogBottle = async (req: Request, res: Response) => {
   }
 };
 
-const updateLog = async (req: Request, res: Response) => {
+const updateWaterLog = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
     let existingData: { [key: string]: WaterLogProps } = {};
@@ -277,7 +284,7 @@ const updateLog = async (req: Request, res: Response) => {
   }
 };
 
-const destroyLog = async (req: Request, res: Response) => {
+const destroyWaterLog = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
     let existingData: { [key: string]: WaterLogProps } = {};
@@ -308,8 +315,8 @@ export {
   getLogByDate,
   getGaugeByDate,
   createLogByDate,
-  updateLog,
-  destroyLog,
+  updateWaterLog,
+  destroyWaterLog,
 };
 
 // TODO: move types out of controller
