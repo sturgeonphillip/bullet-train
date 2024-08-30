@@ -1,8 +1,5 @@
 import { useState, useCallback } from 'react';
 import * as Slider from '@radix-ui/react-slider';
-import { isoDateKey } from '../../utils/dateKey';
-import './kerosene.css';
-import { debounce } from '../../utils/debounce';
 
 interface WaterBottleDisplayProps {
   color?: string;
@@ -77,37 +74,4 @@ const WaterBottle = ({
   );
 };
 
-// could benefit from 2nd file
-const Display = () => {
-  const [ounces, setOunces] = useState([0]);
-
-  const today = isoDateKey();
-
-  // debouncer + useCallback seems like overkill
-  const debouncedHandleCommitValueData = debounce((value: number[]) => {
-    console.log('Committing value data during fetch:', value);
-  }, 2000);
-
-  const handleCommitValueData = useCallback(debouncedHandleCommitValueData, [
-    debouncedHandleCommitValueData,
-  ]);
-
-  return (
-    <>
-      <div className='bottle-display-grid'>
-        <WaterBottle
-          color='red'
-          ounces={ounces}
-          setOunces={setOunces}
-          commitValue={handleCommitValueData}
-        />
-      </div>
-      <div>
-        {/* add an empty bottle to the metrics for the day */}
-        <button>add an empty bottle to {today}</button>
-      </div>
-    </>
-  );
-};
-
-export default Display;
+export default WaterBottle;
