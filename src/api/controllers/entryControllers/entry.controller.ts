@@ -115,7 +115,7 @@ const updateEntry = async (req: Request, res: Response) => {
     const entryDate = req.params.date;
     const updatedRoutines = req.body.routines;
 
-    console.log('UPDATEDROUTINES', updatedRoutines);
+    console.log('updated routines', updatedRoutines);
     let existingData: { [key: string]: EntryProps } = {};
 
     try {
@@ -162,11 +162,9 @@ const destroyEntry = async (req: Request, res: Response) => {
     }
 
     if (!Object.prototype.hasOwnProperty.call(existingData, entryDate)) {
-      res
-        .status(404)
-        .send({
-          message: `Entry not found for specified date (${entryDate}).`,
-        });
+      res.status(404).send({
+        message: `Entry not found for specified date (${entryDate}).`,
+      });
       return;
     }
 

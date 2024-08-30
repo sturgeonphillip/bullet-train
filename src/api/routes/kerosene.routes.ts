@@ -12,8 +12,8 @@ router.get('/:date/:gauge', keroseneController.getGaugeByDate);
 
 router.post('/:date', keroseneController.createLogByDate);
 
-router.patch('/:date', keroseneController.updateLog);
+router.patch('/:date', keroseneController.updateWaterLog);
 
-router.delete('./:date', keroseneController.destroyLog);
+router.delete('./:date', keroseneController.destroyWaterLog);
 
 export default router;
