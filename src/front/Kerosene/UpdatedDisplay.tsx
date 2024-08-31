@@ -21,13 +21,17 @@ const Display = () => {
   const commitValue = async (index: number, value: number[]) => {
     try {
       console.log('Committing value data:', value);
-      const response = await fetch('/endpoint', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ index, value }),
-      });
+      // const response = await fetch(`http://localhost:3001/water/${dateKey}`, {
+      const response = await fetch(
+        `http://localhost:3001/water/2024-08-29, {`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ index, value }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Network response was not ok');

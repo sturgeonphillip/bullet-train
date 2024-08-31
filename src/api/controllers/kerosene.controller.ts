@@ -6,18 +6,14 @@ import { Request, Response } from 'express';
 import { handleError } from '../../utils/errorHandler';
 
 // TODO: move these functions to a better place than front/Kerosene
-import {
-  createWaterBottle,
-  createWaterMetric,
-  createNonconsecutiveWaterLog,
-} from '../../front/Kerosene/createWaterLog';
+import { createWaterMetrics } from '../../front/Kerosene/createWaterLog';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, './../../../db/kerosene.json');
 
-const getWaterData = async (): Promise<{
+export const getWaterData = async (): Promise<{
   [key: string]: WaterLogProps;
 } | null> => {
   try {
@@ -33,8 +29,8 @@ const getWaterData = async (): Promise<{
   }
 };
 
-// get entire water log
-const getWaterLog = async (_req: Request, res: Response) => {
+// get entire water database
+const getAllWaterLogRecords = async (_req: Request, res: Response) => {
   try {
     const data = await getWaterData();
 
@@ -49,7 +45,7 @@ const getWaterLog = async (_req: Request, res: Response) => {
   }
 };
 
-// get log for specified date
+// get log for specific date
 const getLogByDate = async (req: Request, res: Response) => {
   try {
     const byDate = req.params.date;
@@ -72,7 +68,7 @@ const getLogByDate = async (req: Request, res: Response) => {
   }
 };
 
-// single gauge on selected date
+// single metric gauge for date
 const getGaugeByDate = async (req: Request, res: Response) => {
   try {
     const { date: byDate, gauge: byGauge } = req.params;
@@ -123,116 +119,9 @@ const getGaugeByDate = async (req: Request, res: Response) => {
   }
 };
 
-const createLogByDateRewrite = async (req: Request, res: Response) => {
+// create new log with no preexisting data, date argument always required
+export const createWaterLogForNewDate = async (req: Request, res: Response) => {
   try {
-    const date = req.params.date;
-    const { ounces, capacity } = req.body;
-
-    if (!date || !ounces || !capacity) {
-      return res.status(400).json({ message: 'Missing required fields.' });
-    }
-
-    // const waterData = await getWaterData();
-    const waterLog = await getWaterData();
-
-    // if (!waterData) {
-    //   throw new Error('Unable to retrieve water data.');
-    // }
-    if (!waterLog) {
-      throw new Error('Unable to retrieve water data.');
-    }
-
-    // if (!waterData[date]) {
-    //   waterData[date] = createWaterLog({ date });
-    // }
-    if (!waterLog[date]) {
-      waterLog[date] = createNonconsecutiveWaterLog({ date });
-    }
-
-    const firstBottle = createWaterBottle();
-    firstBottle.ounces = [ounces];
-    firstBottle.capacity = capacity;
-
-    // const metric = waterLog[date].metrics[0];
-    const metric = createWaterMetric([firstBottle]);
-
-    waterLog[date].metrics.push(metric);
-
-    // metric.gauge++;
-    // metric.bottles.push(firstBottle);
-    // metric.ounces = metric.bottles.reduce(
-    //   (acc, bottle) => acc + bottle.ounces[0],
-    //   0
-    // );
-    // metric.bladders = metric.bottles.length;
-
-    // await fs.writeFile(filePath, JSON.stringify(waterData, null, 2));
-    await fs.writeFile(filePath, JSON.stringify(waterLog, null, 2));
-
-    res.status(201).json(firstBottle);
-  } catch (err) {
-    handleError(err, res, 'Error creating new log entry.');
-  }
-};
-
-const createLogByDate = async (req: Request, res: Response) => {
-  try {
-    const date = req.params.date;
-    const { ounces, capacity } = req.body;
-
-    if (!date || !ounces || !capacity) {
-      return res.status(400).json({ message: 'Missing required fields.' });
-    }
-
-    // let's change the use of the variable "metrics" here because metrics is one of the primary properties on each data entry.
-    const metrics = await getWaterData();
-
-    if (!metrics) {
-      throw new Error('Unable to retrieve metrics data.');
-    }
-
-    if (!metrics[date]) {
-      metrics[date] = {
-        /**
-         * // TODO
-       * error with gauge not existing is that it's on WaterMetricProps, not WaterLogProps
-      date variable should be logDate and should look like this:
-        metrics[logDate] = {
-          date: logDate,
-          metrics: {
-            // add all the needed WaterMetricProps properties here     
-          }
-
-      */
-        gauge: 0,
-        bottles: [],
-      };
-    }
-
-    // i already have a function to create a new bottle. see below.
-    const newBottle = {
-      id: uuid(),
-      ounces,
-      capacity,
-      complete: false,
-    };
-
-    // despite the use of the word metrics, i still like this implementation because it's highly readable
-    metrics[date].gauge++;
-    metrics[date].bottles.push(newBottle);
-
-    await fs.writeFile(filePath, JSON.stringify(metrics, null, 2));
-
-    res.status(201).json(newBottle);
-  } catch (err) {
-    handleError(err, res, 'Error creating new log entry.');
-  }
-};
-
-const createLogBottle = async (req: Request, res: Response) => {
-  try {
-    // const date = req.params.date;
-    const { ounces, capacity } = req.body;
     const logDate = req.params.date;
     let existingData = {};
 
@@ -250,25 +139,151 @@ const createLogBottle = async (req: Request, res: Response) => {
 
     if (Object.prototype.hasOwnProperty.call(existingData, logDate)) {
       throw new Error(
-        'The specific date for which you are trying to create a log already has associated data. Instead of creating a new log entry, update or delete the existing log.'
+        `The specific date for which you are trying to create a log (${logDate}) already has associated data. Instead of creating a new log entry, update or delete the existing log.`
       );
     }
 
-    const waterLog = req.body;
+    const waterLog = createWaterLog();
 
-    const allWaterRecords = {
+    const allWaterLogRecords = {
       ...existingData,
       [logDate]: waterLog,
     };
 
     // TODO: verify entries are sorted
-    await fs.writeFile(filePath, JSON.stringify(allWaterRecords), 'utf8');
+    await fs.writeFile(filePath, JSON.stringify(allWaterLogRecords), 'utf8');
 
     res.status(201).json(waterLog);
   } catch (err) {
-    handleError(err, res, 'Error while writing new water log.');
+    handleError(err, res, 'Error while creating new water log entry.');
   }
 };
+
+/**
+ * create log with preexisting/partial data
+ * create new metric(?) --> which would just be updating an existing log
+ */
+// TODO: refactor - sort out and combine these three commented functions
+// export const createOrUpdateLog = async (req: Request, res: Response) => {
+//   try {
+//     const logDate = req.params.date;
+//     const { ounces, capacity } = req.body;
+
+//     if (!logDate || !ounces || !capacity) {
+//       return res.status(400).json({ message: 'Missing required fields.' });
+//     }
+
+//     let existingData = {};
+
+//     try {
+//       const content = await fs.readFile(filePath, 'utf8');
+//       existingData = JSON.parse(content);
+//     } catch (err) {
+//       if (err instanceof SyntaxError) {
+//         existingData = {};
+//       } else {
+//         return handleError(
+//           err,
+//           res,
+//           'Error reading existing content from file.'
+//         );
+//       }
+//     }
+
+//     if (existingData[logDate]) {
+//       return res.status(409).json({
+//         message:
+//           'Log entry for this date already exists. Consider updating or deleting the existing log.',
+//       });
+//     }
+
+//     const newLogEntry = createWaterLogWithPartialMetrics({
+//       logDate,
+//       metrics: [{ ounces, capacity }],
+//     });
+
+//     existingData[logDate] = newLogEntry;
+
+//     await fs.writeFile(filePath, JSON.stringify(existingData, null, 2), 'utf8');
+
+//     res.status(201).json(newLogEntry);
+//   } catch (err) {
+//     handleError(err, res, 'Error creating or updating log entry.');
+//   }
+// };
+
+// const createLogByDate = async (req: Request, res: Response) => {
+//   try {
+//     const logDate = req.params.date;
+
+//     // this should be used for creating a log with partial metrics
+//     const { ounces, capacity } = req.body;
+
+//     if (!logDate || !ounces || !capacity) {
+//       return res.status(400).json({ message: 'Missing required fields.' });
+//     }
+
+//     const waterData = await getWaterData();
+
+//     if (!waterData) {
+//       throw new Error('Unable to retrieve water data data.');
+//     }
+
+//     if (!waterData[logDate]) {
+//       const newMetric = createWaterMetrics();
+//       waterData[logDate] = {
+//         logDate,
+//         metrics: [newMetric],
+//       };
+//     }
+
+//     await fs.writeFile(filePath, JSON.stringify(waterData, null, 2));
+
+//     res.status(201).json(waterData);
+//   } catch (err) {
+//     handleError(err, res, 'Error creating new log entry.');
+//   }
+// };
+
+// export const createLogBottle = async (req: Request, res: Response) => {
+//   try {
+//     const logDate = req.params.date;
+//     let existingData = {};
+
+//     try {
+//       const content = await fs.readFile(filePath, 'utf8');
+
+//       existingData = await JSON.parse(content);
+//     } catch (err) {
+//       if (err instanceof SyntaxError) {
+//         existingData = {};
+//       } else {
+//         handleError(err, res, 'Error reading existing content from file.');
+//       }
+//     }
+
+//     // TODO: add to createLogByDate
+//     if (Object.prototype.hasOwnProperty.call(existingData, logDate)) {
+//       throw new Error(
+//         'The specific date for which you are trying to create a log already has associated data. Instead of creating a new log entry, update or delete the existing log.'
+//       );
+//     }
+
+//     const waterLog = req.body;
+
+//     const allWaterRecords = {
+//       ...existingData,
+//       [logDate]: waterLog,
+//     };
+
+//     // TODO: verify entries are sorted
+//     await fs.writeFile(filePath, JSON.stringify(allWaterRecords), 'utf8');
+
+//     res.status(201).json(waterLog);
+//   } catch (err) {
+//     handleError(err, res, 'Error while writing new water log.');
+//   }
+// };
 
 const updateWaterLog = async (req: Request, res: Response) => {
   try {
@@ -325,7 +340,7 @@ const destroyWaterLog = async (req: Request, res: Response) => {
 };
 
 export {
-  getWaterLog,
+  getAllWaterLogRecords,
   getLogByDate,
   getGaugeByDate,
   createLogByDate,
@@ -334,79 +349,23 @@ export {
 };
 
 // TODO: move types out of controller
-interface BottleProps {
+export interface BottleProps {
   id: string;
-  ounces: number;
-  color?: string;
+  ounces: number[];
+  capacity: number;
+  complete: boolean;
+  label?: string;
 }
 
-interface WaterMetricsProps {
+export interface WaterMetricsProps {
   gauge: number;
   timestamp: number;
   ounces: number;
-  bottleCount: number;
+  bladders: number;
   bottles: BottleProps[];
 }
 
-interface WaterLogProps {
-  date: string;
+export interface WaterLogProps {
+  logDate: string;
   metrics: WaterMetricsProps[];
 }
-
-/**
- * 
- * That sounds like a great approach!
-
-By updating the client-side state immediately and then debouncing the state update to the server, you can provide a responsive and interactive experience for the user. This approach is known as "optimistic updating" or "client-side rendering with server-side validation".
-
-Here's a high-level overview of how you can implement this:
-
-Client-side state update: When the user interacts with the slider, update the client-side state immediately. This will provide a fast and responsive experience for the user.
-Debouncer: Implement a debouncer that delays the state update to the server by a certain amount of time (e.g., 500ms). This will allow the user to make multiple changes to the slider without sending multiple requests to the server.
-Server-side validation and update: When the debouncer triggers, send the updated state to the server. The server will validate the data and update the water log accordingly.
-By using a debouncer, you can reduce the number of requests sent to the server, which can improve performance and reduce latency. Additionally, by updating the client-side state immediately, you can provide a responsive experience for the user.
-
-Here's some sample code to illustrate this approach:
-
-import { useState } from 'react';
-import { debounce } from 'lodash';
-
-const WaterSlider = () => {
-  const [waterAmount, setWaterAmount] = useState(0);
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  const handleSliderChange = (newAmount: number) => {
-    setWaterAmount(newAmount);
-  };
-
-  const debouncedUpdateServer = debounce(async () => {
-    if (isUpdating) return;
-    setIsUpdating(true);
-    try {
-      // Send updated state to server
-      const response = await fetch('/update-water-log', {
-        method: 'POST',
-        body: JSON.stringify({ waterAmount }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-      // Handle server response
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsUpdating(false);
-    }
-  }, 500);
-
-  return (
-    <div>
-      <Slider
-        value={waterAmount}
-        onChange={handleSliderChange}
-        min={0}
-        max={100}
-      />
-      {isUpdating ? <p>Updating...</p> : null}
-    </div>
-  );
-};
- */

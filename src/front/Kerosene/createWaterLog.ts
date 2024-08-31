@@ -8,13 +8,14 @@ export function createWaterBottle(): BottleProps {
     ounces: [0],
     capacity: 32,
     complete: false,
+    // label
   };
 }
 
 // Create a water metric with default properties
-export function createWaterMetric(
+export function createWaterMetrics(
   bottles: BottleProps[] = []
-): WaterMetricProps {
+): WaterMetricsProps {
   if (bottles.length <= 0) {
     const empty = createWaterBottle();
     bottles.push(empty);
@@ -30,11 +31,11 @@ export function createWaterMetric(
 }
 
 // create a water log base with drefauult properties
-export function createWaterLogBase(date: string): WaterLogProps {
+export function createWaterLogBase(logDate: string): WaterLogProps {
   return {
-    date,
+    logDate,
     metrics: [
-      createWaterMetric([
+      createWaterMetrics([
         createWaterBottle(),
         createWaterBottle(),
         createWaterBottle(),
@@ -51,13 +52,13 @@ export function createWaterLog(): WaterLogProps {
 }
 
 // create a new log for a nonconsecutive day
-export function createNonconsecutiveWaterLog(date: string): WaterLogProps {
-  return createWaterLogBase(date);
+export function createNonconsecutiveWaterLog(logDate: string): WaterLogProps {
+  return createWaterLogBase(logDate);
 }
 
 // create a log entry with partial metrics
 export function createWaterLogWithPartialMetrics({
-  date = isoDateKey(),
+  logDate = isoDateKey(),
   metrics = [],
 }: Partial<WaterLogProps> = {}): WaterLogProps {
   const processedMetrics = metrics.map((metric) => {
@@ -88,7 +89,7 @@ export function createWaterLogWithPartialMetrics({
   }
 
   return {
-    date,
+    logDate,
     metrics: processedMetrics,
   };
 }
@@ -98,10 +99,10 @@ export interface BottleProps {
   ounces: number[];
   capacity: number;
   complete: boolean;
-  color?: string;
+  label?: string;
 }
 
-export interface WaterMetricProps {
+export interface WaterMetricsProps {
   gauge: number;
   timestamp: number;
   ounces: number;
@@ -110,6 +111,6 @@ export interface WaterMetricProps {
 }
 
 export interface WaterLogProps {
-  date: string;
-  metrics: WaterMetricProps[];
+  logDate: string;
+  metrics: WaterMetricsProps[];
 }
