@@ -4,13 +4,13 @@ import * as keroseneController from '../controllers/kerosene.controller';
 
 const router = Router();
 
-router.get('/', keroseneController.getWaterLog);
+router.get('/', keroseneController.getAllWaterLogRecords);
 
 router.get('/:date', keroseneController.getLogByDate);
 
-router.get('/:date/:gauge', keroseneController.getGaugeByDate);
+router.get('/:date/:gauge', keroseneController.getGaugeFromLogByDate);
 
-router.post('/:date', keroseneController.createLogByDate);
+router.post('/:date', keroseneController.createWaterLogForNewDate);
 
 router.patch('/:date', keroseneController.updateWaterLog);
 

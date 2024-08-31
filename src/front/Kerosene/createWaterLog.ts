@@ -33,6 +33,7 @@ export function createWaterMetrics(
 // create a water log base with drefauult properties
 export function createWaterLogBase(logDate: string): WaterLogProps {
   return {
+    // TODO: consider whether or not logDate should remain a property on WaterLogProps, and whether it should be "date" or "logDate"
     logDate,
     metrics: [
       createWaterMetrics([
@@ -111,6 +112,7 @@ export interface WaterMetricsProps {
 }
 
 export interface WaterLogProps {
+  // TODO: consider whether or not logDate should remain a property on WaterLogProps, and whether it should be "date" or "logDate"
   logDate: string;
   metrics: WaterMetricsProps[];
 }

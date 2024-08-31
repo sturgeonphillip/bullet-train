@@ -23,7 +23,7 @@ const Display = () => {
       console.log('Committing value data:', value);
       // const response = await fetch(`http://localhost:3001/water/${dateKey}`, {
       const response = await fetch(
-        `http://localhost:3001/water/2024-08-29, {`,
+        `http://localhost:3001/kerosene/2024-08-29, {`,
         {
           method: 'POST',
           headers: {

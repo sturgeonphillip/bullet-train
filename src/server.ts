@@ -26,12 +26,14 @@ const port = process.env.PORT || 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const approvedOrigins = [
-  'http://localhost:3001',
-  'http://localhost:3001/today',
-  'http://localhost:5173',
-];
-app.use(cors({ origin: approvedOrigins }));
+const corsOptions = {
+  origin: ['http://localhost:3001', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 3600,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

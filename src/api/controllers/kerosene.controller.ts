@@ -6,7 +6,10 @@ import { Request, Response } from 'express';
 import { handleError } from '../../utils/errorHandler';
 
 // TODO: move these functions to a better place than front/Kerosene
-import { createWaterMetrics } from '../../front/Kerosene/createWaterLog';
+import {
+  createWaterLog,
+  // createWaterMetrics,
+} from '../../front/Kerosene/createWaterLog';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -48,79 +51,85 @@ const getAllWaterLogRecords = async (_req: Request, res: Response) => {
 // get log for specific date
 const getLogByDate = async (req: Request, res: Response) => {
   try {
-    const byDate = req.params.date;
-    const data = await getWaterData();
+    const logDate = req.params.date;
+    const waterData = await getWaterData();
 
-    if (!data) {
-      throw new Error(`Unable to retrieve log data.`);
+    if (!waterData) {
+      throw new Error(`Unable to retrieve data from the database.`);
     }
 
-    const water = data[byDate];
+    const waterLog = waterData[logDate];
 
-    if (!water) {
-      throw new Error(`Unable to retrieve log for date (${byDate}).`);
+    if (!waterLog) {
+      // TODO: more appropriate to say doesn't exist?
+      throw new Error(`Unable to retrieve log for date (${logDate}).`);
     }
 
-    res.status(200).json(water);
+    res.status(200).json(waterLog);
   } catch (err) {
     handleError(err, res, 'Error reading water log from database.');
-    // return null;
   }
 };
 
 // single metric gauge for date
-const getGaugeByDate = async (req: Request, res: Response) => {
+const getGaugeFromLogByDate = async (req: Request, res: Response) => {
   try {
-    const { date: byDate, gauge: byGauge } = req.params;
+    // const { date: byDate, gauge: byGauge } = req.params;
 
-    const gaugeNum = parseInt(byGauge, 10);
+    const logDate = req.params.date;
+    const logGauge = req.params.gauge;
 
-    if (isNaN(gaugeNum) || gaugeNum < 0 || !/^\d+$/.test(byGauge)) {
-      return res.status(400).json({
-        message: 'Invalid gauge number. Must be a non-negative integer.',
-      });
+    if (!logDate || !logGauge) {
+      return res.status(400).json({ message: 'Missing required parameters.' });
     }
 
-    if (!byDate || !byGauge) {
-      return res.status(400).json({ message: 'Missing required parameters.' });
+    const gaugeNum = parseInt(logGauge, 10);
+
+    if (
+      isNaN(gaugeNum) ||
+      gaugeNum < 0 ||
+      typeof gaugeNum !== 'number' ||
+      !/^\d+$/.test(String(gaugeNum))
+    ) {
+      return res.status(400).json({
+        message:
+          'Invalid gauge number. Request must be a non-negative integer.',
+      });
     }
 
     const data = await getWaterData();
 
     if (!data) {
-      throw new Error(`[1] No data. Unable to retrieve log data.`);
+      throw new Error(`No data. Unable to retrieve log data.`);
     }
 
-    const water = data[byDate];
+    const water = data[logDate];
 
     console.log('WATER!', water);
     if (!water) {
-      throw new Error(`[2] Unable to retrieve log for date (${byDate}).`);
+      throw new Error(`Unable to retrieve log for date (${logDate}).`);
     }
 
     const gaugePosition = water.metrics.find(
       (metric) => metric.gauge === gaugeNum
     );
 
-    if (!gaugePosition) {
-      throw new Error(`Gauge ${gaugeNum} not found for date ${byDate}.`);
-    }
+    const mostRecentGauge = water.metrics.length;
 
-    /**
-     * alternate response is to return:
-     * if (!gaugePosition) {
-     *   return res.status(404).json({ message: `Gauge ${gaugeNum} not found for date ${byDate}.` })
-     * }
-     */
+    if (!gaugePosition) {
+      throw new Error(
+        `Gauge ${gaugeNum} not found for date ${logDate}. No gauge data found for ${gaugeNum}. The latest gauge for ${logDate} is at gauge ${mostRecentGauge}.`
+      );
+    }
 
     res.status(200).json(gaugePosition);
   } catch (err) {
-    handleError(err, res, 'Error retrieving bottle information.');
+    handleError(err, res, 'Error retrieving gauge.');
   }
 };
 
-// create new log with no preexisting data, date argument always required
-export const createWaterLogForNewDate = async (req: Request, res: Response) => {
+// create new log: no preexisting data - logDate argument always required
+const createWaterLogForNewDate = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
     let existingData = {};
@@ -159,132 +168,7 @@ export const createWaterLogForNewDate = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * create log with preexisting/partial data
- * create new metric(?) --> which would just be updating an existing log
- */
-// TODO: refactor - sort out and combine these three commented functions
-// export const createOrUpdateLog = async (req: Request, res: Response) => {
-//   try {
-//     const logDate = req.params.date;
-//     const { ounces, capacity } = req.body;
-
-//     if (!logDate || !ounces || !capacity) {
-//       return res.status(400).json({ message: 'Missing required fields.' });
-//     }
-
-//     let existingData = {};
-
-//     try {
-//       const content = await fs.readFile(filePath, 'utf8');
-//       existingData = JSON.parse(content);
-//     } catch (err) {
-//       if (err instanceof SyntaxError) {
-//         existingData = {};
-//       } else {
-//         return handleError(
-//           err,
-//           res,
-//           'Error reading existing content from file.'
-//         );
-//       }
-//     }
-
-//     if (existingData[logDate]) {
-//       return res.status(409).json({
-//         message:
-//           'Log entry for this date already exists. Consider updating or deleting the existing log.',
-//       });
-//     }
-
-//     const newLogEntry = createWaterLogWithPartialMetrics({
-//       logDate,
-//       metrics: [{ ounces, capacity }],
-//     });
-
-//     existingData[logDate] = newLogEntry;
-
-//     await fs.writeFile(filePath, JSON.stringify(existingData, null, 2), 'utf8');
-
-//     res.status(201).json(newLogEntry);
-//   } catch (err) {
-//     handleError(err, res, 'Error creating or updating log entry.');
-//   }
-// };
-
-// const createLogByDate = async (req: Request, res: Response) => {
-//   try {
-//     const logDate = req.params.date;
-
-//     // this should be used for creating a log with partial metrics
-//     const { ounces, capacity } = req.body;
-
-//     if (!logDate || !ounces || !capacity) {
-//       return res.status(400).json({ message: 'Missing required fields.' });
-//     }
-
-//     const waterData = await getWaterData();
-
-//     if (!waterData) {
-//       throw new Error('Unable to retrieve water data data.');
-//     }
-
-//     if (!waterData[logDate]) {
-//       const newMetric = createWaterMetrics();
-//       waterData[logDate] = {
-//         logDate,
-//         metrics: [newMetric],
-//       };
-//     }
-
-//     await fs.writeFile(filePath, JSON.stringify(waterData, null, 2));
-
-//     res.status(201).json(waterData);
-//   } catch (err) {
-//     handleError(err, res, 'Error creating new log entry.');
-//   }
-// };
-
-// export const createLogBottle = async (req: Request, res: Response) => {
-//   try {
-//     const logDate = req.params.date;
-//     let existingData = {};
-
-//     try {
-//       const content = await fs.readFile(filePath, 'utf8');
-
-//       existingData = await JSON.parse(content);
-//     } catch (err) {
-//       if (err instanceof SyntaxError) {
-//         existingData = {};
-//       } else {
-//         handleError(err, res, 'Error reading existing content from file.');
-//       }
-//     }
-
-//     // TODO: add to createLogByDate
-//     if (Object.prototype.hasOwnProperty.call(existingData, logDate)) {
-//       throw new Error(
-//         'The specific date for which you are trying to create a log already has associated data. Instead of creating a new log entry, update or delete the existing log.'
-//       );
-//     }
-
-//     const waterLog = req.body;
-
-//     const allWaterRecords = {
-//       ...existingData,
-//       [logDate]: waterLog,
-//     };
-
-//     // TODO: verify entries are sorted
-//     await fs.writeFile(filePath, JSON.stringify(allWaterRecords), 'utf8');
-
-//     res.status(201).json(waterLog);
-//   } catch (err) {
-//     handleError(err, res, 'Error while writing new water log.');
-//   }
-// };
-
+// make updates to a water
 const updateWaterLog = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
@@ -342,8 +226,8 @@ const destroyWaterLog = async (req: Request, res: Response) => {
 export {
   getAllWaterLogRecords,
   getLogByDate,
-  getGaugeByDate,
-  createLogByDate,
+  getGaugeFromLogByDate,
+  createWaterLogForNewDate,
   updateWaterLog,
   destroyWaterLog,
 };

@@ -1,1 +1,39 @@
-{}
+{
+  "2024-08-29, {": {
+    "logDate": "2024-08-31",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1725140191407,
+        "ounces": 0,
+        "bladders": 4,
+        "bottles": [
+          {
+            "id": "6ea5d28c-61b9-43ed-a336-b48bd7e75129",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "a8bc802f-8d45-4682-a092-e6b17d5884fe",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "dffe505e-0fc5-49fa-af40-95c65b330d3c",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "b31176ca-ac7d-497f-961a-5315b94c9d89",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
+  }
+}
