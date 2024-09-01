@@ -116,3 +116,24 @@ export interface WaterLogProps {
   logDate: string;
   metrics: WaterMetricsProps[];
 }
+
+// TODO: apply one of the following sanitization checks where necessary.
+
+// type guard to validate the `logDate` parameter
+export function isValidLogDate(logDate: string): logDate is string {
+  const logDatePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+  return logDatePattern.test(logDate);
+}
+
+// define branded type
+type LogDate = string & { __brand: 'LogDate' };
+
+// returns a type predicate, asserts the parameter is a properly formatted string by testing it against the regex
+export function createLogDate(logDate: string): LogDate {
+  const logDatePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+
+  if (!logDatePattern.test(logDate)) {
+    throw new Error(`Invalid logDate format: ${logDate}`);
+  }
+  return logDate as LogDate;
+}

@@ -9,7 +9,7 @@ import express, {
   Response,
   NextFunction,
 } from 'express';
-
+import { handleError } from './utils/errorHandler';
 // const server: Server;
 
 // TODO: validate all requests server side
@@ -96,24 +96,31 @@ app.post('/draft', async (req: Request, res: Response) => {
   }
 });
 
-const errorHandler: ErrorRequestHandler = (
-  err: Error,
+// <
+//     ParamsDictionary,
+//     any,
+//     any,
+//     ParsedQs,
+//     Record<string, any>
+//   >,
+const errorHandlerMiddleware = (
+  err: ErrorRequestHandler,
   _req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (err instanceof Error) {
-    console.error('Error:', err);
-    res.status(500).send({
-      msg: 'possible CORS Error',
-      detail: err.message,
-    });
+  if ('message' in err && typeof err.message === 'string') {
+    handleError(err.message, res);
+    // if (typeof err.message === 'string') {
+    //   handleError(err.message ?? 'An unknown error occurred', res);
   } else {
-    next(err);
+    handleError('An unknown error occured', res);
   }
+  handleError(err, res);
+  next(err); // call next with the error to propagate it to the next middleware
 };
 
-app.use(errorHandler);
+app.use(errorHandlerMiddleware);
 
 const server: Server = app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);

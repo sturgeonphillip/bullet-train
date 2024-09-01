@@ -4,7 +4,7 @@ export function handleError(
   error: unknown,
   res: Response,
   defaultMessage: string = 'An error occurred.'
-) {
+): void {
   let errorMessage = defaultMessage;
 
   if (error instanceof Error) {

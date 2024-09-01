@@ -4,33 +4,41 @@ import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 
 import { handleError } from '../../utils/errorHandler';
-
-// TODO: move these functions to a better place than front/Kerosene
+import WaterDataService from '../../services/WaterDataService';
 import {
   createWaterLog,
   // createWaterMetrics,
 } from '../../front/Kerosene/createWaterLog';
+
+const waterDataService = new WaterDataService('./db/kerosene.json');
+
+const getWaterData = async (): Promise<{
+  [key: string]: WaterLogProps;
+} | null> => {
+  return waterDataService.getWaterData();
+};
+// TODO: move these functions to a better place than front/Kerosene
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, './../../../db/kerosene.json');
 
-export const getWaterData = async (): Promise<{
-  [key: string]: WaterLogProps;
-} | null> => {
-  try {
-    const data = await fs.readFile(filePath, 'utf8');
+// export const getWaterData = async (): Promise<{
+//   [key: string]: WaterLogProps;
+// } | null> => {
+//   try {
+//     const data = await fs.readFile(filePath, 'utf8');
 
-    if (!data) {
-      return null;
-    }
+//     if (!data) {
+//       return null;
+//     }
 
-    return JSON.parse(data);
-  } catch (err) {
-    return null;
-  }
-};
+//     return JSON.parse(data);
+//   } catch (err) {
+//     throw new Error(`Error reading water data file: ${err.message}`);
+//   }
+// };
 
 // get entire water database
 const getAllWaterLogRecords = async (_req: Request, res: Response) => {
