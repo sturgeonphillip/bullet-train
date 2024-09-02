@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/', keroseneController.getAllWaterLogRecords);
 
-router.get('/:date', keroseneController.getLogByDate);
+router.get('/:date', keroseneController.getWaterLogByDate);
 
 router.get('/:date/:gauge', keroseneController.getGaugeFromLogByDate);
 

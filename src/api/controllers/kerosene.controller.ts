@@ -2,48 +2,24 @@ import fs from 'node:fs/promises';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
-
 import { handleError } from '../../utils/errorHandler';
-import WaterDataService from '../../services/WaterDataService';
+import WaterDataService from '../../services/waterDataService';
 import {
   createWaterLog,
-  // createWaterMetrics,
+  isValidLogDate,
 } from '../../front/Kerosene/createWaterLog';
 
 const waterDataService = new WaterDataService('./db/kerosene.json');
-
-const getWaterData = async (): Promise<{
-  [key: string]: WaterLogProps;
-} | null> => {
-  return waterDataService.getWaterData();
-};
-// TODO: move these functions to a better place than front/Kerosene
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const filePath = path.join(__dirname, './../../../db/kerosene.json');
 
-// export const getWaterData = async (): Promise<{
-//   [key: string]: WaterLogProps;
-// } | null> => {
-//   try {
-//     const data = await fs.readFile(filePath, 'utf8');
-
-//     if (!data) {
-//       return null;
-//     }
-
-//     return JSON.parse(data);
-//   } catch (err) {
-//     throw new Error(`Error reading water data file: ${err.message}`);
-//   }
-// };
-
 // get entire water database
 const getAllWaterLogRecords = async (_req: Request, res: Response) => {
   try {
-    const data = await getWaterData();
+    const data = await waterDataService.getWaterData();
 
     if (!data) {
       throw new Error('Unable to retrieve water log. No data found.');
@@ -57,20 +33,26 @@ const getAllWaterLogRecords = async (_req: Request, res: Response) => {
 };
 
 // get log for specific date
-const getLogByDate = async (req: Request, res: Response) => {
+const getWaterLogByDate = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
-    const waterData = await getWaterData();
+
+    isValidLogDate(logDate);
+
+    const waterData = await waterDataService.getWaterData();
 
     if (!waterData) {
       throw new Error(`Unable to retrieve data from the database.`);
     }
 
+    /** ERROR: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'WaterLogProps'.
+  No index signature with a parameter of type 'string' was found on type 'WaterLogProps'.ts(7053) */
     const waterLog = waterData[logDate];
 
+    console.log('WATER LOG', waterLog);
     if (!waterLog) {
       // TODO: more appropriate to say doesn't exist?
-      throw new Error(`Unable to retrieve log for date (${logDate}).`);
+      throw new Error(`Unable to retrieve log for date ${logDate}.`);
     }
 
     res.status(200).json(waterLog);
@@ -82,11 +64,12 @@ const getLogByDate = async (req: Request, res: Response) => {
 // single metric gauge for date
 const getGaugeFromLogByDate = async (req: Request, res: Response) => {
   try {
-    // const { date: byDate, gauge: byGauge } = req.params;
-
     const logDate = req.params.date;
     const logGauge = req.params.gauge;
 
+    isValidLogDate(logDate);
+
+    // validate user input
     if (!logDate || !logGauge) {
       return res.status(400).json({ message: 'Missing required parameters.' });
     }
@@ -105,24 +88,27 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
       });
     }
 
-    const data = await getWaterData();
+    const waterData = await waterDataService.getWaterData();
 
-    if (!data) {
+    if (!waterData) {
       throw new Error(`No data. Unable to retrieve log data.`);
     }
 
-    const water = data[logDate];
+    /** ERROR: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'WaterLogProps'.
+  No index signature with a parameter of type 'string' was found on type 'WaterLogProps'.ts(7053) */
+    const waterLog = waterData[logDate];
 
-    console.log('WATER!', water);
-    if (!water) {
+    console.log('WATER!', waterLog);
+    if (!waterLog) {
       throw new Error(`Unable to retrieve log for date (${logDate}).`);
     }
 
-    const gaugePosition = water.metrics.find(
-      (metric) => metric.gauge === gaugeNum
+    /** ERROR: Parameter 'metric' implicitly has an 'any' type.ts(7006) */
+    const gaugePosition = waterLog.metrics.find(
+      (metric: WaterMetricsProps) => metric.gauge === gaugeNum
     );
 
-    const mostRecentGauge = water.metrics.length;
+    const mostRecentGauge = waterLog.metrics.length;
 
     if (!gaugePosition) {
       throw new Error(
@@ -140,6 +126,16 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
 const createWaterLogForNewDate = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
+
+    if (!logDate) {
+      return res
+        .status(400)
+        .json({ message: 'Missing required paramter: date.' });
+    }
+
+    isValidLogDate(logDate);
+
+    // let existingData = {};
     let existingData = {};
 
     try {
@@ -182,6 +178,8 @@ const updateWaterLog = async (req: Request, res: Response) => {
     const logDate = req.params.date;
     let existingData: { [key: string]: WaterLogProps } = {};
 
+    isValidLogDate(logDate);
+
     try {
       const content = await fs.readFile(filePath, 'utf8');
       existingData = JSON.parse(content);
@@ -210,6 +208,7 @@ const destroyWaterLog = async (req: Request, res: Response) => {
     const logDate = req.params.date;
     let existingData: { [key: string]: WaterLogProps } = {};
 
+    isValidLogDate(logDate);
     try {
       const content = await fs.readFile(filePath, 'utf8');
       existingData = JSON.parse(content);
@@ -233,7 +232,7 @@ const destroyWaterLog = async (req: Request, res: Response) => {
 
 export {
   getAllWaterLogRecords,
-  getLogByDate,
+  getWaterLogByDate,
   getGaugeFromLogByDate,
   createWaterLogForNewDate,
   updateWaterLog,
@@ -260,4 +259,8 @@ export interface WaterMetricsProps {
 export interface WaterLogProps {
   logDate: string;
   metrics: WaterMetricsProps[];
+}
+
+export interface WaterDataProps {
+  [key: string]: WaterLogProps;
 }

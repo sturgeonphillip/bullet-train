@@ -10,14 +10,12 @@ import express, {
   NextFunction,
 } from 'express';
 import { handleError } from './utils/errorHandler';
-// const server: Server;
 
 // TODO: validate all requests server side
 import entryRoutes from './api/routes/entry.routes';
 import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
 import todayRoutes from './api/routes/today.routes';
-// import waterRoutes from './api/routes/water.routes';
 import keroseneRoutes from './api/routes/kerosene.routes';
 
 const app = express();
@@ -47,7 +45,6 @@ app.use('/entry', entryRoutes);
 app.use('/list', listRoutes);
 app.use('/errands', errandRoutes);
 app.use('/today', todayRoutes);
-// app.use('/water', waterRoutes);
 app.use('/kerosene', keroseneRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
@@ -96,13 +93,6 @@ app.post('/draft', async (req: Request, res: Response) => {
   }
 });
 
-// <
-//     ParamsDictionary,
-//     any,
-//     any,
-//     ParsedQs,
-//     Record<string, any>
-//   >,
 const errorHandlerMiddleware = (
   err: ErrorRequestHandler,
   _req: Request,
@@ -134,26 +124,3 @@ process.on('SIGINT', async () => {
     process.exitCode = 0;
   });
 });
-
-// from MDN: Warning: Client-side form validation is no substitute for validating on the server. It's easy for someone to modify the HTML, or bypass your HTML entirely and submit the data directly to your server. If your server fails to validate the received data, disaster could strike with data that is badly-formatted, too large, of the wrong type, etc.
-
-/**
- * let today = new Date(lapse);
- * console.log('TODAY', today, today.toISOString());
- * let justDate = today.toISOString().split('T')[0];
- * console.log('JSUT DATE', justDate);
- *
- */
-
-/**
- * let lapse = Date.now();
- *
- * app.listen(() => {
- *   setInterval(() => {
- *     console.clear();
- *     console.log(`Server listening at http://
- *     localhost${PORT}\nIt is now: ${(lapse =
- *     Date.now())};`
- *   }, 5000);
- * });
- */

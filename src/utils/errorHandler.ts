@@ -14,7 +14,6 @@ export function handleError(
   res.status(500).json({
     message: errorMessage,
     error: error instanceof Error ? error.stack : {},
-    // error: `OCCURED: ${error instanceof Error ? error.stack?.split('\n')[1]?.trim() : {}}`,
   });
 }
 

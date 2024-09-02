@@ -15,8 +15,6 @@ const Display = () => {
     });
   };
 
-  // break
-
   // define async function to debounce
   const commitValue = async (index: number, value: number[]) => {
     try {

@@ -1,6 +1,10 @@
 import fs from 'node:fs/promises';
 import { WaterLogProps } from '../front/Kerosene/createWaterLog';
 
+export interface WaterDataProps {
+  [key: string]: WaterLogProps;
+}
+
 class WaterDataService {
   private filePath: string;
 
@@ -8,14 +12,18 @@ class WaterDataService {
     this.filePath = filePath;
   }
 
-  async getWaterData(): Promise<{ [key: string]: WaterLogProps } | null> {
+  async getWaterData(): Promise<WaterDataProps | null> {
     try {
       const data = await fs.readFile(this.filePath, 'utf8');
       return JSON.parse(data);
     } catch (err) {
-      throw new Error(
-        `Error reading water data file: ${(err as Error).message}`
-      );
+      if (err instanceof SyntaxError) {
+        return {} as WaterDataProps;
+      } else {
+        throw new Error(
+          `Error reading water data file: ${(err as Error).message}`
+        );
+      }
     }
   }
 
