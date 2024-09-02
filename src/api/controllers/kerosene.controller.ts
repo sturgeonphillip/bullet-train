@@ -94,8 +94,6 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
       throw new Error(`No data. Unable to retrieve log data.`);
     }
 
-    /** ERROR: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'WaterLogProps'.
-  No index signature with a parameter of type 'string' was found on type 'WaterLogProps'.ts(7053) */
     const waterLog = waterData[logDate];
 
     console.log('WATER!', waterLog);
@@ -103,7 +101,6 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
       throw new Error(`Unable to retrieve log for date (${logDate}).`);
     }
 
-    /** ERROR: Parameter 'metric' implicitly has an 'any' type.ts(7006) */
     const gaugePosition = waterLog.metrics.find(
       (metric: WaterMetricsProps) => metric.gauge === gaugeNum
     );
@@ -122,7 +119,8 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
   }
 };
 
-// create new log: no preexisting data - logDate argument always required
+// create a new log, no preexisting data
+// logDate argument always required
 const createWaterLogForNewDate = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
