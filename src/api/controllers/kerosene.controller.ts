@@ -45,11 +45,10 @@ const getWaterLogByDate = async (req: Request, res: Response) => {
       throw new Error(`Unable to retrieve data from the database.`);
     }
 
-    /** ERROR: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'WaterLogProps'.
-  No index signature with a parameter of type 'string' was found on type 'WaterLogProps'.ts(7053) */
     const waterLog = waterData[logDate];
 
     console.log('WATER LOG', waterLog);
+
     if (!waterLog) {
       // TODO: more appropriate to say doesn't exist?
       throw new Error(`Unable to retrieve log for date ${logDate}.`);

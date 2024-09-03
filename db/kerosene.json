@@ -35,5 +35,116 @@
         ]
       }
     ]
+  },
+  "2024-09-01": {
+    "logDate": "2024-09-01",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1725255731905,
+        "ounces": 0,
+        "bladders": 4,
+        "bottles": [
+          {
+            "id": "8d191db9-b6b7-4849-84ca-28d5a30e6f42",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "8d4fd141-c824-4c85-beff-fc4468057dd0",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "63c3df67-e2a5-4bab-be5b-860be3c23b84",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "51dd2d50-3cdf-4cf8-88ce-874c84b09617",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
+  },
+  "2024-09-02": {
+    "logDate": "2024-09-02",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1725307716205,
+        "ounces": 14,
+        "bladders": 4,
+        "bottles": [
+          {
+            "id": "7e811a33-afcf-4086-9189-98fff8c98ed8",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "ed8035da-1544-42ca-bc81-2a218008bd49",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "9354a35c-0fa4-47b8-9671-75b9bc602239",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "eac14eb1-a302-4a8c-9517-72e5359a75ab",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
+  },
+  "2024-09-03": {
+    "logDate": "2024-09-03",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1725399623572,
+        "ounces": 8,
+        "bladders": 4,
+        "bottles": [
+          {
+            "id": "a6d2231b-60e7-414a-855e-b07ac5ac1daa",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "f9018eb8-07d9-4d6a-b101-2ba69bab53e0",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "f91b5444-4496-4bd6-a3ce-3906c6f99624",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "583e215d-dc87-475d-95c1-26550e13a51e",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
   }
 }

@@ -117,7 +117,8 @@ export interface WaterLogProps {
   metrics: WaterMetricsProps[];
 }
 
-// TODO: apply one of the following sanitization checks where necessary.
+/** logDate validation */
+// TODO: apply one of the following sanitization checks to createwhere necessary.
 
 // type guard to validate the `logDate` parameter
 export function isValidLogDate(logDate: string): logDate is string {

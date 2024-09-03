@@ -30,6 +30,17 @@ class WaterDataService {
   async saveWaterData(data: { [key: string]: WaterLogProps }): Promise<void> {
     await fs.writeFile(this.filePath, JSON.stringify(data), 'utf8');
   }
+
+  async waterLogExists(logDate: string): Promise<boolean> {
+    try {
+      const data = await this.getWaterData();
+      console.log('DATA', data);
+
+      return !!data && Object.prototype.hasOwnProperty.call(data, logDate);
+    } catch (err) {
+      throw new Error(`Error checking water log: ${(err as Error).message}`);
+    }
+  }
 }
 
 export default WaterDataService;
