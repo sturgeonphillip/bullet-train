@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { debouncer } from './updatedDebouncer';
-import WaterBottle from './UpdatedWaterBottleA';
+import WaterBottle from './WaterBottle';
 import './kerosene.css';
 import { WaterMetricsProps } from './createWaterLog';
 
@@ -20,12 +20,14 @@ const Display = () => {
       const response = await fetch(
         `http://localhost:3001/updateKerosene/${dateKey}`
       );
+
       if (response.ok) {
         const data = await response.json();
 
         const fetchedBottles = data.metrics.map((metric: WaterMetricsProps) => [
           metric.ounces,
         ]);
+
         // update bottle state based on fetched data
         setBottles(fetchedBottles);
       } else {

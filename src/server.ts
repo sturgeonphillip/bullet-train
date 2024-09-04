@@ -17,11 +17,6 @@ import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
 import todayRoutes from './api/routes/today.routes';
 import keroseneRoutes from './api/routes/kerosene.routes';
-import WaterDataService from './services/waterDataService';
-import { createWaterLogForNewDate } from './api/controllers/kerosene.controller';
-import { getWaterLogByDate } from './api/controllers/kerosene.controller';
-import { isValidLogDate } from './front/Kerosene/createWaterLog';
-const waterDataService = new WaterDataService('./db/kerosene.json');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -54,67 +49,6 @@ app.use('/kerosene', keroseneRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
-});
-
-app.get('/updateKerosene/:date', async (req: Request, res: Response) => {
-  try {
-    const logDate = req.params.date;
-
-    isValidLogDate(logDate);
-
-    const waterData = await waterDataService.getWaterData();
-
-    if (!waterData) {
-      throw new Error(`Unable to retrieve data from the database.`);
-    }
-
-    const waterLog = waterData[logDate];
-
-    if (!waterLog) {
-      // TODO: more appropriate to say doesn't exist?
-      throw new Error(`Unable to retrieve log for date ${logDate}.`);
-    }
-
-    console.log('water log!!!', waterLog);
-    res.status(200).json(waterLog);
-  } catch (err) {
-    handleError(err, res, 'Error reading water log from database.');
-  }
-});
-
-app.patch('/updateKerosene/:date', async (req, res) => {
-  const logDate = req.params.date;
-  const { index, value } = req.body;
-
-  try {
-    const waterData = await waterDataService.getWaterData();
-
-    if (!waterData) {
-      throw new Error(`Unable to retrieve data from the database.`);
-    }
-
-    if (!waterData[logDate]) {
-      await createWaterLogForNewDate(req, res);
-    } else {
-      // update
-      waterData[logDate].metrics[index].ounces = value[0];
-
-      // save updates
-      await waterDataService.saveWaterData(waterData);
-
-      res.status(200).json(waterData[logDate]);
-    }
-    // const exists = await waterDataService.waterLogExists(logDate);
-
-    // console.log('EXISTS', exists);
-    // if (!exists) {
-    //   await createWaterLogForNewDate(req, res);
-    // } else {
-    //   await getWaterLogByDate(req, res);
-    // }
-  } catch (err) {
-    handleError(err, res, 'Error fetching orr creating water log.');
-  }
 });
 
 app.post('/draft', async (req: Request, res: Response) => {

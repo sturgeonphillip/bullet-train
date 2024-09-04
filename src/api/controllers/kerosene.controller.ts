@@ -47,8 +47,6 @@ const getWaterLogByDate = async (req: Request, res: Response) => {
 
     const waterLog = waterData[logDate];
 
-    console.log('WATER LOG', waterLog);
-
     if (!waterLog) {
       // TODO: more appropriate to say doesn't exist?
       throw new Error(`Unable to retrieve log for date ${logDate}.`);
@@ -95,7 +93,6 @@ const getGaugeFromLogByDate = async (req: Request, res: Response) => {
 
     const waterLog = waterData[logDate];
 
-    console.log('WATER!', waterLog);
     if (!waterLog) {
       throw new Error(`Unable to retrieve log for date (${logDate}).`);
     }
@@ -169,37 +166,34 @@ const createWaterLogForNewDate = async (req: Request, res: Response) => {
   }
 };
 
-// make updates to a water
 const updateWaterLog = async (req: Request, res: Response) => {
+  const logDate = req.params.date;
+  const { index, value } = req.body;
+
   try {
-    const logDate = req.params.date;
-    let existingData: { [key: string]: WaterLogProps } = {};
+    const waterData = await waterDataService.getWaterData();
 
-    isValidLogDate(logDate);
-
-    try {
-      const content = await fs.readFile(filePath, 'utf8');
-      existingData = JSON.parse(content);
-    } catch (err) {
-      if (err instanceof SyntaxError) {
-        existingData = {};
-      } else {
-        handleError(err, res, 'Error reading file contents.');
-      }
+    if (!waterData) {
+      throw new Error(`Unable to retrieve data from the database.`);
     }
 
-    let log: WaterLogProps = existingData[logDate];
-    log = { ...req.body };
-    existingData[logDate] = log;
+    if (!waterData[logDate]) {
+      await createWaterLogForNewDate(req, res);
+    } else {
+      // update
+      waterData[logDate].metrics[index].ounces = value[0];
 
-    await fs.writeFile(filePath, JSON.stringify(existingData), 'utf8');
+      // save updates
+      await waterDataService.saveWaterData(waterData);
 
-    res.status(204).send({ message: 'Update successful.' });
+      res.status(200).json(waterData[logDate]);
+    }
   } catch (err) {
-    handleError(err, res, 'Error updating water log.');
+    handleError(err, res, 'Error fetching orr creating water log.');
   }
 };
 
+// delete a water log
 const destroyWaterLog = async (req: Request, res: Response) => {
   try {
     const logDate = req.params.date;
