@@ -17,9 +17,8 @@ const Display = () => {
 
   const fetchWaterData = async (dateKey: string) => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/updateKerosene/${dateKey}`
-      );
+      console.log('FETCH WATER DATA!');
+      const response = await fetch(`http://localhost:3001/kerosene/${dateKey}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -49,19 +48,16 @@ const Display = () => {
   const commitValue = async (index: number, value: number[]) => {
     console.log('INDEX', index, 'VALUE', value);
     try {
-      const response = await fetch(
-        `http://localhost:3001/updateKerosene/${date}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ index, value }),
-        }
-      );
+      const response = await fetch(`http://localhost:3001/kerosene/${date}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ index, value }),
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok (from UpdatedDisplayB).');
+        throw new Error('Network response was not ok.');
       }
 
       const data = await response.json();

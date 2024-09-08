@@ -1,6 +1,6 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
-import BlackBottle from './front/Kerosene/UpdatedDisplayB';
+import BlackBottle from './front/Kerosene/Display';
 
 function App() {
   return (

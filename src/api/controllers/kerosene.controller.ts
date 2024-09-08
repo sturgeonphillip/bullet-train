@@ -34,9 +34,9 @@ const getAllWaterLogRecords = async (_req: Request, res: Response) => {
 
 // get log for specific date
 const getWaterLogByDate = async (req: Request, res: Response) => {
-  try {
-    const logDate = req.params.date;
+  const logDate = req.params.date;
 
+  try {
     isValidLogDate(logDate);
 
     const waterData = await waterDataService.getWaterData();
@@ -45,11 +45,18 @@ const getWaterLogByDate = async (req: Request, res: Response) => {
       throw new Error(`Unable to retrieve data from the database.`);
     }
 
-    const waterLog = waterData[logDate];
+    let waterLog;
 
-    if (!waterLog) {
-      // TODO: more appropriate to say doesn't exist?
-      throw new Error(`Unable to retrieve log for date ${logDate}.`);
+    let newLog;
+    try {
+      //  if (waterData[logDate])
+
+      if (!waterLog) {
+        newLog = await createWaterLogForNewDate(req, res);
+      }
+      return newLog;
+    } catch (err) {
+      handleError(err, res, 'Error reading');
     }
 
     res.status(200).json(waterLog);
@@ -124,12 +131,11 @@ const createWaterLogForNewDate = async (req: Request, res: Response) => {
     if (!logDate) {
       return res
         .status(400)
-        .json({ message: 'Missing required paramter: date.' });
+        .json({ message: 'Missing required parameter: date.' });
     }
 
     isValidLogDate(logDate);
 
-    // let existingData = {};
     let existingData = {};
 
     try {
@@ -171,6 +177,59 @@ const updateWaterLog = async (req: Request, res: Response) => {
   const { index, value } = req.body;
 
   try {
+    isValidLogDate(logDate);
+
+    const waterData = await waterDataService.getWaterData();
+
+    if (!waterData) {
+      throw new Error('Unable to retrieve data from the database.');
+    }
+
+    const waterLog = waterData[logDate];
+
+    if (!waterLog) {
+      await createWaterLogForNewDate(req, res);
+    } else {
+      const currentMetrics = waterData[logDate].metrics;
+      const latestMetric = currentMetrics[currentMetrics.length - 1];
+
+      // update the specific bottle
+      latestMetric.bottles[index].ounces = value;
+      latestMetric.bottles[index].complete =
+        value[0] >= latestMetric.bottles[index].capacity;
+
+      // recalculate total ounces
+      const totalOunces = latestMetric.bottles.reduce(
+        (acc: number, bottle: BottleProps) => acc + bottle.ounces[0],
+        0
+      );
+
+      // create a new WaterMetricsProps object
+      const newMetric: WaterMetricsProps = {
+        gauge: currentMetrics.length,
+        timestamp: Date.now(),
+        ounces: totalOunces,
+        bladders: latestMetric.bottles.length,
+        bottles: [...latestMetric.bottles], // copy the bottles array
+      };
+
+      // push newMetric onto metrics array
+      currentMetrics.push(newMetric);
+
+      await waterDataService.saveWaterData(waterData);
+
+      res.status(200).json(waterData[logDate]);
+    }
+  } catch (err) {
+    handleError(err, res, 'Error fetching or creating a water log.');
+  }
+};
+
+export const updateWaterLog2 = async (req: Request, res: Response) => {
+  const logDate = req.params.date;
+  const { index, value } = req.body;
+
+  try {
     const waterData = await waterDataService.getWaterData();
 
     if (!waterData) {
@@ -189,7 +248,7 @@ const updateWaterLog = async (req: Request, res: Response) => {
       res.status(200).json(waterData[logDate]);
     }
   } catch (err) {
-    handleError(err, res, 'Error fetching orr creating water log.');
+    handleError(err, res, 'Error fetching or creating water log.');
   }
 };
 
