@@ -176,77 +176,43 @@ const updateWaterLog = async (req: Request, res: Response) => {
   const logDate = req.params.date;
   const { index, value } = req.body;
 
-  try {
-    isValidLogDate(logDate);
-
-    const waterData = await waterDataService.getWaterData();
-
-    if (!waterData) {
-      throw new Error('Unable to retrieve data from the database.');
-    }
-
-    const waterLog = waterData[logDate];
-
-    if (!waterLog) {
-      await createWaterLogForNewDate(req, res);
-    } else {
-      const currentMetrics = waterData[logDate].metrics;
-      const latestMetric = currentMetrics[currentMetrics.length - 1];
-
-      // update the specific bottle
-      latestMetric.bottles[index].ounces = value;
-      latestMetric.bottles[index].complete =
-        value[0] >= latestMetric.bottles[index].capacity;
-
-      // recalculate total ounces
-      const totalOunces = latestMetric.bottles.reduce(
-        (acc: number, bottle: BottleProps) => acc + bottle.ounces[0],
-        0
-      );
-
-      // create a new WaterMetricsProps object
-      const newMetric: WaterMetricsProps = {
-        gauge: currentMetrics.length,
-        timestamp: Date.now(),
-        ounces: totalOunces,
-        bladders: latestMetric.bottles.length,
-        bottles: [...latestMetric.bottles], // copy the bottles array
-      };
-
-      // push newMetric onto metrics array
-      currentMetrics.push(newMetric);
-
-      await waterDataService.saveWaterData(waterData);
-
-      res.status(200).json(waterData[logDate]);
-    }
-  } catch (err) {
-    handleError(err, res, 'Error fetching or creating a water log.');
-  }
-};
-
-export const updateWaterLog2 = async (req: Request, res: Response) => {
-  const logDate = req.params.date;
-  const { index, value } = req.body;
+  isValidLogDate(logDate);
 
   try {
-    const waterData = await waterDataService.getWaterData();
-
-    if (!waterData) {
-      throw new Error(`Unable to retrieve data from the database.`);
-    }
+    let waterData = (await waterDataService.getWaterData()) ?? {};
 
     if (!waterData[logDate]) {
       await createWaterLogForNewDate(req, res);
-    } else {
-      // update
-      waterData[logDate].metrics[index].ounces = value[0];
 
-      // save updates
-      await waterDataService.saveWaterData(waterData);
-
-      res.status(200).json(waterData[logDate]);
+      waterData = (await waterDataService.getWaterData()) ?? {};
     }
+
+    if (!waterData[logDate]) {
+      throw new Error(
+        `Unable to retrieve or create water log for date ${logDate}.`
+      );
+    }
+
+    const newMetric: WaterMetricsProps = {
+      gauge: waterData[logDate].metrics.length,
+      timestamp: Date.now(),
+      ounces: waterData[logDate].metrics[0].bottles.reduce(
+        (acc, bottle, i) => acc + (i === index ? value[0] : bottle.ounces[0]),
+        0
+      ),
+      bladders: waterData[logDate].metrics[0].bottles.length,
+      bottles: waterData[logDate].metrics[0].bottles.map((bottle, idx) =>
+        idx === index
+          ? { ...bottle, ounces: value, complete: value[0] === bottle.capacity }
+          : bottle
+      ),
+    };
+
+    waterData[logDate].metrics.push(newMetric);
+
+    await waterDataService.saveWaterData(waterData);
+
+    res.status(200).json(waterData[logDate]);
   } catch (err) {
     handleError(err, res, 'Error fetching or creating water log.');
   }
