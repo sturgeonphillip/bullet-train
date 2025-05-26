@@ -3,7 +3,7 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'node:url';
 import { Request, Response } from 'express';
 import { handleError } from '../../utils/errorHandler';
-import WaterDataService from '../../services/waterDataService';
+import WaterDataService from '../../services/WaterDataService';
 import {
   createWaterLog,
   isValidLogDate,

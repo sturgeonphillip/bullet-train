@@ -1,46 +1,123 @@
 import { useState, useEffect, useCallback } from 'react';
-import { debouncer } from './updatedDebouncer';
+// import { debouncer } from './updatedDebouncer';
 import WaterBottle from './WaterBottle';
 import './kerosene.css';
-import { WaterMetricsProps } from './createWaterLog';
+import {
+  BottleProps,
+  createWaterBottle,
+  WaterMetricsProps,
+} from './createWaterLog';
+import { getLocalDateKey } from '../../utils/dateKey';
 
 const Display = () => {
-  // initialize bottles as an array of arrays of number
-  const [bottles, setBottles] = useState<number[][]>([[0], [0], [0], [0]]);
+  // initialize an array of function calls that each create a new bottle
+  const [bottles, setBottles] = useState<BottleProps[]>([
+    createWaterBottle(),
+    createWaterBottle(),
+    createWaterBottle(),
+    createWaterBottle(),
+  ]);
+
   const [date, setDate] = useState<string>(
-    new Date().toISOString().slice(0, 10)
+    getLocalDateKey()
+    // new Date().toISOString().slice(0, 10)
   );
 
-  useEffect(() => {
-    fetchWaterData(date);
-  }, [date]);
-
-  const fetchWaterData = async (dateKey: string) => {
+  const fetchWaterData = useCallback(async (dateKey: string) => {
     try {
-      console.log('FETCH WATER DATA!');
       const response = await fetch(`http://localhost:3001/kerosene/${dateKey}`);
 
       if (response.ok) {
         const data = await response.json();
 
-        const fetchedBottles = data.metrics.map((metric: WaterMetricsProps) => [
-          metric.ounces,
-        ]);
+        // if no metrics exist, create default data
+        if (!data.metrics || data.metrics.length === 0) {
+          // create default data (eg, 3 bottles w/ 0 oz)
+          const defaultMetrics = [
+            { ounces: 0 }, // createWaterBottle(),
+            { ounces: 0 }, // createWaterBottle(),
+            { ounces: 0 }, // createWaterBottle(),
+            { ounces: 0 }, // createWaterBottle(),
+          ];
 
-        // update bottle state based on fetched data
-        setBottles(fetchedBottles);
-      } else {
-        throw new Error('Failed to fetch water data.');
+          // send a request to create this default data
+          await createDefaultData(dateKey, defaultMetrics);
+
+          // after created, fetch again to update state
+          await fetchWaterData(dateKey);
+
+          // exit early after fetching again
+          return;
+        } else {
+          const fetchedBottles = data.metrics.map(
+            (metric: WaterMetricsProps) => [metric.ounces]
+          );
+
+          setBottles(fetchedBottles);
+        }
       }
     } catch (err) {
-      console.error('Fetch error:', err);
+      console.error(`Fetch error: ${err}`);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('date', date);
+    fetchWaterData(date);
+  }, [date, fetchWaterData]);
+
+  const createDefaultData = async (
+    dateKey: string,
+    metrics: { ounces: number }[]
+  ) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/kerosene/${dateKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ metrics }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok.');
+      }
+
+      const data = await response.json();
+      console.log('Default data created:', data);
+    } catch (err) {
+      console.error('Error creating default data:', err);
     }
   };
+
+  // const fetchWaterData = async (dateKey: string) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3001/kerosene/${dateKey}`);
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+
+  //       // exit early and keep default state if no metrics exist
+  //       if (!data.metrics || data.metrics.length === 0) {
+  //         return;
+  //       } else {
+  //         const fetchedBottles = data.metrics.map(
+  //           (metric: WaterMetricsProps) => [metric.ounces]
+  //         );
+  //         setBottles(fetchedBottles);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error(`Fetch error: ${err}`);
+  //   }
+  // };
 
   const handleOuncesChange = (index: number, value: number[]) => {
     setBottles((prevBottles) => {
       const updatedBottles = [...prevBottles];
-      updatedBottles[index] = value;
+      updatedBottles[index].ounces = value;
       return updatedBottles;
     });
   };
@@ -67,13 +144,31 @@ const Display = () => {
     }
   };
 
-  const debouncedCommitValue = useCallback(
-    debouncer(
-      (index: number, value: number[]) => commitValue(index, value),
-      2000
-    ),
-    [date]
+  const debouncedCV = useCallback(
+    (index: number, value: number[]) => {
+      let timeout: NodeJS.Timeout | null = null;
+
+      return () => {
+        if (timeout) clearTimeout(timeout);
+
+        timeout = setTimeout(() => {
+          commitValue(index, value).catch((err) => {
+            console.error('Debounced function Error.', err);
+          });
+        }, 2000);
+      };
+    },
+    []
+    // [commitValue]
   );
+
+  // const debouncedCommitValue = useCallback(
+  //   debouncer(
+  //     (index: number, value: number[]) => commitValue(index, value),
+  //     2000
+  //   ),
+  //   [date]
+  // );
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDate(event.target.value);
@@ -82,13 +177,14 @@ const Display = () => {
   return (
     <>
       <div className={'bottle-display-grid'}>
-        {bottles.map((ounces, index) => (
+        {bottles.map((bottle, index) => (
           <WaterBottle
             key={index}
             color={index % 2 === 0 ? 'blue' : 'pink'}
-            ounces={ounces}
+            ounces={bottle.ounces}
             onOuncesChange={(value) => handleOuncesChange(index, value)}
-            onCommit={(value) => debouncedCommitValue(index, value)}
+            onCommit={(value) => debouncedCV(index, value)}
+            // onCommit={(value) => debouncedCommitValue(index, value)}
           />
         ))}
       </div>
@@ -108,3 +204,20 @@ const Display = () => {
 };
 
 export default Display;
+
+/**
+ * Key Points and Improvements
+ *
+ * 1. Default Metrics Creation: Creating an array of default metrics with four bottles is good. However, to make it more dynamic, consider defining the number of bottles as a constant or state variable.
+ *
+ * 2. Commented Code: Some commented-out code is unnecessary. It's good practice to remove unused code to keep your codebase clean.
+ *
+ * 3. Error Handling: Provide user feedback when an error occurs during fetch or creating data. This could be done using a state variable to show an error message in the UI.
+ *
+ * 4. Initial State: Right now, `bottles` is initialized with four bottles of zero ounces. To ensure that this is only the case when there is no data, consider setting the initial state to an empty array and then populate it based on the fetched data.
+ *
+ * 5. Avoiding Duplicate Fetch Calls: When creating default data and then immediately fetching it again, ensure that the state is updated correctly without the unnecessary re-renders.
+ *
+ */
+
+// refined

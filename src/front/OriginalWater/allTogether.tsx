@@ -84,8 +84,8 @@ const Display = () => {
     return (acc += crv[0]);
   }, 0);
 
-  let timeoutId: NodeJS.Timeout | null;
-  let abortController: AbortController;
+  const timeoutId: NodeJS.Timeout | null = null;
+  const abortController: AbortController | null = null;
 
   const handleSliderCommit = () => {
     const debouncedValues: DebounceFetchProps = {
