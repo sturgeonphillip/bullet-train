@@ -433,23 +433,37 @@
       }
     ]
   },
+<<<<<<< Updated upstream
   "2024-05-25": {
     "id": "7f6c1b38-bea6-4ec0-9121-ade933af594c",
     "date": "2024-05-25",
     "routines": [
       {
         "id": "e9c72b37-5931-4a6b-87ac-bab74358a1ec",
+=======
+  "2025-04-03": {
+    "id": "18d44d90-0b6a-48e8-936b-aa15ed7da35d",
+    "date": "2025-04-03",
+    "routines": [
+      {
+        "id": "62e44ab5-6eab-4e00-a84e-a2451459f7ea",
+>>>>>>> Stashed changes
         "name": "Walk Dogs",
         "complete": false,
         "timestamp": 0
       },
       {
+<<<<<<< Updated upstream
         "id": "7d907233-09a7-4fbc-9a96-ab4b07761e17",
+=======
+        "id": "3fbee3e0-8a90-466a-a211-82929989edcd",
+>>>>>>> Stashed changes
         "name": "Pray",
         "complete": false,
         "timestamp": 0
       },
       {
+<<<<<<< Updated upstream
         "id": "4449d1d1-3a46-48d6-974b-a2a239e6e325",
         "name": "Row",
         "complete": false,
@@ -475,6 +489,9 @@
       },
       {
         "id": "f754c4fb-290c-4648-86e7-dbd5584a5569",
+=======
+        "id": "f097b922-73cb-430a-a816-8cfd939deea8",
+>>>>>>> Stashed changes
         "name": "Row",
         "complete": false,
         "timestamp": 0
