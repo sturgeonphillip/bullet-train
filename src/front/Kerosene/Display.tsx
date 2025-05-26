@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-// import { debouncer } from './updatedDebouncer';
 import WaterBottle from './WaterBottle';
 import './kerosene.css';
 import {
@@ -122,28 +121,6 @@ const Display = () => {
     });
   };
 
-  const commitValue = async (index: number, value: number[]) => {
-    console.log('INDEX', index, 'VALUE', value);
-    try {
-      const response = await fetch(`http://localhost:3001/kerosene/${date}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ index, value }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
-      }
-
-      const data = await response.json();
-      console.log('Fetch successful:', data);
-    } catch (err) {
-      console.error('Fetch error:', err);
-    }
-  };
-
   const debouncedCV = useCallback(
     (index: number, value: number[]) => {
       let timeout: NodeJS.Timeout | null = null;
@@ -151,24 +128,30 @@ const Display = () => {
       return () => {
         if (timeout) clearTimeout(timeout);
 
-        timeout = setTimeout(() => {
-          commitValue(index, value).catch((err) => {
-            console.error('Debounced function Error.', err);
-          });
+        timeout = setTimeout(async () => {
+          try {
+            const res = await fetch(`http://localhost:3001/kerosene/${date}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ index, value }),
+            });
+
+            if (!res.ok) {
+              throw new Error('Network response was not ok.');
+            }
+
+            const data = await res.json();
+            console.log('Fetch successful:', data);
+          } catch (err) {
+            console.error('Fetch error:', err);
+          }
         }, 2000);
       };
     },
-    []
-    // [commitValue]
+    [date]
   );
-
-  // const debouncedCommitValue = useCallback(
-  //   debouncer(
-  //     (index: number, value: number[]) => commitValue(index, value),
-  //     2000
-  //   ),
-  //   [date]
-  // );
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDate(event.target.value);
@@ -184,7 +167,6 @@ const Display = () => {
             ounces={bottle.ounces}
             onOuncesChange={(value) => handleOuncesChange(index, value)}
             onCommit={(value) => debouncedCV(index, value)}
-            // onCommit={(value) => debouncedCommitValue(index, value)}
           />
         ))}
       </div>
