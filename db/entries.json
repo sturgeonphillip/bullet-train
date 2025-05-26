@@ -432,5 +432,53 @@
         "timestamp": 0
       }
     ]
+  },
+  "2024-05-25": {
+    "id": "7f6c1b38-bea6-4ec0-9121-ade933af594c",
+    "date": "2024-05-25",
+    "routines": [
+      {
+        "id": "e9c72b37-5931-4a6b-87ac-bab74358a1ec",
+        "name": "Walk Dogs",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "7d907233-09a7-4fbc-9a96-ab4b07761e17",
+        "name": "Pray",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "4449d1d1-3a46-48d6-974b-a2a239e6e325",
+        "name": "Row",
+        "complete": false,
+        "timestamp": 0
+      }
+    ]
+  },
+  "2024-05-26": {
+    "id": "181e12d4-ab60-4930-a537-15e7469da479",
+    "date": "2024-05-26",
+    "routines": [
+      {
+        "id": "980493cd-1ad7-4455-8d4d-eaf9d5e14ee9",
+        "name": "Walk Dogs",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "83320333-2cf7-4d18-b4fe-92172de8048e",
+        "name": "Pray",
+        "complete": false,
+        "timestamp": 0
+      },
+      {
+        "id": "f754c4fb-290c-4648-86e7-dbd5584a5569",
+        "name": "Row",
+        "complete": false,
+        "timestamp": 0
+      }
+    ]
   }
 }
