@@ -188,7 +188,7 @@ const Display = () => {
 export default Display;
 
 /**
- * Key Points and Improvements
+ * Key Points and Improvements related to Display.tsx
  *
  * 1. Default Metrics Creation: Creating an array of default metrics with four bottles is good. However, to make it more dynamic, consider defining the number of bottles as a constant or state variable.
  *
@@ -201,5 +201,3 @@ export default Display;
  * 5. Avoiding Duplicate Fetch Calls: When creating default data and then immediately fetching it again, ensure that the state is updated correctly without the unnecessary re-renders.
  *
  */
-
-// refined

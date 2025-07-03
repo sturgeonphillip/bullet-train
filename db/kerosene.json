@@ -538,5 +538,42 @@
         ]
       }
     ]
+  },
+  "2025-07-02": {
+    "logDate": "2025-07-03",
+    "metrics": [
+      {
+        "gauge": 0,
+        "timestamp": 1751505799436,
+        "ounces": 0,
+        "bladders": 4,
+        "bottles": [
+          {
+            "id": "46cb0829-c099-45f9-8bf9-4584ecc8cd2c",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "02cbfc8a-7a4e-459f-bf31-964924e8b759",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "94e396d0-a5df-48dc-b729-2dba3e9a7aaf",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          },
+          {
+            "id": "5fb1bf8d-da79-43fb-a9a7-60186eaf1e2e",
+            "ounces": [0],
+            "capacity": 32,
+            "complete": false
+          }
+        ]
+      }
+    ]
   }
 }
