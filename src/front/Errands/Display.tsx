@@ -122,20 +122,20 @@ const Display = () => {
 
   /** *** *** *** */
 
-  const fetchErrands = async () => {
-    try {
-      const res = await fetch('http://localhost:3001/errands');
-      if (!res.ok) {
-        throw new Error('Network response error.');
-      }
+  // const fetchErrands = async () => {
+  //   try {
+  //     const res = await fetch('http://localhost:3001/errands');
+  //     if (!res.ok) {
+  //       throw new Error('Network response error.');
+  //     }
 
-      const saved = await res.json();
+  //     const saved = await res.json();
 
-      setErrands(saved);
-    } catch (err) {
-      console.error(`There was a problem with the fetch operation: ${err}`);
-    }
-  };
+  //     setErrands(saved);
+  //   } catch (err) {
+  //     console.error(`There was a problem with the fetch operation: ${err}`);
+  //   }
+  // };
 
   /** *** *** *** */
   return (

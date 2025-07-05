@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ErrandProps } from './createErrand';
 
-const Errand = ({
+export const Errand = ({
   id,
   name,
   complete,

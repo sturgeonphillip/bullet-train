@@ -1,25 +1,17 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
-import BlackBottle from './front/Kerosene/Display';
 
+import { HydrationTracker } from './front/Hydration/HydrationTracker';
 function App() {
   return (
     <>
       <div>
         <div className='display-container'>
           <Clock />
+          <h1>bullet-train</h1>
           <hr />
-          <div className='holding'>
-            <h4>Original</h4>
-            {/* <Water /> */}
-          </div>
-          {/* <div className='holding'>
-            <h4>Kerosene!</h4>
-            <Kerosene />
-          </div> */}
-          <div className='holding'>
-            <h4>Black Bottle</h4>
-            <BlackBottle />
+          <div>
+            <HydrationTracker />
           </div>
         </div>
       </div>

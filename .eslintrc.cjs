@@ -18,3 +18,4 @@ module.exports = {
     'array-bracket-spacing': 1,
   },
 };
+@
