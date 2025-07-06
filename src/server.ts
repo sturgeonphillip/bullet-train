@@ -1,3 +1,4 @@
+import { Server } from 'http';
 import fs from 'node:fs/promises';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -8,12 +9,14 @@ import express, {
   Response,
   NextFunction,
 } from 'express';
+import { handleError } from './utils/errorHandler';
 
 // TODO: validate all requests server side
 import entryRoutes from './api/routes/entry.routes';
 import listRoutes from './api/routes/list.routes';
 import errandRoutes from './api/routes/errand.routes';
 import todayRoutes from './api/routes/today.routes';
+import hydrationRoutes from './api/routes/hydration.routes';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -21,12 +24,14 @@ const port = process.env.PORT || 3001;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const approvedOrigins = [
-  'http://localhost:3001',
-  'http://localhost:3001/today',
-  'http://localhost:5173',
-];
-app.use(cors({ origin: approvedOrigins }));
+const corsOptions = {
+  origin: ['http://localhost:3001', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 3600,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,146 +45,82 @@ app.use('/entry', entryRoutes);
 app.use('/list', listRoutes);
 app.use('/errands', errandRoutes);
 app.use('/today', todayRoutes);
+app.use('/hydration', hydrationRoutes);
 
 app.get('/', (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'main.html'));
 });
 
-app.get('/errands', async (_req: Request, res: Response) => {
-  const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
-
-app.post('/errands', async (req: Request, res: Response) => {
+app.post('/draft', async (req: Request, res: Response) => {
   try {
-    const dataPath = path.join(__dirname, './data/errands.json');
-    const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
+    const dataPath = path.join(__dirname, '../db/drafts.json');
+
+    let existingData = [];
+
+    try {
+      const content = await fs.readFile(dataPath, 'utf8');
+
+      existingData = JSON.parse(content);
+      console.log('EXIST', existingData);
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        existingData = [];
+      } else {
+        console.error(`Error reading file contents: ${error}`);
+      }
+    }
+
+    const oldRoutine = existingData.at(-1).routines; // ?? [];
+    const newRoutine = [...oldRoutine, req.body];
+    const routine = {
+      date: Date.now(),
+      routines: newRoutine,
+    };
+    // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
 
     await fs.writeFile(
       dataPath,
-      JSON.stringify([...errands, req.body]),
+      JSON.stringify([...existingData, routine]),
       'utf8'
     );
-    res.status(201).json({ message: 'Errand saved.' });
-  } catch (err) {
-    console.error('Error saving errands: ', err);
-    res.status(500).json({ message: 'Error saving errand', error: err });
+    res.status(201).json(routine);
+  } catch (error) {
+    console.error('Error adding a new routine.', error);
+    res.status(500).json({
+      message: 'Error adding a new routine.',
+      error,
+    });
   }
 });
 
-// app.post('/routineList', async (req: Request, res: Response) => {
-//   try {
-//     const dataPath = path.join(__dirname, '../db/adjustments.json');
-
-//     let existingData = [];
-
-//     try {
-//       const content = await fs.readFile(dataPath, 'utf8');
-
-//       existingData = JSON.parse(content);
-//       console.log('EXIST', existingData);
-//     } catch (error) {
-//       if (error instanceof SyntaxError) {
-//         existingData = [];
-//       } else {
-//         console.error(`Error reading file contents: ${error}`);
-//       }
-//     }
-
-//     const oldRoutine = existingData.at(-1).routines; // ?? [];
-//     const newRoutine = [...oldRoutine, req.body];
-//     const routine = {
-//       date: Date.now(),
-//       routines: newRoutine,
-//     };
-//     // get datapath before hitting create -> const dataPath = path.join(__dirname, '');
-
-//     await fs.writeFile(
-//       dataPath,
-//       JSON.stringify([...existingData, routine]),
-//       'utf8'
-//     );
-//     res.status(201).json(routine);
-//   } catch (error) {
-//     console.error('Error adding a new routine.', error);
-//     res.status(500).json({
-//       message: 'Error adding a new routine.',
-//       error,
-//     });
-//   }
-// });
-
-app.delete('/errands/:id', async (req: Request, res: Response) => {
-  const idToDelete = await req.params.id;
-
-  try {
-    const dataPath = path.join(__dirname, './data/errands.json');
-    const errands = JSON.parse(await fs.readFile(dataPath, 'utf8'));
-
-    const updatedErrands = errands.filter(
-      (errand: { id: string }) => errand.id !== idToDelete
-    );
-
-    await fs.writeFile(dataPath, JSON.stringify(updatedErrands), 'utf8');
-  } catch (err) {
-    if (err instanceof Error) {
-      console.error('Error saving errands: ', err);
-      res.status(500).json({
-        message: 'Error deleting errand',
-        error: err.message,
-      });
-    }
-  }
-});
-
-app.get('/entries', async (req: Request, res: Response) => {
-  await console.log(req.body);
-  const dataPath = path.join(__dirname, '..', 'db', 'errands.json');
-  const data = await fs.readFile(dataPath, 'utf8');
-  res.send(data);
-});
-
-const errorHandler: ErrorRequestHandler = (
-  err: Error,
+const errorHandlerMiddleware = (
+  err: ErrorRequestHandler,
   _req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (err instanceof Error) {
-    res.status(500).send({
-      msg: 'possible CORS Error',
-      detail: err.message,
-    });
+  if ('message' in err && typeof err.message === 'string') {
+    handleError(err.message, res);
+    // if (typeof err.message === 'string') {
+    //   handleError(err.message ?? 'An unknown error occurred', res);
   } else {
-    next(err);
+    handleError('An unknown error occured', res);
   }
+  handleError(err, res);
+  next(err); // call next with the error to propagate it to the next middleware
 };
 
-app.use(errorHandler);
-app.listen(port, () => {
+app.use(errorHandlerMiddleware);
+
+const server: Server = app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
 
-// from MDN: Warning: Client-side form validation is no substitute for validating on the server. It's easy for someone to modify the HTML, or bypass your HTML entirely and submit the data directly to your server. If your server fails to validate the received data, disaster could strike with data that is badly-formatted, too large, of the wrong type, etc.
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. Performing cleanup...');
 
-/**
- * let today = new Date(lapse);
- * console.log('TODAY', today, today.toISOString());
- * let justDate = today.toISOString().split('T')[0];
- * console.log('JSUT DATE', justDate);
- *
- */
-
-/**
- * let lapse = Date.now();
- *
- * app.listen(() => {
- *   setInterval(() => {
- *     console.clear();
- *     console.log(`Server listening at http://
- *     localhost${PORT}\nIt is now: ${(lapse =
- *     Date.now())};`
- *   }, 5000);
- * });
- */
+  server.close(() => {
+    console.log('Server closed.');
+    process.exitCode = 0;
+  });
+});

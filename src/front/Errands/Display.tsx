@@ -4,6 +4,7 @@ import Form from './Form';
 import Errand from './Errand';
 import { ErrandProps } from './createErrand';
 
+// Display A
 const Display = () => {
   const [errands, setErrands] = useState<ErrandProps[]>([]);
 
@@ -13,6 +14,7 @@ const Display = () => {
       The id logs as ${id}.`);
       return;
     }
+
     const errandIndex = errands.findIndex((errand) => errand.id === id);
 
     if (errandIndex === -1) {
@@ -118,9 +120,26 @@ const Display = () => {
     }
   }
 
+  /** *** *** *** */
+
+  // const fetchErrands = async () => {
+  //   try {
+  //     const res = await fetch('http://localhost:3001/errands');
+  //     if (!res.ok) {
+  //       throw new Error('Network response error.');
+  //     }
+
+  //     const saved = await res.json();
+
+  //     setErrands(saved);
+  //   } catch (err) {
+  //     console.error(`There was a problem with the fetch operation: ${err}`);
+  //   }
+  // };
+
+  /** *** *** *** */
   return (
     <>
-      {/* <hr /> */}
       <div className='errands-container'>
         <div className='errands-title-div'>
           <h2>Errands</h2>

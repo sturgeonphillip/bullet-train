@@ -39,10 +39,10 @@
   color: #888;
 }
 
-.display-container {
+/* .display-container {
   display: flex;
   flex-direction: row;
-}
+} */
 
 .display {
   margin: 0 50px;

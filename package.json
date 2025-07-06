@@ -1,5 +1,5 @@
 {
-  "name": "diehard",
+  "name": "bullet-train",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,6 +14,8 @@
     "server": "npx tsx watch ./src/server.ts"
   },
   "dependencies": {
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "react": "^18.2.0",

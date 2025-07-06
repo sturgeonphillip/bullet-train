@@ -150,7 +150,6 @@ td {
 
 .detail-container-div .table-b tr:nth-child(odd) {
   background-color: rgba(24, 190, 228, 0.25);
-  /* --aquatic: rgb(24, 190, 228); */
 }
 
 .detail-container-div .table-b th {

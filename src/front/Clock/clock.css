@@ -1,7 +1,4 @@
-:root {
-  --aquatic: rgb(24, 190, 228);
-  --fuschatic: rgb(245, 0, 188);
-}
+@import url('../../css/colors.css');
 
 .clock {
   font-style: italic;
@@ -11,9 +8,9 @@
     var(--aquatic),
     var(--aquatic),
     var(--aquatic),
-    var(--fuschatic),
-    var(--fuschatic),
-    var(--fuschatic)
+    var(--fuchsia),
+    var(--fuchsia),
+    var(--fuchsia)
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
