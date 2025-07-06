@@ -96,12 +96,12 @@ Block out your day, visualize structure, and optionally sync with external calen
 
 - [ ] Calendar and Scheduling Component
 - [ ] Editable routines (CRUD + history)
-- [ ] API for hydration tracking
+- [x] API for hydration tracking
 - [ ] Migrate local JSON storage to a database
   - [ ] Evaluate Prisma or a schema-first approach
   - [ ] Optional cloud sync (e.g. Supabase)
   - [ ] Unified storage for same-day data (routines + hydration)
-- Github Repository Intro
+- [x] Github Repository Intro
 - Build Contribution Guidelines and usage examples
 - Add screenshot images and a logo
 
