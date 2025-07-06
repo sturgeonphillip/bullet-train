@@ -5,3 +5,6 @@ export function isValidLogDate(value: string) {
 
   return true;
 }
+
+export const getTodayKey = (tz = 'America/Los_Angeles', locale = 'en-CA') =>
+  new Intl.DateTimeFormat(locale, { timeZone: tz }).format(new Date());

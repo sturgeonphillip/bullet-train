@@ -1,4 +1,3 @@
-// clear
 import * as Slider from '@radix-ui/react-slider';
 import './hydration.css';
 

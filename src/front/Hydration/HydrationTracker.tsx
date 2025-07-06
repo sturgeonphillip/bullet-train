@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { HydrationBottle } from './HydrationBottle';
 import { debouncePatchTotalOunces } from './debouncer/patchTotalOunces';
 import './hydration.css';
+import { getTodayKey } from '../../utils/dateUtils';
 
 export interface BottleStateProps {
   id: string;
@@ -25,7 +26,7 @@ const createBottle = (): BottleStateProps => ({
 });
 
 // TODO: fix to replace with import, centralize utils(?)
-const todayKey = new Date().toISOString().split('T')[0];
+const todayKey = getTodayKey(); // uses PDT-local time
 
 function fillBottlesSequentially(
   total: number,
