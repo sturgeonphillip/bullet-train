@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import './history1.css';
+import './history-table.css';
 export interface RoutineHistoryProps {
   [dateKey: string]: string[];
 }
 
-const History = () => {
+export const HistoryTable = () => {
   const [list, setList] = useState<RoutineHistoryProps[] | null>(null);
 
   const requestLists = useCallback(async () => {
@@ -54,5 +54,3 @@ const History = () => {
     </>
   );
 };
-
-export default History;

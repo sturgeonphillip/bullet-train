@@ -94,16 +94,21 @@ Block out your day, visualize structure, and optionally sync with external calen
 
 ## Roadmap
 
-- [ ] Calendar and Scheduling Component
 - [ ] Editable routines (CRUD + history)
 - [x] API for hydration tracking
 - [ ] Migrate local JSON storage to a database
-  - [ ] Evaluate Prisma or a schema-first approach
-  - [ ] Optional cloud sync (e.g. Supabase)
+  - [ ] Prisma for typing and api management(?)
+  - [ ] Cloud sync (optional for users)
   - [ ] Unified storage for same-day data (routines + hydration)
 - [x] Github Repository Intro
 - Build Contribution Guidelines and usage examples
-- Add screenshot images and a logo
+- [ ] Calendar and Scheduling Component
+- [ ] Add screenshot images and a logo(?)
+
+## Eventually
+
+- [ ] Add Zod (if needed)
+- [ ] Add Prisma (if needed)
 
 ---
 

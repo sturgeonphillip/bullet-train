@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './index.css';
-import List from './List';
-
+// import List from './List';
+import { HistoryColumn } from './HistoryColumn/HistoryColumn';
 export type RoutineHistoryProps = [date: string, routines: string[]];
 
 const Display = () => {
@@ -39,15 +39,15 @@ const Display = () => {
       )} */}
       <ul>
         {/* <h5>AS UL</h5> */}
+
         {lists.length > 0 ? (
-          lists.map((list) => (
-            <div key={list[0]}>
-              <List
+          <div>
+            {/* <List
                 dateKey={list[0]}
                 routines={list[1]}
-              />
-            </div>
-          ))
+              /> */}
+            <HistoryColumn />
+          </div>
         ) : (
           <p>no history of routines.</p>
         )}

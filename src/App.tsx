@@ -1,6 +1,6 @@
 import './App.css';
 import { Clock } from './front/Clock/Clock';
-
+import List from './front/RoutineHistory/Display';
 import { HydrationTracker } from './front/Hydration/HydrationTracker';
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
           <div>
             <HydrationTracker />
           </div>
+          <List />
         </div>
       </div>
     </>
