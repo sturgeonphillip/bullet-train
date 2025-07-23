@@ -1,27 +1,52 @@
-import { RoutineProps } from './types';
+// import { RoutineProps } from './types';
 
-export const Routine = ({ id, name, complete, onComplete }: RoutineProps) => {
-  function handleToggle() {
+// export const Routine = ({ id, name, complete, onComplete }: RoutineProps) => {
+//   function handleToggle() {
+//     if (onComplete) {
+//       onComplete(id);
+//     }
+//   }
+
+//   return (
+//     <>
+//       <li
+//         key={id}
+//         className='entry-routine-li'
+//       >
+//         <input
+//           type='checkbox'
+//           id={id}
+//           checked={complete}
+//           onChange={handleToggle}
+//           className='routine-checkbox'
+//         />
+//         <p className='routine-name-p'>{name}</p>
+//       </li>
+//     </>
+//   );
+// };
+
+import { RoutineProps } from './types'
+
+const Routine = ({ id, name, complete, onComplete }: RoutineProps) => {
+  const handleToggle = () => {
     if (onComplete) {
-      onComplete(id);
+      onComplete(id)
     }
   }
 
   return (
-    <>
-      <li
-        key={id}
-        className='entry-routine-li'
-      >
-        <input
-          type='checkbox'
-          id={id}
-          checked={complete}
-          onChange={handleToggle}
-          className='routine-checkbox'
-        />
-        <p className='routine-name-p'>{name}</p>
-      </li>
-    </>
-  );
-};
+    <li className='entry-routine-li'>
+      <input
+        type='checkbox'
+        id={id}
+        checked={complete}
+        onChange={handleToggle}
+        className='routine-checkbox'
+      />
+      <p className='routine-name-p'>{name}</p>
+    </li>
+  )
+}
+
+export default Routine

@@ -1,7 +1,7 @@
-import './App.css';
-import { Clock } from './front/Clock/Clock';
-
-import { HydrationTracker } from './front/Hydration/HydrationTracker';
+import './App.css'
+import { Clock } from './front/Clock/Clock'
+import Main from '../src/front/Intended/Fix/Main'
+import { HydrationTracker } from './front/Hydration/HydrationTracker'
 function App() {
   return (
     <>
@@ -12,14 +12,15 @@ function App() {
           <hr />
           <div>
             <HydrationTracker />
+            <Main />
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
 
 /***
  *    Date, Time    |   Calendar Events
