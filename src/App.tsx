@@ -2,6 +2,8 @@ import './App.css'
 import { Clock } from './front/Clock/Clock'
 import Main from '../src/front/Intended/Fix/Main'
 import { HydrationTracker } from './front/Hydration/HydrationTracker'
+import Errands from './front/Errands/DisplayA'
+
 function App() {
   return (
     <>
@@ -15,6 +17,7 @@ function App() {
             <Main />
           </div>
         </div>
+        <Errands />
       </div>
     </>
   )

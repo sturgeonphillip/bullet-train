@@ -1,8 +1,7 @@
-// Display A
 import { useState, useEffect } from 'react'
 import './errands.css'
 import Form from './Form'
-import Errand from './Errand'
+import Errand from './ErrandA'
 import { ErrandProps } from './createErrand'
 
 const Display = () => {
@@ -10,8 +9,9 @@ const Display = () => {
 
   const handleComplete = async (id: string) => {
     if (!id) {
-      console.error(`Attempt to update errand failed. Item is either null or undefined, or function was called without an argument.
-      The id logs as ${id}.`)
+      console.error(
+        `Attempt to update errand failed. Item is either null or undefined, or the function was called without an argument. The id logs as ${id}`
+      )
       return
     }
 
@@ -34,8 +34,10 @@ const Display = () => {
     setErrands((prev) => {
       const allErrands = [...prev]
       allErrands[errandIndex] = errandToUpdate
+
       return allErrands
     })
+
     // update errand in db
     try {
       const options = {
@@ -88,6 +90,7 @@ const Display = () => {
       }
 
       const res = await fetch(`http://localhost:3001/errands/${id}`, options)
+
       if (!res.ok) {
         throw new Error(
           `Failed to delete errand from database. Status code: ${res.status}`
@@ -96,8 +99,12 @@ const Display = () => {
 
       console.log(`Errand ${errandToDelete.name.toUpperCase()} was deleted.`)
     } catch (err) {
-      console.error(`Error when deleting errand: ${err}`)
+      console.log('ERR OBJECT:')
+      console.log(err)
+      // console.error(`Error when deleting errand: ${err}`)
+
       // add errand back to errands array if error on deleting in database
+
       setErrands((prevErrands) => [...prevErrands, errandToDelete])
     }
   }
@@ -107,16 +114,42 @@ const Display = () => {
   }, [])
 
   async function requestErrands() {
+    let res
     try {
-      const res = await fetch('http://localhost:3001/errands')
+      // const res = await fetch(`http://localhost:3001/errands`)
+      // const text = await res.text()
+      res = await fetch(`http://localhost:3001/errands`)
+      const text = await res.text()
+
+      // console.log('Response length:', text.length)
+      // console.log('Response preview (first 100 chars):', text.slice(0, 100))
+      // console.log('Response end (last 100 chars):', text.slice(-100))
+
+      // const errorContext = text.slice(506, 606) // show 50 chars before and after
+      // console.log('Error context (around position 556):', errorContext)
+
+      // split into lines to verify line numbers
+      // const lines = text.split('\n')
+      // console.log('Line 22 content:', lines[21])
+
       if (!res.ok) {
-        throw new Error(`Network response not ok. Status: ${res.status}.`)
+        throw new Error(`Network response not ok. Status: ${res.status}`)
       }
 
-      const saved = await res.json()
+      // parse JSON separately to catch exact error position
+      const saved = JSON.parse(text) // will throw detailed SyntaxError
+      // await res.json()
       setErrands(saved)
     } catch (err) {
-      console.error(`There was a problem with the fetch operation: ${err}`)
+      // console.error(`There was a problem with the fetch operation: ${err}`)
+      console.error('Fetch operation details:', {
+        url: 'http://localhost:3001/errands',
+        status: res?.status,
+        statusText: res?.statusText,
+        error: err instanceof Error ? err.message : String(err),
+        stack: err instanceof Error ? err.stack : null,
+      })
+      throw err
     }
   }
 
@@ -146,7 +179,7 @@ const Display = () => {
               />
             ))
           ) : (
-            <p>no errands to complete.</p>
+            <p>No errands to complete.</p>
           )}
         </ul>
       </div>
@@ -155,3 +188,18 @@ const Display = () => {
 }
 
 export default Display
+
+// 114  async function requestErrands() {
+// 115      try {
+// 116        const res = await fetch(`http://localhost:3001/errands`)
+// 117
+// 118        if (!res.ok) {
+// 119          throw new Error(`Network response not ok. Status: ${res.status}`)
+// 120        }
+// 121
+// 122        const saved = await res.json()
+// 123        setErrands(saved)
+// 124      } catch (err) {
+// 125        console.error(`There was a problem with the fetch operation: ${err}`)
+// 126      }
+// 127    }

@@ -1,4 +1,3 @@
-// Errand A
 import { useState } from 'react'
 import { ErrandProps } from './createErrand'
 import { DetailDrop } from './DetailDrop'
@@ -17,6 +16,12 @@ const Errand = ({
   const handleToggle = () => {
     if (onComplete) {
       onComplete(id)
+    }
+  }
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(id)
     }
   }
 
@@ -41,6 +46,14 @@ const Errand = ({
               {name}
             </p>
           </div>
+          <button
+            onClick={handleDelete}
+            className='errand-delete-button'
+          >
+            x
+          </button>
+        </li>
+        <div>
           {detail && (
             <DetailDrop
               id={id}
@@ -51,7 +64,7 @@ const Errand = ({
               onDelete={onDelete}
             />
           )}
-        </li>
+        </div>
       </div>
     </>
   )

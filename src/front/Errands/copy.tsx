@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ErrandProps } from './createErrand';
+import { useState } from 'react'
+import { ErrandProps } from './createErrand'
 
 export const Errand = ({
   id,
@@ -10,19 +10,19 @@ export const Errand = ({
   onComplete,
   onDelete,
 }: ErrandProps) => {
-  const [detail, setDetail] = useState(false);
+  const [detail, setDetail] = useState(false)
 
   const handleDelete = () => {
     if (onDelete) {
-      onDelete(id);
+      onDelete(id)
     }
-  };
+  }
 
   const handleToggle = () => {
     if (onComplete) {
-      onComplete(id);
+      onComplete(id)
     }
-  };
+  }
 
   return (
     <>
@@ -70,5 +70,5 @@ export const Errand = ({
         </div>
       </div>
     </>
-  );
-};
+  )
+}

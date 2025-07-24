@@ -18,7 +18,7 @@ class ApiClient {
 
       if (!res.ok) {
         throw new ApiError({
-          nessage: `API Error: ${res.statusText}`,
+          message: `API Error: ${res.statusText}`,
           status: res.status,
         })
       }
