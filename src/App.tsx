@@ -1,5 +1,6 @@
 import './App.css'
 import { Clock } from './front/Clock/Clock'
+// Main is main for entries (routines)
 import Main from '../src/front/Intended/Fix/Main'
 import { HydrationTracker } from './front/Hydration/HydrationTracker'
 import Errands from './front/Errands/DisplayA'

@@ -1,49 +1,3 @@
-// import { Dispatch, SetStateAction } from 'react';
-
-// export interface EntryProps {
-//   id: string;
-//   date: string;
-//   routines: RoutineProps[];
-// }
-
-// export interface RoutineProps {
-//   id: string;
-//   name: string;
-//   complete: boolean;
-//   timestamp: number;
-//   onComplete?: (id: string) => void;
-// }
-
-// export type ListProps = {
-//   [entryDate: string]: string[];
-// };
-
-// export type RoutineListProps = string[];
-
-// export type ListOptionProps = [string, string[]];
-
-// export interface DisplayEntryProps {
-//   inputDate: string;
-//   entry: EntryProps | null;
-//   setEntry: Dispatch<SetStateAction<EntryProps | null>>;
-//   wizard: number;
-// }
-
-// export interface DisplayMissingProps {
-//   inputDate: string;
-//   // handleTrue: (verdict: boolean) => void;
-//   // handleFalse: (verdict: boolean) => void;
-//   handler: (verdict: boolean) => void;
-//   wizard: number;
-// }
-
-// export interface DisplayListOptionProps {
-//   inputDate: string;
-//   candidates: ListOptionProps[];
-//   createNewEntry?: (list: string[]) => void;
-//   wizard: number;
-//   setWizard: React.Dispatch<React.SetStateAction<number>>;
-// }
 export interface EntryProps {
   id: string
   date: string
@@ -62,7 +16,7 @@ export interface ListProps {
   [key: string]: string[]
 }
 
-export interface AdjacentListsResult {
+export interface AdjacentListsResultProps {
   before: {
     date: string
     practices: string[] // ***
@@ -88,7 +42,7 @@ export interface DisplayMissingProps {
 
 export interface DisplayListOptionProps {
   inputDate: string
-  candidates: AdjacentListsResult
+  candidates: AdjacentListsResultProps
   wizard: WizardState
   setWizard: React.Dispatch<React.SetStateAction<WizardState>>
   onCreateEntry: (tasks: string[]) => void
