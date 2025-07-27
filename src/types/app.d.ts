@@ -16,6 +16,7 @@ export interface DisplayEntryProps {
   inputDate: string
   entry: EntryProps | null
   setEntry: Dispatch<SetStateAction<EntryProps | null>>
+  wizard: WizardStateEnum
 }
 
 export interface DisplayListOptionProps {
@@ -38,17 +39,17 @@ export enum WizardStateEnum {
   LIST_OPTIONS = 'LIST_OPTIONS',
 }
 
-/** Hydration and Notes (other aspects of an entry) types */
-export interface NoteProps {
-  content: string
-  format?: 'plain' | 'markdown'
-  updated?: number
-}
-
-export interface HydrationProps {
-  goal?: number
-  totalOz: number
-  updated?: number
+/** Errand types */
+export interface ErrandProps {
+  id: string
+  edit?: boolean
+  name: string
+  complete: boolean
+  timeAssigned?: number
+  timeExecuted?: number
+  showDelete?: boolean
+  onDelete?: (id: string) => void
+  onComplete?: (id: string) => void
 }
 
 /** Entry types */
@@ -65,7 +66,20 @@ export interface EntriesArchiveProps {
   [date: string]: EntryProps
 }
 
-/** Routine Props */
+/** Entry properties (Hydration, Note, Routine) */
+
+export interface HydrationProps {
+  goal?: number
+  totalOz: number
+  updated?: number
+}
+
+export interface NoteProps {
+  content: string
+  format?: 'plain' | 'markdown'
+  updated?: number
+}
+
 // one routine item from the array of routines on an entry
 export interface RoutineProps {
   id: string
@@ -75,11 +89,9 @@ export interface RoutineProps {
   onComplete?: (id: string) => void
 }
 
-// the evergreen list of routines used to initialize a new day's entry
+// the evergreen list of routines to initialize a new day's entry
 export interface RoutineListProps {
-  // references to routine by name
   routineNames: string[]
-  // I don't like "created at", but need something to indicate its start
   dateIntroduced?: string
   label?: string
   notes?: string
@@ -88,19 +100,4 @@ export interface RoutineListProps {
 // the evolution of routine lists
 export interface RoutineListHistoryProps {
   [date: string]: RoutineListProps
-}
-
-// export interface RoutineListArchiveProps {} -> I don't think I need this
-
-/** Errand types */
-export interface ErrandProps {
-  id: string
-  edit?: boolean
-  name: string
-  complete: boolean
-  timeAssigned?: number
-  timeExecuted?: number
-  showDelete?: boolean
-  onDelete?: (id: string) => void
-  onComplete?: (id: string) => void
 }

@@ -1,5 +1,5 @@
-import { EntryProps, ApiError } from '../types'
-import { apiClient } from './apiClient'
+import { EntryProps } from '../../../../types/app.d'
+import { apiClient, ApiError } from './apiClient'
 import { createEntry } from './routineUtils'
 import { isoDateKey } from '../../../../utils/dateUtilsForRoutineEntries'
 import { getAdjacentLists } from './adjacentLists'
@@ -18,8 +18,8 @@ export async function fetchOrCreateTodayEntry(): Promise<EntryProps | null> {
 
     // use most recent list (before) if available, otherwise empty
     const routinesToUse =
-      adjacentLists.before.practices.length > 0
-        ? adjacentLists.before.practices
+      adjacentLists.before.routines.length > 0
+        ? adjacentLists.before.routines
         : []
 
     const newEntry = createEntry(routinesToUse, today)

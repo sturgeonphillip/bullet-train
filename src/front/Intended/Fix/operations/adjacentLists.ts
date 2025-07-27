@@ -1,20 +1,23 @@
-import { ListProps, AdjacentListsResultProps, ApiError } from '../types'
-import { apiClient } from './apiClient'
+import {
+  AdjacentListsResultProps,
+  RoutineListHistoryProps,
+} from '../../../../types/app.d'
+import { apiClient, ApiError } from './apiClient'
 
 function findAdjacentDates(
   inputDate: string,
-  listDB: ListProps
+  routineListHistory: RoutineListHistoryProps
 ): AdjacentListsResultProps {
   const inputTime = new Date(inputDate).getTime()
-  const sortedDates = Object.keys(listDB)
+  const sortedDates = Object.keys(routineListHistory)
     // only consider dates with tasks/routines
-    .filter((date) => listDB[date]?.length > 0)
+    .filter((date) => routineListHistory[date].routineNames.length > 0)
     .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
 
   if (sortedDates.length === 0) {
     return {
-      before: { date: inputDate, practices: [] },
-      after: { date: inputDate, practices: [] },
+      before: { date: inputDate, routines: [] },
+      after: { date: inputDate, routines: [] },
     }
   }
 
@@ -25,7 +28,7 @@ function findAdjacentDates(
   for (let i = sortedDates.length - 1; i >= 0; i--) {
     if (new Date(sortedDates[i]).getTime() < inputTime) {
       beforeDate = sortedDates[i]
-      beforeRoutines = listDB[beforeDate]
+      beforeRoutines = routineListHistory[beforeDate].routineNames
       break
     }
   }
@@ -36,7 +39,7 @@ function findAdjacentDates(
   for (let i = 0; i < sortedDates.length; i++) {
     if (new Date(sortedDates[i]).getTime() > inputTime) {
       afterDate = sortedDates[i]
-      afterRoutines = listDB[afterDate]
+      afterRoutines = routineListHistory[afterDate].routineNames
       break
     }
   }
@@ -44,11 +47,11 @@ function findAdjacentDates(
   return {
     before: {
       date: beforeDate || inputDate,
-      practices: beforeRoutines,
+      routines: beforeRoutines,
     },
     after: {
       date: afterDate || inputDate,
-      practices: afterRoutines,
+      routines: afterRoutines,
     },
   }
 }

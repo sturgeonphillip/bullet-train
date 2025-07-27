@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
-import { EntryProps, WizardStateEnum, AdjacentListsResultProps } from './types'
+import {
+  EntryProps,
+  WizardStateEnum,
+  AdjacentListsResultProps,
+} from '../../../types/app.d'
 import { isoDateKey } from '../../../utils/dateUtilsForRoutineEntries'
 import { apiClient } from './operations/apiClient'
 import { getAdjacentLists } from './operations/adjacentLists'
@@ -12,7 +16,7 @@ import DisplayMissing from './DisplayMissing'
 import DisplayListOption from './DisplayListOption'
 import './fix.css'
 
-const Main = () => {
+const EntryDisplay = () => {
   const [entryDate, setEntryDate] = useState(isoDateKey())
   const [entry, setEntry] = useState<EntryProps | null>(null)
   const [wizard, setWizard] = useState<WizardStateEnum>(
@@ -105,7 +109,7 @@ const Main = () => {
     }
   }
 
-  const renderWizard = () => {
+  const RenderWizard = () => {
     if (loading) {
       return <div className='loading'>Loading...</div>
     }
@@ -142,67 +146,103 @@ const Main = () => {
         ) : null
 
       default:
-        return (
-          <DisplayEntry
-            inputDate={entryDate}
-            entry={entry}
-            wizard={wizard}
-            setEntry={setEntry}
-          />
-        )
+        return null
+      // return (
+      //   <DisplayEntry
+      //     inputDate={entryDate}
+      //     entry={entry}
+      //     wizard={wizard}
+      //     setEntry={setEntry}
+      //   />
+      // )
     }
   }
 
   return (
-    <div>
+    <>
       <div>
-        <span>
-          <a
-            href='http://localhost:3001'
-            target='_blank'
-            rel='noopener noreferrer'
+        <form onSubmit={handleSubmit}>
+          <input
+            type='date'
+            name='entry-date'
+            value={entryDate}
+            onChange={(e) => setEntryDate(e.target.value)}
+            disabled={loading}
+          />
+          <button
+            type='submit'
+            disabled={loading}
           >
-            LINK
-          </a>
-        </span>
+            {loading ? 'Loading...' : 'GO'}
+          </button>
+        </form>
+
+        {error && (
+          <div
+            className='error-message'
+            style={{ color: 'red' }}
+          >
+            {error}
+          </div>
+        )}
+        <div>{RenderWizard()}</div>
       </div>
-
-      <hr />
-      <hr />
-      <form onSubmit={handleSubmit}>
-        <input
-          type='date'
-          id='entry-date-id'
-          name='entry-date'
-          value={entryDate}
-          onChange={(e) => setEntryDate(e.target.value)}
-          disabled={loading}
-        />
-        <button
-          type='submit'
-          disabled={loading}
-        >
-          {loading ? 'Loading...' : 'GO'}
-        </button>
-      </form>
-
-      {error && (
-        <div
-          className='error-message'
-          style={{
-            color: 'red',
-            margin: '10px 0',
-          }}
-        >
-          {error}
-        </div>
-      )}
-
-      <div>{renderWizard()}</div>
-
-      <hr />
-    </div>
+    </>
   )
 }
 
-export default Main
+export default EntryDisplay
+
+/**
+ * 
+ * return (
+ *   <div>
+ *     <div>
+ *       <span>
+ *         <a
+ *           href='http://localhost:3001'
+ *           target='_blank'
+ *           rel='noopener noreferrer'
+ *         >
+ *           LINK
+ *         </a>
+ *       </span>
+ *     </div>
+
+* *     <hr />
+ *     <hr />
+ *     <form onSubmit={handleSubmit}>
+ *       <input
+ *         type='date'
+ *         id='entry-date-id'
+ *         name='entry-date'
+ *         value={entryDate}
+ *         onChange={(e) => setEntryDate(e.target.value)}
+ *         disabled={loading}
+ *       />
+ *       <button
+ *         type='submit'
+ *         disabled={loading}
+ *       >
+ *         {loading ? 'Loading...' : 'GO'}
+ *       </button>
+ *     </form>
+
+* *     {error && (
+ *       <div
+ *         className='error-message'
+ *         style={{
+ *           color: 'red',
+ *           margin: '10px 0',
+ *         }}
+ *       >
+ *         {error}
+ *       </div>
+ *     )}
+
+* *     <div>{renderWizard()}</div>
+
+* *     <hr />
+ *   </div>
+ * )
+ */

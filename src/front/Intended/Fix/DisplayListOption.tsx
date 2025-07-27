@@ -1,4 +1,4 @@
-import { DisplayListOptionProps, WizardStateEnum } from './types'
+import { DisplayListOptionProps, WizardStateEnum } from '../../../types/app.d'
 
 const DisplayListOption = ({
   inputDate,
@@ -33,41 +33,41 @@ const DisplayListOption = ({
       <p>Choose a template to start with:</p>
 
       <div className='list-options'>
-        {before.practices.length > 0 && (
+        {before.routines.length > 0 && (
           <div className='option-card'>
             <h3>Use list from {formatDate(before.date)}</h3>
             <ul className='task-preview'>
-              {before.practices.slice(0, 3).map((practice, index) => (
-                <li key={index}>{practice}</li>
+              {before.routines.slice(0, 3).map((routine, index) => (
+                <li key={index}>{routine}</li>
               ))}
-              {before.practices.length > 3 && (
-                <li>... and {before.practices.length - 3} more</li>
+              {before.routines.length > 3 && (
+                <li>... and {before.routines.length - 3} more</li>
               )}
             </ul>
             <button
               className='pe-btn-option'
-              onClick={() => handleSelectList(before.practices)}
+              onClick={() => handleSelectList(before.routines)}
             >
-              Use This List ({before.practices.length} items)
+              Use This List ({before.routines.length} items)
             </button>
           </div>
         )}
-        {after.practices.length > 0 && (
+        {after.routines.length > 0 && (
           <div className='option-card'>
-            <h3> Use list from {formatDate(after.date)}</h3>
+            <h3>Use list from {formatDate(after.date)}</h3>
             <ul className=''>
-              {after.practices.slice(0, 3).map((practice, index) => (
-                <li key={index}>{practice}</li>
+              {after.routines.slice(0, 3).map((routine, index) => (
+                <li key={index}>{routine}</li>
               ))}
-              {after.practices.length > 3 && (
-                <li>... and {after.practices.length - 3} more</li>
+              {after.routines.length > 3 && (
+                <li>... and {after.routines.length - 3} more</li>
               )}
             </ul>
             <button
               className='pe-btn-option'
-              onClick={() => handleSelectList(after.practices)}
+              onClick={() => handleSelectList(after.routines)}
             >
-              Use This List ({after.practices.length} items)
+              Use This List ({after.routines.length} items)
             </button>
           </div>
         )}

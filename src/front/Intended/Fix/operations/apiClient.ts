@@ -1,4 +1,14 @@
-import { EntryProps, ListProps, ApiError } from '../types'
+import { EntryProps, RoutineListHistoryProps } from '../../../../types/app.d'
+
+export class ApiError extends Error {
+  status?: number
+
+  constructor({ message, status }: { message: string; status?: number }) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+  }
+}
 
 const BASE_URL = 'http://localhost:3001'
 
@@ -59,8 +69,8 @@ class ApiClient {
     })
   }
 
-  async fetchLists(): Promise<ListProps> {
-    return await this.request<ListProps>('/list')
+  async fetchLists(): Promise<RoutineListHistoryProps> {
+    return await this.request<RoutineListHistoryProps>('/list')
   }
 
   async fetchTodayEntry(): Promise<EntryProps | null> {

@@ -31,35 +31,25 @@ export interface DisplayEntryProps {
   inputDate: string
   entry: EntryProps | null
   setEntry: React.Dispatch<React.SetStateAction<EntryProps | null>>
-  wizard: WizardState
+  wizard: WizardStateEnum
 }
 
 export interface DisplayMissingProps {
   inputDate: string
   handler: (verdict: boolean) => void
-  wizard: WizardState
+  wizard: WizardStateEnum
 }
 
 export interface DisplayListOptionProps {
   inputDate: string
   candidates: AdjacentListsResultProps
-  wizard: WizardState
-  setWizard: React.Dispatch<React.SetStateAction<WizardState>>
+  wizard: WizardStateEnum
+  setWizard: React.Dispatch<React.SetStateAction<WizardStateEnum>>
   onCreateEntry: (tasks: string[]) => void
 }
 
-export enum WizardState {
+export enum WizardStateEnum {
   SHOW_ENTRY = 'SHOW_ENTRY',
   MISSING_ENTRY = 'MISSING_ENTRY',
   LIST_OPTIONS = 'LIST_OPTIONS',
-}
-
-export class ApiError extends Error {
-  status?: number
-
-  constructor({ message, status }: { message: string; status?: number }) {
-    super(message)
-    this.name = 'ApiError'
-    this.status = status
-  }
 }

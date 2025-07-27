@@ -2,8 +2,7 @@ import {
   DisplayEntryProps,
   RoutineProps,
   WizardStateEnum,
-  ApiError,
-} from './types'
+} from '../../../types/app.d'
 import { apiClient } from './operations/apiClient'
 import Routine from './Routine'
 
@@ -49,7 +48,7 @@ const DisplayEntry = ({
     }
   }
 
-  if (!entry || !entry.routines) {
+  if (!entry || entry.routines.length === 0) {
     return (
       <div>
         <h4>Entry for {inputDate} is empty.</h4>

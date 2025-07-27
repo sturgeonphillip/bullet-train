@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { RoutineProps, EntryProps } from '../types'
+import { RoutineProps, EntryProps } from '../../../../types/app'
 
 export function createRoutine(name: string): RoutineProps {
   return {
