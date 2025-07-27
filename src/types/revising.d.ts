@@ -117,30 +117,30 @@ export interface ListProps {
   }
 }
 
-// def: src/utils/ValidLogDateType.ts
-type LogDate = string & {
-  /**readonly */ [Symbol.match](pattern: RegExp): RegExpMatchArray | null
-} & {
-  /**readonly */ [Symbol.replace](pattern: RegExp, replacement: string): string
-} & {
-  /**readonly */ [Symbol.search](pattern: RegExp): number
-} & {
-  /**readonly */ [Symbol.search](
-    separator: string | RegExp,
-    limit?: number
-  ): string[]
-}
+// // def: src/utils/ValidLogDateType.ts
+// type LogDate = string & {
+//   /**readonly */ [Symbol.match](pattern: RegExp): RegExpMatchArray | null
+// } & {
+//   /**readonly */ [Symbol.replace](pattern: RegExp, replacement: string): string
+// } & {
+//   /**readonly */ [Symbol.search](pattern: RegExp): number
+// } & {
+//   /**readonly */ [Symbol.search](
+//     separator: string | RegExp,
+//     limit?: number
+//   ): string[]
+// }
 
 // def: src/front/Intended/Fix/types.ts
 export type RoutineListProps = string[]
 
 // def: src/utils/sortEntries.ts, src/api/controllers/entryControllers/entry.controller.ts
-export interface RoutineProps {
-  id: string
-  name: string
-  complete: boolean
-  timestamp: number
-}
+// export interface RoutineProps {
+//   id: string
+//   name: string
+//   complete: boolean
+//   timestamp: number
+// }
 
 // def: src/api/factories.ts, src/front/Intended/Fix/types.ts
 export interface RoutineProps {

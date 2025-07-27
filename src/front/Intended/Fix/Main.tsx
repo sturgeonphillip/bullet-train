@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { EntryProps, WizardState, AdjacentListsResultProps } from './types'
+import { EntryProps, WizardStateEnum, AdjacentListsResultProps } from './types'
 import { isoDateKey } from '../../../utils/dateUtilsForRoutineEntries'
 import { apiClient } from './operations/apiClient'
 import { getAdjacentLists } from './operations/adjacentLists'
@@ -15,7 +15,9 @@ import './fix.css'
 const Main = () => {
   const [entryDate, setEntryDate] = useState(isoDateKey())
   const [entry, setEntry] = useState<EntryProps | null>(null)
-  const [wizard, setWizard] = useState<WizardState>(WizardState.SHOW_ENTRY)
+  const [wizard, setWizard] = useState<WizardStateEnum>(
+    WizardStateEnum.SHOW_ENTRY
+  )
   const [adjacentLists, setAdjacentLists] =
     useState<AdjacentListsResultProps | null>(null)
   const [loading, setLoading] = useState(false)
@@ -29,7 +31,7 @@ const Main = () => {
       const todayEntry = await fetchOrCreateTodayEntry()
       setEntry(todayEntry)
       setEntryDate(isoDateKey())
-      setWizard(WizardState.SHOW_ENTRY)
+      setWizard(WizardStateEnum.SHOW_ENTRY)
     } catch (err) {
       setError("Failed to load today's entry")
       console.error('Error loading today:', err)
@@ -54,10 +56,10 @@ const Main = () => {
 
       if (submittedEntry) {
         setEntry(submittedEntry)
-        setWizard(WizardState.SHOW_ENTRY)
+        setWizard(WizardStateEnum.SHOW_ENTRY)
       } else {
         setEntry(null)
-        setWizard(WizardState.MISSING_ENTRY)
+        setWizard(WizardStateEnum.MISSING_ENTRY)
       }
     } catch (err) {
       setError('Failed to fetch entry.')
@@ -74,7 +76,7 @@ const Main = () => {
       try {
         const lists = await getAdjacentLists(entryDate)
         setAdjacentLists(lists)
-        setWizard(WizardState.LIST_OPTIONS)
+        setWizard(WizardStateEnum.LIST_OPTIONS)
       } catch (err) {
         setError('Failed to load list options.')
         console.error('Error getting adjacent lists:', err)
@@ -94,7 +96,7 @@ const Main = () => {
     try {
       const newEntry = await createEntryFromRoutines(entryDate, routines)
       setEntry(newEntry)
-      setWizard(WizardState.SHOW_ENTRY)
+      setWizard(WizardStateEnum.SHOW_ENTRY)
     } catch (err) {
       setError('Failed to create entry.')
       console.error('Error create entry:', err)
@@ -109,7 +111,7 @@ const Main = () => {
     }
 
     switch (wizard) {
-      case WizardState.SHOW_ENTRY:
+      case WizardStateEnum.SHOW_ENTRY:
         return (
           <DisplayEntry
             inputDate={entryDate}
@@ -119,7 +121,7 @@ const Main = () => {
           />
         )
 
-      case WizardState.MISSING_ENTRY:
+      case WizardStateEnum.MISSING_ENTRY:
         return (
           <DisplayMissing
             inputDate={entryDate}
@@ -128,7 +130,7 @@ const Main = () => {
           />
         )
 
-      case WizardState.LIST_OPTIONS:
+      case WizardStateEnum.LIST_OPTIONS:
         return adjacentLists ? (
           <DisplayListOption
             inputDate={entryDate}
