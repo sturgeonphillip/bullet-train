@@ -1,4 +1,4 @@
-import { EntryProps, RoutineListHistoryProps } from '../../../../types/app.d'
+import { EntryProps, RoutineListHistoryProps } from '../../../../types/app'
 
 export class ApiError extends Error {
   status?: number

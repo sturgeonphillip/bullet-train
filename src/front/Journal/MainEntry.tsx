@@ -3,7 +3,7 @@ import {
   EntryProps,
   WizardStateEnum,
   AdjacentListsResultProps,
-} from '../../../types/app.d'
+} from '../../../types/app'
 import { isoDateKey } from '../../../utils/dateUtilsForRoutineEntries'
 import { apiClient } from './operations/apiClient'
 import { getAdjacentLists } from './operations/adjacentLists'

@@ -1,4 +1,4 @@
-import { RoutineProps } from '../../../types/app.d'
+import { RoutineProps } from '../../../types/app'
 const Routine = ({ id, name, complete, onComplete }: RoutineProps) => {
   const handleToggle = () => {
     if (onComplete) {

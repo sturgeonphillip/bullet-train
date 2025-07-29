@@ -1,4 +1,4 @@
-import { EntryProps } from '../../../../types/app.d'
+import { EntryProps } from '../../../../types/app'
 import { apiClient, ApiError } from './apiClient'
 import { createEntry } from './routineUtils'
 import { isoDateKey } from '../../../../utils/dateUtilsForRoutineEntries'

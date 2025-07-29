@@ -1,7 +1,7 @@
 import {
   AdjacentListsResultProps,
   RoutineListHistoryProps,
-} from '../../../../types/app.d'
+} from '../../../../types/app'
 import { apiClient, ApiError } from './apiClient'
 
 function findAdjacentDates(

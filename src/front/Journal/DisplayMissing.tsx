@@ -1,6 +1,6 @@
 // component active when no entry exists for input date
 // asks user if they would like to create the missing entry
-import { DisplayMissingProps, WizardStateEnum } from '../../../types/app.d'
+import { DisplayMissingProps, WizardStateEnum } from '../../../types/app'
 
 const DisplayMissing = ({
   inputDate,

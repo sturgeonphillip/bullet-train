@@ -2,7 +2,7 @@ import {
   DisplayEntryProps,
   RoutineProps,
   WizardStateEnum,
-} from '../../../types/app.d'
+} from '../../../types/app'
 import { apiClient } from './operations/apiClient'
 import Routine from './Routine'
 

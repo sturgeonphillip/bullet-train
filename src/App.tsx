@@ -14,7 +14,6 @@ function App() {
           <h1>
             <a
               href='http://localhost:3001'
-              target='_blank'
               rel='noopener noreferrer'
             >
               bullet-train
@@ -33,26 +32,3 @@ function App() {
 }
 
 export default App
-
-/***
- *    Date, Time    |   Calendar Events
- *                  |
- *                  |
- * *  Water Bottles |
- * *                |
- * *                |
- * *                |     Errands
- * *  Routines      |
- * *                |
- * *                |
- * *                |
- * * Journal space:
- * - gratitude
- * - memory
- * - question
- * - conflict
- * - prayer
- *
- *
- *
- */
