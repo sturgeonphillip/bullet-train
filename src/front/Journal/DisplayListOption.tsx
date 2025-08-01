@@ -1,5 +1,5 @@
-import { DisplayListOptionProps, WizardStateEnum } from '../../../types/app'
-
+import { DisplayListOptionProps } from '../../types/app'
+import { WizardStateEnum } from '../../types/enums'
 const DisplayListOption = ({
   inputDate,
   candidates,

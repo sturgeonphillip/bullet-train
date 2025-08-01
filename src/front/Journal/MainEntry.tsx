@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react'
-import {
-  EntryProps,
-  WizardStateEnum,
-  AdjacentListsResultProps,
-} from '../../../types/app'
-import { isoDateKey } from '../../../utils/dateUtilsForRoutineEntries'
+import { EntryProps, AdjacentListsResultProps } from '../../types/app'
+import { WizardStateEnum } from '../../types/enums'
+import { getUTCDateKey } from '../../utils/dateUtils'
 import { apiClient } from './operations/apiClient'
 import { getAdjacentLists } from './operations/adjacentLists'
 import {
@@ -17,7 +14,7 @@ import DisplayListOption from './DisplayListOption'
 import './fix.css'
 
 const EntryDisplay = () => {
-  const [entryDate, setEntryDate] = useState(isoDateKey())
+  const [entryDate, setEntryDate] = useState(getUTCDateKey())
   const [entry, setEntry] = useState<EntryProps | null>(null)
   const [wizard, setWizard] = useState<WizardStateEnum>(
     WizardStateEnum.SHOW_ENTRY
@@ -34,7 +31,7 @@ const EntryDisplay = () => {
     try {
       const todayEntry = await fetchOrCreateTodayEntry()
       setEntry(todayEntry)
-      setEntryDate(isoDateKey())
+      setEntryDate(getUTCDateKey())
       setWizard(WizardStateEnum.SHOW_ENTRY)
     } catch (err) {
       setError("Failed to load today's entry")
@@ -147,14 +144,6 @@ const EntryDisplay = () => {
 
       default:
         return null
-      // return (
-      //   <DisplayEntry
-      //     inputDate={entryDate}
-      //     entry={entry}
-      //     wizard={wizard}
-      //     setEntry={setEntry}
-      //   />
-      // )
     }
   }
 
@@ -192,57 +181,3 @@ const EntryDisplay = () => {
 }
 
 export default EntryDisplay
-
-/**
- * 
- * return (
- *   <div>
- *     <div>
- *       <span>
- *         <a
- *           href='http://localhost:3001'
- *           target='_blank'
- *           rel='noopener noreferrer'
- *         >
- *           LINK
- *         </a>
- *       </span>
- *     </div>
-
-* *     <hr />
- *     <hr />
- *     <form onSubmit={handleSubmit}>
- *       <input
- *         type='date'
- *         id='entry-date-id'
- *         name='entry-date'
- *         value={entryDate}
- *         onChange={(e) => setEntryDate(e.target.value)}
- *         disabled={loading}
- *       />
- *       <button
- *         type='submit'
- *         disabled={loading}
- *       >
- *         {loading ? 'Loading...' : 'GO'}
- *       </button>
- *     </form>
-
-* *     {error && (
- *       <div
- *         className='error-message'
- *         style={{
- *           color: 'red',
- *           margin: '10px 0',
- *         }}
- *       >
- *         {error}
- *       </div>
- *     )}
-
-* *     <div>{renderWizard()}</div>
-
-* *     <hr />
- *   </div>
- * )
- */

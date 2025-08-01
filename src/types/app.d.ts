@@ -33,12 +33,6 @@ export interface DisplayMissingProps {
   wizard: WizardStateEnum
 }
 
-export enum WizardStateEnum {
-  SHOW_ENTRY = 'SHOW_ENTRY',
-  MISSING_ENTRY = 'MISSING_ENTRY',
-  LIST_OPTIONS = 'LIST_OPTIONS',
-}
-
 /** Errand types */
 export interface ErrandProps {
   id: string
@@ -67,7 +61,6 @@ export interface EntriesArchiveProps {
 }
 
 /** Entry properties (Hydration, Note, Routine) */
-
 export interface HydrationProps {
   goal?: number
   totalOz: number

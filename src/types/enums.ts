@@ -1,0 +1,5 @@
+export enum WizardStateEnum {
+  SHOW_ENTRY = 'SHOW_ENTRY',
+  MISSING_ENTRY = 'MISSING_ENTRY',
+  LIST_OPTIONS = 'LIST_OPTIONS',
+}

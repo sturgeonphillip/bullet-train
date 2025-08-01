@@ -1,8 +1,5 @@
-import {
-  DisplayEntryProps,
-  RoutineProps,
-  WizardStateEnum,
-} from '../../../types/app'
+import { DisplayEntryProps, RoutineProps } from '../../types/app'
+import { WizardStateEnum } from '../../types/enums'
 import { apiClient } from './operations/apiClient'
 import Routine from './Routine'
 

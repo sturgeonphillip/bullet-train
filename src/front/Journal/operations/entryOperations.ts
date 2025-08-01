@@ -1,7 +1,7 @@
-import { EntryProps } from '../../../../types/app'
+import { EntryProps } from '../../../types/app'
 import { apiClient, ApiError } from './apiClient'
 import { createEntry } from './routineUtils'
-import { isoDateKey } from '../../../../utils/dateUtilsForRoutineEntries'
+import { getUTCDateKey } from '../../../utils/dateUtils'
 import { getAdjacentLists } from './adjacentLists'
 
 export async function fetchOrCreateTodayEntry(): Promise<EntryProps | null> {
@@ -13,7 +13,7 @@ export async function fetchOrCreateTodayEntry(): Promise<EntryProps | null> {
     }
 
     // if no entry exists, create one based on most recent list
-    const today = isoDateKey()
+    const today = getUTCDateKey()
     const adjacentLists = await getAdjacentLists(today)
 
     // use most recent list (before) if available, otherwise empty
