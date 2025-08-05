@@ -51,7 +51,7 @@ export interface EntryProps {
   id: string
   date: string
   hydration?: HydrationProps
-  notes?: NoteProps
+  notes?: string | NoteProps
   routines: RoutineProps[]
 }
 
@@ -64,9 +64,11 @@ export interface EntriesArchiveProps {
 export interface HydrationProps {
   goal?: number
   totalOz: number
-  updated?: number
+  // TODO: why add?
+  // updated?: number
 }
 
+// TODO: how will I integrate this (if at all?)
 export interface NoteProps {
   content: string
   format?: 'plain' | 'markdown'

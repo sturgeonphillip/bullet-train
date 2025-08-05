@@ -1,4 +1,4 @@
-import { ErrandProps } from './createErrand';
+import { ErrandProps } from './createErrand'
 
 export const DetailDrop = ({
   id,
@@ -10,9 +10,9 @@ export const DetailDrop = ({
 }: ErrandProps) => {
   const handleDelete = () => {
     if (onDelete) {
-      onDelete(id);
+      onDelete(id)
     }
-  };
+  }
 
   function formattedTime(str: number) {
     const options = {
@@ -22,11 +22,11 @@ export const DetailDrop = ({
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-    } as const;
+    } as const
 
-    const formal = new Date(str).toLocaleString('en-US', options);
-    const parts = formal.split(',');
-    return parts[1].concat(', ', parts[0]);
+    const formal = new Date(str).toLocaleString('en-US', options)
+    const parts = formal.split(',')
+    return parts[1].concat(', ', parts[0])
   }
 
   return (
@@ -71,5 +71,5 @@ export const DetailDrop = ({
         </button>
       </div>
     </>
-  );
-};
+  )
+}

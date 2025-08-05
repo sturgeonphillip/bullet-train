@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './errands.css'
 import Form from './Form'
-import Errand from './ErrandA'
+import Errand from './Errand'
 import { ErrandProps } from './createErrand'
 
 const Display = () => {

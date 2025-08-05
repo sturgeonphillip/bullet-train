@@ -1,6 +1,10 @@
+import { HydrationProps } from '../../types/app'
+
 export interface EntryProps {
   id: string
   date: string
+  note: string
+  hydration: HydrationProps
   routines: RoutineProps[]
 }
 

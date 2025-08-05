@@ -1,9 +1,9 @@
 import './App.css'
-import { Clock } from './front/Clock/Clock'
+import { Clock } from './ui/Clock/Clock'
 // Main is main for entries (routines)
-import Main from './front/Journal/MainEntry'
-import { HydrationTracker } from './front/Hydration/HydrationTracker'
-import Errands from './front/Errands/DisplayA'
+import Entry from './ui/Journal/DisplayEntry'
+import { HydrationTracker } from './ui/Hydration/HydrationTracker'
+import Errands from './ui/Errands/Display'
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
           <hr />
           <div>
             <HydrationTracker />
-            <Main />
+            <Entry />
           </div>
         </div>
         <Errands />
