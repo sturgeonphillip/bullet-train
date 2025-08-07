@@ -1,7 +1,7 @@
 import './App.css'
 import { Clock } from './ui/Clock/Clock'
 // Main is main for entries (routines)
-import Entry from './ui/Journal/DisplayEntry'
+import Entry from './ui/Journal/Display'
 import { HydrationTracker } from './ui/Hydration/HydrationTracker'
 import Errands from './ui/Errands/Display'
 

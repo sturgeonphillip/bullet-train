@@ -8,12 +8,12 @@ import {
   fetchOrCreateTodayEntry,
   createEntryFromRoutines,
 } from './operations/entryOperations'
-import EntryPosition from './EntryPosition'
-import MissingPosition from './MissingPosition'
-import OptionPosition from './OptionPosition'
+import EntryShape from './EntryShape'
+import MissingShape from './MissingShape'
+import OptionShape from './OptionsShape'
 import './fix.css'
 
-const EntryDisplay = () => {
+const DisplayEntry = () => {
   const [entryDate, setEntryDate] = useState(getUTCDateKey())
   const [entry, setEntry] = useState<EntryProps | null>(null)
   const [wizard, setWizard] = useState<WizardStateEnum>(
@@ -114,7 +114,7 @@ const EntryDisplay = () => {
     switch (wizard) {
       case WizardStateEnum.SHOW_ENTRY:
         return (
-          <EntryPosition
+          <EntryShape
             inputDate={entryDate}
             entry={entry}
             wizard={wizard}
@@ -124,7 +124,7 @@ const EntryDisplay = () => {
 
       case WizardStateEnum.MISSING_ENTRY:
         return (
-          <MissingPosition
+          <MissingShape
             inputDate={entryDate}
             handler={handleMissingEntry}
             wizard={wizard}
@@ -133,7 +133,7 @@ const EntryDisplay = () => {
 
       case WizardStateEnum.LIST_OPTIONS:
         return adjacentLists ? (
-          <OptionPosition
+          <OptionShape
             inputDate={entryDate}
             candidates={adjacentLists}
             wizard={wizard}
@@ -180,4 +180,4 @@ const EntryDisplay = () => {
   )
 }
 
-export default EntryDisplay
+export default DisplayEntry

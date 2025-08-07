@@ -12,14 +12,14 @@ export interface AdjacentListsResultProps {
   }
 }
 
-export interface DisplayEntryProps {
+export interface EntryShapeProps {
   inputDate: string
   entry: EntryProps | null
   setEntry: Dispatch<SetStateAction<EntryProps | null>>
   wizard: WizardStateEnum
 }
 
-export interface DisplayListOptionProps {
+export interface OptionsShapeProps {
   inputDate: string
   candidates: AdjacentListsResultProps
   wizard: WizardStateEnum
@@ -27,7 +27,7 @@ export interface DisplayListOptionProps {
   onCreateEntry: (routines: string[]) => void
 }
 
-export interface DisplayMissingProps {
+export interface MissingShapeProps {
   inputDate: string
   handler: (verdict: boolean) => void
   wizard: WizardStateEnum

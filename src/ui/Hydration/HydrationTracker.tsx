@@ -18,12 +18,14 @@ export interface DayLogProps {
   totalOunces: number
 }
 
-const createBottle = (): BottleStateProps => ({
-  id: uuid(),
-  ounces: 0,
-  capacity: 32,
-  complete: false,
-})
+const createBottle = (): BottleStateProps => {
+  return {
+    id: uuid(),
+    ounces: 0,
+    capacity: 32,
+    complete: false,
+  }
+}
 
 // TODO: fix to replace with import, centralize utils(?)
 const todayKey = getTodayKey() // uses PDT-local time

@@ -52,7 +52,6 @@ function getTodayKey(tz = 'America/Los_Angeles', locale = 'en-CA'): string {
 
 // if exact parsing is preferred to avoid locale inconsistencies,
 // consider using Intl.DateTimeFormat().formatToParts() instead
-
 export {
   getLocalDateKey,
   getUTCDateKey,

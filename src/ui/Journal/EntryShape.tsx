@@ -1,14 +1,14 @@
-import { EntryPositionProps, RoutineProps } from '../../types/app'
+import { EntryShapeProps, RoutineProps } from '../../types/app'
 import { WizardStateEnum } from '../../types/enums'
 import { apiClient } from './operations/apiClient'
 import Routine from './Routine'
 
-const EntryPosition = ({
+const EntryShape = ({
   inputDate,
   entry,
   setEntry,
   wizard,
-}: EntryPositionProps) => {
+}: EntryShapeProps) => {
   if (wizard !== WizardStateEnum.SHOW_ENTRY) {
     return null
   }
@@ -78,4 +78,4 @@ const EntryPosition = ({
   )
 }
 
-export default EntryPosition
+export default EntryShape
