@@ -1,4 +1,4 @@
-import { EntryProps, RoutineListHistoryProps } from '../../../types/app'
+import { EntryProps, RoutineListHistoryProps } from '../../../types/appTypes'
 
 export class ApiError extends Error {
   status?: number
@@ -31,6 +31,11 @@ class ApiClient {
           message: `API Error: ${res.statusText}`,
           status: res.status,
         })
+      }
+
+      // handle response with no content
+      if (res.status === 204 || res.headers.get('content-length') === '0') {
+        return {} as T
       }
 
       return await res.json()

@@ -5,7 +5,7 @@ import {
   ErrandProps,
   HydrationProps,
   RoutineProps,
-} from '../types/app'
+} from '../types/appTypes'
 
 export function createEntry(current: string[] = [], date?: string): EntryProps {
   const routines = current.map((name: string) => createRoutine(name))
@@ -35,7 +35,6 @@ export function createHydration(goal?: number): HydrationProps {
     goal: goal ?? 0,
     totalOz: 0,
     // TODO: why add?
-
     // updated: 0,
   }
 }

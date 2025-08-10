@@ -1,4 +1,4 @@
-import { EntryProps } from '../../../types/app'
+import { EntryProps } from '../../../types/appTypes'
 import { apiClient, ApiError } from './apiClient'
 import { createEntry } from './routineUtils'
 import { getUTCDateKey } from '../../../utils/dateUtils'

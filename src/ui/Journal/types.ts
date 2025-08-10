@@ -1,4 +1,4 @@
-import { HydrationProps } from '../../types/app'
+import { HydrationProps } from '../../types/appTypes'
 
 export interface EntryProps {
   id: string

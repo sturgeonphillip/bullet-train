@@ -1,12 +1,9 @@
 // component active when no entry exists for input date
 // asks user if they would like to create the missing entry
-import { MissingPositionProps } from '../../types/app'
+import { MissingShapeProps } from '../../types/appTypes'
 import { WizardStateEnum } from '../../types/enums'
-const MissingPosition = ({
-  inputDate,
-  handler,
-  wizard,
-}: MissingPositionProps) => {
+
+const MissingShape = ({ inputDate, handler, wizard }: MissingShapeProps) => {
   if (wizard !== WizardStateEnum.MISSING_ENTRY) {
     return null
   }
@@ -31,4 +28,4 @@ const MissingPosition = ({
   )
 }
 
-export default MissingPosition
+export default MissingShape

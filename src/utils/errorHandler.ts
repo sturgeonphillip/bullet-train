@@ -1,20 +1,25 @@
-import { Response } from 'express';
+import { Response } from 'express'
 
 export function handleError(
   error: unknown,
   res: Response,
   defaultMessage: string = 'An error occurred.'
 ): void {
-  let errorMessage = defaultMessage;
+  // check if response has already been sent
+  if (res.headersSent) {
+    console.error('Headers already sent, cannot send error response:', error)
+    return
+  }
+  let errorMessage = defaultMessage
 
   if (error instanceof Error) {
-    errorMessage = error.message;
+    errorMessage = error.message
   }
 
   res.status(500).json({
     message: errorMessage,
     error: error instanceof Error ? error.stack : {},
-  });
+  })
 }
 
 // TODO:

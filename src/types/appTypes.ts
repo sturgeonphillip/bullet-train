@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react'
+import { WizardStateEnum } from './enums'
 
 /** UI-bound types (specific to frontend) */
 export interface AdjacentListsResultProps {

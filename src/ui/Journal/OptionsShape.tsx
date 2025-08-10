@@ -1,12 +1,12 @@
-import { DisplayListOptionProps } from '../../types/app'
+import { OptionsShapeProps } from '../../types/appTypes'
 import { WizardStateEnum } from '../../types/enums'
-const DisplayListOption = ({
+const OptionsShape = ({
   inputDate,
   candidates,
   wizard,
   setWizard,
   onCreateEntry,
-}: DisplayListOptionProps) => {
+}: OptionsShapeProps) => {
   if (wizard !== WizardStateEnum.LIST_OPTIONS) {
     return null
   }
@@ -94,4 +94,4 @@ const DisplayListOption = ({
   )
 }
 
-export default DisplayListOption
+export default OptionsShape

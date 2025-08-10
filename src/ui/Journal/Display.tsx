@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { EntryProps, AdjacentListsResultProps } from '../../types/app'
+import { EntryProps, AdjacentListsResultProps } from '../../types/appTypes'
 import { WizardStateEnum } from '../../types/enums'
 import { getUTCDateKey } from '../../utils/dateUtils'
 import { apiClient } from './operations/apiClient'

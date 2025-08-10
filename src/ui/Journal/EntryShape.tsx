@@ -1,4 +1,4 @@
-import { EntryShapeProps, RoutineProps } from '../../types/app'
+import { EntryShapeProps, RoutineProps } from '../../types/appTypes'
 import { WizardStateEnum } from '../../types/enums'
 import { apiClient } from './operations/apiClient'
 import Routine from './Routine'
