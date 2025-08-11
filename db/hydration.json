@@ -1,1 +1,9 @@
-{ "2025-07-06": { "totalOunces": 96 }, "2025-07-22": { "totalOunces": 128 } }
+{
+  "2025-07-06": { "totalOunces": 96 },
+  "2025-07-22": { "totalOunces": 128 },
+  "2025-07-27": { "totalOunces": 80 },
+  "2025-07-28": { "totalOunces": 32 },
+  "2025-07-31": { "totalOunces": 72 },
+  "2025-08-04": { "totalOunces": 12 },
+  "2025-08-10": { "totalOunces": 20 }
+}
