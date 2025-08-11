@@ -1,183 +1,182 @@
-import fs from 'node:fs/promises';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'node:url';
-import { Request, Response } from 'express';
-import { handleError } from '../../../utils/errorHandler';
-import { sortEntries } from '../../../utils/sortEntries';
+import fs from 'node:fs/promises'
+import path, { dirname } from 'path'
+import { fileURLToPath } from 'node:url'
+import { Request, Response } from 'express'
+import { handleError } from '../../../utils/errorHandler'
+import { sortEntries } from '../../../utils/sortEntries'
 import {
   createEntry,
   EntryProps,
   RoutineProps,
   EntriesObjectProps,
-} from '../../factories';
+} from '../../factories'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-const filePath = path.join(__dirname, '../../../../db/entries.json');
+const filePath = path.join(__dirname, '../../../../db/entries.json')
 
 // TODO: compare this with createTodayEntry to see if there's a way to reduce redundancy by refactoring.
-export const createEntryByDate = async (req: Request, res: Response) => {
+export async function createEntryByDate(req: Request, res: Response) {
   try {
-    const entryDate = req.params.date;
-    let existingData = {};
+    const entryDate = req.params.date
+    let existingData = {}
 
     try {
-      const content = await fs.readFile(filePath, 'utf8');
+      const content = await fs.readFile(filePath, 'utf8')
 
-      existingData = await JSON.parse(content);
+      existingData = await JSON.parse(content)
     } catch (err) {
       if (err instanceof SyntaxError) {
-        existingData = {};
+        existingData = {}
       } else {
-        handleError(err, res, 'Error reading existing content from file.');
+        handleError(err, res, 'Error reading existing content from file.')
       }
     }
 
-    const entryBody = req.body;
+    const entryBody = req.body
 
     const allEntries = {
       ...existingData,
       [entryDate]: entryBody,
-    };
+    }
 
-    const sorted = sortEntries(allEntries);
+    const sorted = sortEntries(allEntries)
 
-    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8')
 
-    res.status(201).json(allEntries);
+    res.status(201).json(allEntries)
   } catch (err) {
-    handleError(err, res, 'Error while writing new entry.');
+    handleError(err, res, 'Error while writing new entry.')
   }
-};
+}
 
-export const createTodayEntry = async (req: Request, res: Response) => {
+export async function createTodayEntry(req: Request, res: Response) {
   try {
-    let existingData: { [key: string]: EntryProps } = {};
+    let existingData: { [key: string]: EntryProps } = {}
 
     try {
-      const content = await fs.readFile(filePath, 'utf8');
-      existingData = await JSON.parse(content);
+      const content = await fs.readFile(filePath, 'utf8')
+      existingData = await JSON.parse(content)
     } catch (err) {
       if (err instanceof SyntaxError) {
-        existingData = {};
+        existingData = {}
       } else {
-        handleError(err, res, 'Error reading existing content from file.');
+        handleError(err, res, 'Error reading existing content from file.')
       }
     }
 
-    console.log('existing data', existingData);
+    console.log('existing data', existingData)
 
-    const entryKey = req.params.date;
+    const entryKey = req.params.date
 
     if (existingData[entryKey]) {
-      console.log(`WARNING: There is already an entry for today, ${entryKey}.`);
-      return;
+      console.log(`WARNING: There is already an entry for today, ${entryKey}.`)
+      return
     }
 
-    const entryData = await createTodayFromYesterday(entryKey);
+    const entryData = await createTodayFromYesterday(entryKey)
 
     const allEntries: EntriesObjectProps = {
       ...existingData,
       [entryKey]: entryData,
-    };
+    }
 
-    const sorted = sortEntries(allEntries);
+    const sorted = sortEntries(allEntries)
 
-    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8');
+    await fs.writeFile(filePath, JSON.stringify(sorted), 'utf8')
 
-    res.status(201).json(entryData);
+    res.status(201).json(entryData)
   } catch (err) {
-    handleError(err, res, 'Error while writing new entry.');
+    handleError(err, res, 'Error while writing new entry.')
   }
-};
+}
 
 export async function createTodayFromYesterday(date: string) {
-  let todayEntry;
-  let routineList;
-  const yesterday = yesterdayDate(date);
+  let todayEntry
+  let routineList
+  const yesterday = yesterdayDate(date)
 
   try {
-    const existingEntry = await getEntryByDate(date);
+    const existingEntry = await getEntryByDate(date)
     if (!existingEntry) {
       console.log(
         `INFO: No entry found for today, ${date}. Entry will be created using routines from ${yesterday}. Creating now...`
-      );
+      )
 
-      const yesterdayEntry = await getEntryByDate(yesterday);
+      const yesterdayEntry = await getEntryByDate(yesterday)
 
       if (!yesterdayEntry) {
         // go back to most recent entry list
         // use sorted entries to find last/most recent
-        const mostRecent = await getMostRecentExistingEntry();
+        const mostRecent = await getMostRecentExistingEntry()
         if (mostRecent) {
-          routineList = mostRecent['routineList'];
+          routineList = mostRecent['routineList']
         }
       } else {
-        routineList = yesterdayEntry.routines.map((x: RoutineProps) => x.name);
+        routineList = yesterdayEntry.routines.map((x: RoutineProps) => x.name)
       }
 
-      todayEntry = createEntry(routineList, date);
+      todayEntry = createEntry(routineList, date)
 
-      return todayEntry;
+      return todayEntry
     } else {
-      console.log(`Return existing entry: ${existingEntry}`);
+      console.log(`Return existing entry: ${existingEntry}`)
 
-      return existingEntry;
+      return existingEntry
     }
   } catch (err) {
     // TODO: log or handle error
     console.error(
       `ERROR: Error while creating today's entry from yesterday. ${err}`
-    );
+    )
   }
 }
 
 export function yesterdayDate(date: string) {
-  let today;
+  let today
   if (typeof date === 'string') {
-    today = new Date(date).getTime();
+    today = new Date(date).getTime()
   } else {
-    today = Date.now();
+    today = Date.now()
   }
 
-  const oneDay = 24 * 60 * 60 * 1000;
-  const yesterday = new Date(today - oneDay).toISOString().split('T')[0];
+  const oneDay = 24 * 60 * 60 * 1000
+  const yesterday = new Date(today - oneDay).toISOString().split('T')[0]
 
-  return yesterday;
+  return yesterday
 }
 
 export async function getEntryByDate(date: string) {
   try {
-    const data = await fs.readFile(filePath, 'utf8');
-    const entries = JSON.parse(data);
+    const data = await fs.readFile(filePath, 'utf8')
+    const entries = JSON.parse(data)
 
-    return entries[date];
+    return entries[date]
   } catch (err) {
-    console.error(`Error reading entry by date: ${err}`);
+    console.error(`Error reading entry by date: ${err}`)
 
-    return null;
+    return null
   }
 }
 
 export async function getMostRecentExistingEntry() {
-  // let existingData;
   try {
-    const data = await fs.readFile(filePath, 'utf8');
-    const json = JSON.parse(data);
+    const data = await fs.readFile(filePath, 'utf8')
+    const json = JSON.parse(data)
 
     const entryTuples: [string, EntryProps][] | undefined = Object.entries(
       json
-    ).map(([key, val]) => [key, val as EntryProps]);
+    ).map(([key, val]) => [key, val as EntryProps])
 
-    const mostRecent = entryTuples[entryTuples.length - 1];
+    const mostRecent = entryTuples[entryTuples.length - 1]
 
     return {
       date: mostRecent[0],
       routineList: mostRecent[1]['routines'].map((x) => x.name),
-    };
+    }
   } catch (err) {
-    console.error(`ERROR at getMostRecentExistingEntry: ${err}`);
+    console.error(`ERROR at getMostRecentExistingEntry: ${err}`)
   }
 }
 

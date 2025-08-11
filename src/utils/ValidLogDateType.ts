@@ -3,25 +3,25 @@
 // add methods to match, replace, search, and split
 
 type LogDate = string & {
-  /**readonly*/ [Symbol.match](pattern: RegExp): RegExpMatchArray | null;
+  /**readonly*/ [Symbol.match](pattern: RegExp): RegExpMatchArray | null
 } & {
-  /**readonly*/ [Symbol.replace](pattern: RegExp, replacement: string): string;
+  /**readonly*/ [Symbol.replace](pattern: RegExp, replacement: string): string
 } & {
-  /**readonly*/ [Symbol.search](pattern: RegExp): number;
+  /**readonly*/ [Symbol.search](pattern: RegExp): number
 } & {
   /**readonly*/ [Symbol.search](
     separator: string | RegExp,
     limit?: number
-  ): string[];
-};
+  ): string[]
+}
 
 // match date format
-const logDatePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+const logDatePattern = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
 
 // combine LogDate type with constraint to ensure proper match
-type ValidLogDate = LogDate & {
-  readonly match: (pattern: typeof logDatePattern) => RegExpMatchArray | null;
-};
+export type ValidLogDate = LogDate & {
+  readonly match: (pattern: typeof logDatePattern) => RegExpMatchArray | null
+}
 
 // `ValidLogDate` type combines the `LogDate` type with a constraint that ensures the `match` method returns a match for the `logDatePattern` regex.
 // It effectively restricts the `logDate` param to only accept strings that match the proper format.

@@ -47,11 +47,11 @@ Daily habit checklist that resets each day.
 
 ```ts
 interface RoutineProps {
-  id: string;
-  name: string;
-  complete: boolean;
-  timestamp: number;
-  onComplete?: (id: string) => void;
+  id: string
+  name: string
+  complete: boolean
+  timestamp: number
+  onComplete?: (id: string) => void
 }
 ```
 
@@ -61,15 +61,15 @@ One-time tasks not tied to a calendar.
 
 ```ts
 interface ErrandProps {
-  id: string;
-  edit?: boolean;
-  name: string;
-  complete: boolean;
-  timeAssigned?: number;
-  timeExecuted?: number;
-  showDelete?: boolean;
-  onDelete?: (id: string) => void;
-  onComplete?: (id: string) => void;
+  id: string
+  edit?: boolean
+  name: string
+  complete: boolean
+  timeAssigned?: number
+  timeExecuted?: number
+  showDelete?: boolean
+  onDelete?: (id: string) => void
+  onComplete?: (id: string) => void
 }
 ```
 
@@ -79,10 +79,10 @@ Custom slider interface for daily water tracking (default goal: 128 oz).
 
 ```ts
 interface BottleProps {
-  dateKey?: string;
-  id: string;
-  ounces: number[];
-  setOunces: (oz: number[]) => void;
+  dateKey?: string
+  id: string
+  ounces: number[]
+  setOunces: (oz: number[]) => void
 }
 ```
 
@@ -101,9 +101,9 @@ Block out your day, visualize structure, and optionally sync with external calen
   - [ ] Cloud sync (optional for users)
   - [ ] Unified storage for same-day data (routines + hydration)
 - [x] Github Repository Intro
-- Build Contribution Guidelines and usage examples
+- [ ] Build Contribution Guidelines and usage examples
 - [ ] Calendar and Scheduling Component
-- [ ] Add screenshot images and a logo(?)
+- [ ] Add screenshot images and a logo
 
 ## Eventually
 
