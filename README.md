@@ -8,7 +8,7 @@ _Bullet Train_ combines the rapid focus of the Bullet Journal with the relentles
 
 ## Why Bullet Train?
 
-- \*\*Executive-Function Friendly — bite-sized actions, clear visual feedback, gentle nudges.
+- **Executive-Function Friendly** — bite-sized actions, clear visual feedback, gentle nudges.
 - **CBT-Informed** - supports habit stacking and positive reinforcement.
 - **Minimal By Design** - minimal packages, maximum focus. Only essential UI and tooling.
 
