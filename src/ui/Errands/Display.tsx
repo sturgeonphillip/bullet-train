@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import './errands.css'
 import Form from './Form'
 import Errand from './Errand'
-import { ErrandProps } from './createErrand'
+import { ErrandProps } from '../../types/appTypes'
+// TODO: use in requestErrands function
+import { ONE_DAY, isOlderThan } from './filterErrands'
 
 const Display = () => {
   const [errands, setErrands] = useState<ErrandProps[]>([])
@@ -54,7 +56,7 @@ const Display = () => {
         throw new Error('Failed to update errand in database.')
       }
 
-      console.log(`Errand ${errandToUpdate.name.toUpperCase()} was updated:`)
+      console.log(`Errand ${errandToUpdate.name.toUpperCase()} was updated.`)
 
       console.log(JSON.parse(JSON.stringify(errandToUpdate)))
     } catch (err) {
@@ -99,49 +101,31 @@ const Display = () => {
 
       console.log(`Errand ${errandToDelete.name.toUpperCase()} was deleted.`)
     } catch (err) {
-      console.log('ERR OBJECT:')
       console.log(err)
-      // console.error(`Error when deleting errand: ${err}`)
 
       // add errand back to errands array if error on deleting in database
-
       setErrands((prevErrands) => [...prevErrands, errandToDelete])
     }
   }
 
   useEffect(() => {
+    console.log('Requesting Errands...')
+
     requestErrands()
   }, [])
 
   async function requestErrands() {
     let res
     try {
-      // const res = await fetch(`http://localhost:3001/errands`)
-      // const text = await res.text()
       res = await fetch(`http://localhost:3001/errands`)
-      const text = await res.text()
-
-      // console.log('Response length:', text.length)
-      // console.log('Response preview (first 100 chars):', text.slice(0, 100))
-      // console.log('Response end (last 100 chars):', text.slice(-100))
-
-      // const errorContext = text.slice(506, 606) // show 50 chars before and after
-      // console.log('Error context (around position 556):', errorContext)
-
-      // split into lines to verify line numbers
-      // const lines = text.split('\n')
-      // console.log('Line 22 content:', lines[21])
 
       if (!res.ok) {
         throw new Error(`Network response not ok. Status: ${res.status}`)
       }
 
-      // parse JSON separately to catch exact error position
-      const saved = JSON.parse(text) // will throw detailed SyntaxError
-      // await res.json()
+      const saved = await res.json()
       setErrands(saved)
     } catch (err) {
-      // console.error(`There was a problem with the fetch operation: ${err}`)
       console.error('Fetch operation details:', {
         url: 'http://localhost:3001/errands',
         status: res?.status,
@@ -153,6 +137,23 @@ const Display = () => {
     }
   }
 
+  // TODO: incorporate helper function isOlderThan to clean up file.
+  const HIDE_COMPLETED_AFTER_TIME = ONE_DAY
+
+  const now = Date.now()
+  console.log('ERRANDS:', errands)
+  const visibleErrands = errands.filter((errand) => {
+    if (!errand.complete) return true
+
+    if (!errand.timeExecuted) return true
+
+    const timeSinceExecuted = now - errand.timeExecuted
+    if (timeSinceExecuted < HIDE_COMPLETED_AFTER_TIME) {
+      return true
+    }
+  })
+
+  console.log('VISIBLE:', visibleErrands)
   return (
     <>
       <div className='errands-container'>
@@ -165,8 +166,8 @@ const Display = () => {
         </div>
 
         <ul>
-          {errands.length > 0 ? (
-            errands.map((errand) => (
+          {visibleErrands.length > 0 ? (
+            visibleErrands.map((errand) => (
               <Errand
                 key={errand.id}
                 id={errand.id}
@@ -188,18 +189,3 @@ const Display = () => {
 }
 
 export default Display
-
-// 114  async function requestErrands() {
-// 115      try {
-// 116        const res = await fetch(`http://localhost:3001/errands`)
-// 117
-// 118        if (!res.ok) {
-// 119          throw new Error(`Network response not ok. Status: ${res.status}`)
-// 120        }
-// 121
-// 122        const saved = await res.json()
-// 123        setErrands(saved)
-// 124      } catch (err) {
-// 125        console.error(`There was a problem with the fetch operation: ${err}`)
-// 126      }
-// 127    }

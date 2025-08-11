@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FormEvent } from 'react'
 import { EntryProps, AdjacentListsResultProps } from '../../types/app'
 import { WizardStateEnum } from '../../types/enums'
 import { getUTCDateKey } from '../../utils/dateUtils'
@@ -45,7 +45,7 @@ const EntryDisplay = () => {
     showToday()
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!entryDate) return
 

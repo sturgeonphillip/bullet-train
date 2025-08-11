@@ -39,6 +39,7 @@ export function createHydration(goal?: number): HydrationProps {
   }
 }
 
+// TODO: verify this is correct. should the errand times be created this way or using a localized method?
 export function createErrand(name: string): ErrandProps {
   name = name ?? '[EMPTY]'
 

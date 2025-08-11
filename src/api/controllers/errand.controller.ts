@@ -13,7 +13,9 @@ const filePath = path.join(__dirname, '../../../db/errands.json')
 const getErrands = async (_req: Request, res: Response) => {
   try {
     const content = await fs.readFile(filePath, 'utf8')
-    res.status(200).send(content)
+    const errands = JSON.parse(content)
+
+    res.status(200).json(errands)
   } catch (err) {
     handleError(err, res, 'Error reading data from file.')
   }

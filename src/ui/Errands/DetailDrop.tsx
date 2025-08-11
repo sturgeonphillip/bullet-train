@@ -1,4 +1,4 @@
-import { ErrandProps } from './createErrand'
+import { ErrandProps } from '../../types/appTypes'
 
 export const DetailDrop = ({
   id,

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ErrandProps } from './createErrand'
+import { ErrandProps } from '../../types/appTypes'
 import { DetailDrop } from './DetailDrop'
 
 const Errand = ({
