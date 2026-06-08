@@ -5,16 +5,16 @@ export function debounce<T>(
   fn: (arg: T) => void,
   delay: number
 ): (arg: T) => void {
-  let timeoutId: NodeJS.Timeout | null = null;
+  let timeoutId: NodeJS.Timeout | null = null
 
   return (arg: T) => {
     if (timeoutId) {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId)
     }
 
     timeoutId = setTimeout(() => {
-      fn(arg);
-      timeoutId = null;
-    }, delay);
-  };
+      fn(arg)
+      timeoutId = null
+    }, delay)
+  }
 }

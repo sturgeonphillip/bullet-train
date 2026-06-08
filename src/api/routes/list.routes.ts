@@ -1,16 +1,16 @@
-import { Router } from 'express';
-import * as listController from '../controllers/list.controller';
+import { Router } from 'express'
+import * as listController from '../controllers/list.controller'
 
-const router = Router();
+const router = Router()
 
-router.get('/', listController.getRoutineList);
+router.get('/', listController.getRoutineList)
 
-router.get('/:date', listController.getRoutineByDate);
+router.get('/:date', listController.getRoutineByDate)
 
-router.post('/', listController.createRoutineList);
+router.post('/', listController.createRoutineList)
 
-router.patch('/:date', listController.updateRoutineList);
+router.patch('/:date', listController.updateRoutineList)
 
-router.delete('/:date', listController.destroyRoutineList);
+router.delete('/:date', listController.destroyRoutineList)
 
-export default router;
+export default router

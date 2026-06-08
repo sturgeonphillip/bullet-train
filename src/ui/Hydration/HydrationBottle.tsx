@@ -1,10 +1,10 @@
-import * as Slider from '@radix-ui/react-slider';
-import './hydration.css';
+import * as Slider from '@radix-ui/react-slider'
+import './hydration.css'
 
 interface HydrationBottleProps {
-  index: number;
-  ounces: number;
-  onChange: (oz: number) => void;
+  index: number
+  ounces: number
+  onChange: (oz: number) => void
 }
 
 export const HydrationBottle = ({
@@ -13,7 +13,7 @@ export const HydrationBottle = ({
   onChange,
 }: HydrationBottleProps) => {
   // const fillRatio = ounces / 32;
-  const colorClass = ['blue', 'orange', 'pink', 'green'][index % 4];
+  const colorClass = ['blue', 'orange', 'pink', 'green'][index % 4]
 
   return (
     <div className={`bottle-container-div ${colorClass}`}>
@@ -46,5 +46,5 @@ export const HydrationBottle = ({
       </Slider.Root>
       <p className='ounces-p'>{ounces} oz</p>
     </div>
-  );
-};
+  )
+}
