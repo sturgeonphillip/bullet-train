@@ -1,4 +1,4 @@
-function logAllChildElements(parent: HTMLElement) {
+export function logAllChildElements(parent: HTMLElement) {
   // log current parent element
   console.log('Parent Element: ', parent)
 
